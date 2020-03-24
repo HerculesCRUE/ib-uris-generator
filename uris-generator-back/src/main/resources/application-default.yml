@@ -1,0 +1,20 @@
+---
+app:
+  # Persistence
+  persistence:
+    jpa:
+      generate-ddl: true
+      show-sql: true
+  # Swagger
+  swagger:
+    enabled: true
+    secured: false
+#    authServerUrl: ../oauth
+#    authServerClientId: acme
+#    authServerClientSecret: acmesecret
+
+## Actuator
+management:
+  health:
+    redis:
+      enabled: false
