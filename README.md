@@ -47,8 +47,6 @@ Para pararlo:
 
 	docker-compose down
 
-En caso de querer levantar Solr, se precisa descomentar del fichero ```docker-compose.yml``` la sección correspondiente. Acceder a solr (http://localhost:8983/solr/#/~collections) y crear una colección llamada app con el esquema default
-
 ## Metodología de desarrollo
 
 La metodología de desarrollo es Git Flow.
