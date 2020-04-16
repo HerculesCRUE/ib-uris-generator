@@ -13,4 +13,8 @@ public interface LanguageService
     extends QueryService<Language, String, LanguageFilter>, SaveService<Language>, DeleteService<Language, String> {
 
     List<Language> getAllByLanguage(final Language language);
+
+    void setNotIsDefaultAllLanguages();
+
+    List<Language> getDefaultLanguages();
 }

@@ -4,6 +4,7 @@ import es.um.asio.service.filter.LanguageFilter;
 import es.um.asio.service.filter.SearchCriteria;
 import es.um.asio.service.filter.SearchOperation;
 import es.um.asio.service.filter.TypeFilter;
+import es.um.asio.service.util.Utils;
 import es.um.asio.service.util.ValidationConstants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -11,6 +12,7 @@ import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Locale;
 import java.util.Set;
 
 @Entity
@@ -29,10 +31,46 @@ public class Language {
      * The id.
      */
     @Id
-    @Column(name = Columns.ISO, columnDefinition = "VARCHAR(2)", length = 2)
+    @Column(name = Columns.ISO, columnDefinition = "VARCHAR(20)", length = 20)
     @EqualsAndHashCode.Include
     @ApiModelProperty(	example="ES",allowEmptyValue = false, position=1, readOnly=false, value = "Required: ISO Code of Country", required = false)
     private String ISO;
+
+    /**
+     * LANGUAGE.
+     */
+    @ApiModelProperty(	example="ES",allowEmptyValue = false, position=2, readOnly=false, value = "Optional: Name of language. ", required = false)
+    @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
+    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
+    @Column(name = Columns.LANGUAGE, nullable = true,columnDefinition = "VARCHAR(20)",length = 20)
+    private String language;
+
+    /**
+     * REGION.
+     */
+    @ApiModelProperty(	example="ES",allowEmptyValue = false, position=2, readOnly=false, value = "Optional: Name of region. ", required = false)
+    @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
+    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
+    @Column(name = Columns.REGION, nullable = true,columnDefinition = "VARCHAR(20)",length = 20)
+    private String region;
+
+    /**
+     * VARIANT.
+     */
+    @ApiModelProperty(	example="ES",allowEmptyValue = false, position=2, readOnly=false, value = "Optional: Name of variant. ", required = false)
+    @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
+    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
+    @Column(name = Columns.VARIANT, nullable = true,columnDefinition = "VARCHAR(20)",length = 20)
+    private String variant;
+
+    /**
+     * VARIANT.
+     */
+    @ApiModelProperty(	example="ES",allowEmptyValue = false, position=2, readOnly=false, value = "Optional: Name of Script. ", required = false)
+    @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
+    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
+    @Column(name = Columns.SCRIPT, nullable = true,columnDefinition = "VARCHAR(20)",length = 20)
+    private String script;
 
     /**
      * NAME.
@@ -64,7 +102,7 @@ public class Language {
     /**
      * TYPE NAME.
      */
-    @ApiModelProperty(	example="tipo",allowEmptyValue = false, position=4, readOnly=false, value = "Required: Name of type in selected language. ", required = false)
+    @ApiModelProperty(	example="tipo",allowEmptyValue = false, position=5, readOnly=false, value = "Required: Name of type in selected language. ", required = false)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.TYPE, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
@@ -73,7 +111,7 @@ public class Language {
     /**
      * CONCEPT NAME.
      */
-    @ApiModelProperty(	example="class",allowEmptyValue = false, position=4, readOnly=false, value = "Required: Name of Concept(class) in selected language. ", required = false)
+    @ApiModelProperty(	example="class",allowEmptyValue = false, position=6, readOnly=false, value = "Required: Name of Concept(class) in selected language. ", required = false)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.CONCEPT, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
@@ -82,15 +120,23 @@ public class Language {
     /**
      * REFERENCE NAME.
      */
-    @ApiModelProperty(	example="item",allowEmptyValue = false, position=4, readOnly=false, value = "Required: Name of Reference(item) in selected language. ", required = false)
+    @ApiModelProperty(	example="item",allowEmptyValue = false, position=7, readOnly=false, value = "Required: Name of Reference(item) in selected language. ", required = false)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.REFERENCE, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String reference;
 
     /**
+     * Is Default language.
+     */
+    @ApiModelProperty(	value = "true if is the default language", example="true", allowEmptyValue = false, allowableValues = "true, false",position =8, readOnly=false, required = false)
+    @Column(name = Columns.IS_DEFAULT)
+    public Boolean isDefault = false;
+
+    /**
      * Relation Bidirectional LanguageType OneToMany
      */
+    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "language", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private Set<LanguageType> languageTypes;
@@ -98,9 +144,46 @@ public class Language {
     /**
      * Relation Bidirectional CanonicalURILanguage OneToMany
      */
+    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "language", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private Set<CanonicalURILanguage> canonicalURILanguages;
+
+    public Language() {
+    }
+
+    public Language(String iso, String name, String domain, String subDomain, String type, String concept, String reference, boolean isDefault) {
+        setISO(iso);
+        this.name = name;
+        this.domain = domain;
+        this.subDomain = subDomain;
+        this.type = type;
+        this.concept = concept;
+        this.reference = reference;
+        this.isDefault = isDefault;
+    }
+
+    public void setISO(String ISO) {
+        try {
+            Locale l = Locale.forLanguageTag(ISO);
+            if (Utils.isValidString(l.getDisplayLanguage())) {
+                language = l.getDisplayLanguage();
+            }
+            if (Utils.isValidString(l.getDisplayCountry())) {
+                region = l.getDisplayCountry();
+            }
+            if (Utils.isValidString(l.getDisplayScript())) {
+                variant = l.getDisplayVariant();
+            }
+            if (Utils.isValidString(l.getDisplayScript())) {
+                script = l.getDisplayScript();
+            }
+            this.ISO = ISO;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     /**
@@ -118,6 +201,26 @@ public class Language {
          * ID column.
          */
         protected static final String ISO = "ISO";
+
+        /**
+         * LANGUAGE column.
+         */
+        protected static final String LANGUAGE = "LANGUAGE";
+
+        /**
+         * REGION column.
+         */
+        protected static final String REGION = "REGION";
+
+        /**
+         * VARIANT column.
+         */
+        protected static final String VARIANT = "VARIANT";
+
+        /**
+         * SCRIPT column.
+         */
+        protected static final String SCRIPT = "SCRIPT";
 
         /**
          * ISO.
@@ -149,6 +252,11 @@ public class Language {
          */
         protected static final String REFERENCE = "REFERENCE_NAME";
 
+        /**
+         * URI column.
+         */
+        protected static final String IS_DEFAULT = "IS_DEFAULT";
+
     }
 
     public LanguageFilter buildFilterByEntity() {
@@ -174,6 +282,9 @@ public class Language {
         if (this.reference != null && !this.reference.equals("")) {
             f.add(new SearchCriteria(Columns.REFERENCE, this.reference, SearchOperation.EQUAL));
         }
+        if (this.isDefault != null) {
+            f.add(new SearchCriteria(Columns.IS_DEFAULT, this.isDefault, SearchOperation.EQUAL));
+        }
         return f;
     }
 
@@ -184,5 +295,16 @@ public class Language {
         }
         return f;
     }
+
+    public void merge(Language other){
+        this.name = other.getName();
+        this.domain = other.getDomain();
+        this.subDomain = other.getSubDomain();
+        this.type = other.getType();
+        this.concept = other.getConcept();
+        this.reference = other.getReference();
+        this.isDefault = other.getIsDefault();
+    }
+
 
 }

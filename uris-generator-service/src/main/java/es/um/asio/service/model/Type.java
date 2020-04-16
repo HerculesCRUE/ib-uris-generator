@@ -29,7 +29,7 @@ public class Type {
      * The id.
      */
     @Id
-    @Column(name = Columns.TYPE, columnDefinition = "VARCHAR(3)", length = 3)
+    @Column(name = Columns.CODE, columnDefinition = "VARCHAR(3)", length = 3)
     @EqualsAndHashCode.Include
     @ApiModelProperty(	example="cat",allowEmptyValue = false, position=1, readOnly=false, value = "Required: TYPE Code (3 characters)", required = true)
     private String code;
@@ -62,6 +62,14 @@ public class Type {
      */
     public static final String TABLE = "TYPE";
 
+    public Type() {
+    }
+
+    public Type(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
     /**
      * Column name constants.
      */
@@ -70,7 +78,7 @@ public class Type {
         /**
          * TYPE ID column.
          */
-        protected static final String TYPE = "CODE";
+        protected static final String CODE = "CODE";
 
         /**
          * NAME TYPE COLUMN.
@@ -81,7 +89,7 @@ public class Type {
     public TypeFilter buildFilterByEntity() {
         TypeFilter f = new TypeFilter();
         if (this.code != null && !this.code.equals("")) {
-            f.add(new SearchCriteria(Columns.TYPE, this.code, SearchOperation.EQUAL));
+            f.add(new SearchCriteria(Columns.CODE, this.code, SearchOperation.EQUAL));
         }
         if (this.name != null && !this.name.equals("")) {
             f.add(new SearchCriteria(Columns.NAME, this.name, SearchOperation.EQUAL));
@@ -92,8 +100,12 @@ public class Type {
     public TypeFilter buildFilterByEntityUniqueProperties() {
         TypeFilter f = new TypeFilter();
         if (this.code != null && !this.code.equals("")) {
-            f.add(new SearchCriteria(Columns.TYPE, this.code, SearchOperation.EQUAL));
+            f.add(new SearchCriteria(Columns.CODE, this.code, SearchOperation.EQUAL));
         }
         return f;
     }
+    public void merge(Type other){
+        this.name = other.getName();
+    }
+
 }

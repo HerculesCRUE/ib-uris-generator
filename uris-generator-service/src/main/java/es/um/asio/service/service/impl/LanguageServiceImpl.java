@@ -121,4 +121,20 @@ public class LanguageServiceImpl implements LanguageService {
         }
     }
 
+    @Override
+    public void setNotIsDefaultAllLanguages() {
+        Optional<List<Language>> languages = this.repository.findByIsDefault(true);
+        languages.ifPresent((ls)->ls.forEach(
+                (l)-> {
+                    l.isDefault = false;
+                    this.repository.save(l);
+                }
+        ));
+
+    }
+
+    @Override
+    public List<Language> getDefaultLanguages() {
+        return this.repository.findByIsDefault(true).orElse(new ArrayList<>());
+    }
 }

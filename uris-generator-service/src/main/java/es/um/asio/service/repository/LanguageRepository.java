@@ -6,6 +6,7 @@ import es.um.asio.service.model.URIMap;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,6 +21,15 @@ public interface LanguageRepository extends JpaRepository<Language, String>, Jpa
      * @return an {@link Language} entity stored in the database or {@literal Optional#empty()} if none found
      */
     Optional<Language> findByISO(String iso);
+
+    /**
+     * Finds a Language by isDefault.
+     *
+     * @param isDefault
+     *            The isDefault to search for
+     * @return an {@link Language} entity stored in the database or {@literal Optional#empty()} if none found
+     */
+    Optional<List<Language>> findByIsDefault(boolean isDefault);
 
 
 }
