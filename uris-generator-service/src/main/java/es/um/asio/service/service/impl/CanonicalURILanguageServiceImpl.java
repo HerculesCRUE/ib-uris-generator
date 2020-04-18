@@ -29,10 +29,16 @@ import java.util.Optional;
 public class CanonicalURILanguageServiceImpl implements CanonicalURILanguageService {
 
     /**
-     * Spring Data repository for {@link CanonicalURI}.
+     * Spring Data repository for {@link CanonicalURILanguage}.
      */
     @Autowired
     private CanonicalURILanguageRepository repository;
+
+    /**
+     * Spring Data repository for {@link CanonicalURI}.
+     */
+    @Autowired
+    private CanonicalURILanguageRepository canonicalRepository;
 
     /**
      * Solr enabled
@@ -120,4 +126,49 @@ public class CanonicalURILanguageServiceImpl implements CanonicalURILanguageServ
             return new ArrayList<CanonicalURILanguage>();
         }
     }
+
+    @Override
+    public List<CanonicalURILanguage> getAllByFullURI(String fullURI) {
+        return this.repository.findByFullURI(fullURI).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<CanonicalURILanguage> getAllByEntityNameAndPropertyName(String entityName, String propertyName) {
+        return this.repository.findByEntityNameAndPropertyName(entityName,propertyName).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<CanonicalURILanguage> getAllByEntityNameAndReference(String entityName, String reference) {
+        return this.repository.findByEntityNameAndReference(entityName,reference).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<CanonicalURILanguage> getAllByEntityName(String entityName) {
+        return this.repository.findByEntityName(entityName).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<CanonicalURILanguage> getAllByPropertyName(String propertyName) {
+        return this.repository.findByPropertyName(propertyName).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<CanonicalURILanguage> getAllByElements(String domain, String subDomain, String language, String type, String concept, String reference) {
+        List<CanonicalURILanguage> canonicalURILanguages = new ArrayList<>();
+        for (CanonicalURILanguage cul : this.repository.findAll()) {
+            if (
+                    ( domain == null || (cul!=null && cul.getDomain()!=null && cul.getDomain().trim().equals(domain.trim())))
+                            && ( subDomain == null || (cul!=null && cul.getSubDomain()!=null && cul.getSubDomain().trim().equals(subDomain.trim())))
+                            && ( type == null || (cul!=null && cul.getType()!=null && cul.getType().getCode()!=null && cul.getType().getCode().trim().equals(type.trim())))
+                            && ( language == null || (cul!=null && cul.getLanguage()!=null && cul.getLanguage().getISO()!=null && cul.getLanguage().getISO().trim().equals(language.trim())))
+                            && ( concept == null || (cul!=null && cul.getConcept()!=null && cul.getConcept().trim().equals(concept.trim())))
+                            && ( reference == null || (cul!=null && cul.getReference()!=null && cul.getReference().trim().equals(reference.trim())))
+            ) {
+                canonicalURILanguages.add(cul);
+            }
+        }
+        return canonicalURILanguages;
+    }
+
+
 }

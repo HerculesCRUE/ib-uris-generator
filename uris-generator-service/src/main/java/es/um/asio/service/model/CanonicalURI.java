@@ -414,4 +414,22 @@ public class CanonicalURI implements Serializable {
             setIsEntity(true);
         }
     }
+
+    @Override
+    public String toString() {
+        return "CanonicalURI{" +
+                "id=" + id +
+                ", domain='" + domain + '\'' +
+                ", subDomain='" + subDomain + '\'' +
+                ", typeIdCode='" + typeIdCode + '\'' +
+                ", concept='" + concept + '\'' +
+                ", reference='" + reference + '\'' +
+                ", fullURI='" + fullURI + '\'' +
+                ", isEntity=" + isEntity +
+                ", isProperty=" + isProperty +
+                ", isInstance=" + isInstance +
+                ", entityName='" + entityName + '\'' +
+                ", propertyName='" + propertyName + '\'' +
+                '}';
+    }
 }

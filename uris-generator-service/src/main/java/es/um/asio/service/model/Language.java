@@ -306,5 +306,21 @@ public class Language {
         this.isDefault = other.getIsDefault();
     }
 
-
+    @Override
+    public String toString() {
+        return "Language{" +
+                "ISO='" + ISO + '\'' +
+                ", language='" + language + '\'' +
+                ", region='" + region + '\'' +
+                ", variant='" + variant + '\'' +
+                ", script='" + script + '\'' +
+                ", name='" + name + '\'' +
+                ", domain='" + domain + '\'' +
+                ", subDomain='" + subDomain + '\'' +
+                ", type='" + type + '\'' +
+                ", concept='" + concept + '\'' +
+                ", reference='" + reference + '\'' +
+                ", isDefault=" + isDefault +
+                '}';
+    }
 }

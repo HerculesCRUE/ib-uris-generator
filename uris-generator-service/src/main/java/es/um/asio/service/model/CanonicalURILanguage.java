@@ -8,9 +8,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hibernate.validator.constraints.SafeHtml;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Set;
 
 
 @Entity
@@ -38,6 +40,7 @@ public class CanonicalURILanguage implements Serializable {
     /**
      * Relation Bidirectional CanonicalURI ManyToOne
      */
+    @JsonIgnore
     @EqualsAndHashCode.Include
     @ApiModelProperty(	example="ES",allowEmptyValue = false, position=1, readOnly=false, value = "Required: Parent Canonical URI", required = true)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,6 +49,7 @@ public class CanonicalURILanguage implements Serializable {
     /**
      * Relation Bidirectional Language ManyToOne
      */
+    @JsonIgnore
     @EqualsAndHashCode.Include
     @ApiModelProperty(	example="ES",allowEmptyValue = false, position=1, readOnly=false, value = "Required: Parent Canonical URI", required = true)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -130,6 +134,31 @@ public class CanonicalURILanguage implements Serializable {
     @Column(name = Columns.FULL_URI, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String fullURI;
 
+    @ApiModelProperty(hidden = true)
+    @Column(name = Columns.FULL_PARENT_URI, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
+    private String fullParentURI;
+
+    /**
+     * Is Entity.
+     */
+    @ApiModelProperty(	value = "true if is entity", example="true", allowEmptyValue = false, allowableValues = "true, false",position =7, readOnly=false, required = true)
+    @Column(name = URIMap.Columns.IS_ENTITY)
+    private Boolean isEntity = false;
+
+    /**
+     * Is Property.
+     */
+    @ApiModelProperty(	value = "true if is property", example="true", allowEmptyValue = false, allowableValues = "true, false",position =8, readOnly=false, required = true)
+    @Column(name = URIMap.Columns.IS_PROPERTY)
+    private Boolean isProperty = false;
+
+    /**
+     * Is Instance.
+     */
+    @ApiModelProperty(	value = "true if is instance", example="true", allowEmptyValue = false, allowableValues = "true, false",position =9, readOnly=false, required = true)
+    @Column(name = URIMap.Columns.IS_INSTANCE)
+    private Boolean isInstance = false;
+
     /**
      * Entity Name.
      */
@@ -160,10 +189,10 @@ public class CanonicalURILanguage implements Serializable {
 
     /**
      * TYPE.
-     * Relation Bidirectional ManyToOne
+     * Relation Bidirectional OneToMany
      */
-    @OneToOne(mappedBy = "canonicalURILanguage",fetch = FetchType.LAZY)
-    private LocalURI localURI;
+    @OneToMany(mappedBy = "canonicalURILanguage", cascade = CascadeType.ALL)
+    private Set<LocalURI> localURIs;
 
     /**
      * Table name.
@@ -171,37 +200,96 @@ public class CanonicalURILanguage implements Serializable {
     public static final String TABLE = "CANONICAL_URI_LANGUAGE";
 
     public CanonicalURILanguage() {
+        updateParentURI();
     }
 
-    public CanonicalURILanguage(CanonicalURI canonicalURI,String domain, String subDomain, Type t,LanguageType lt, String concept, String reference) {
-        this.canonicalURI = canonicalURI;
+
+    public CanonicalURILanguage(String domain, String subDomain,LanguageType lt, String concept, String reference, String property) {
         this.domain = domain;
         this.subDomain = subDomain;
-        this.typeCode = t.getCode();
-        this.type = t;
-        this.typeLangCode = lt.getTypeLangCode();
-        this.languageType = lt;
+        setLanguageType(lt);
         setConcept(concept);
+        setPropertyName(property);
         setReference(reference);
+        updateState();
         generateFullURL();
+        updateParentURI();
+    }
+
+    @PostConstruct
+    public void init() {
+        updateParentURI();
+    }
+    public void setLanguageType(LanguageType lt) {
+        this.languageType = lt;
+        if (lt!=null) {
+            this.type = lt.getType();
+            this.typeCode = (lt.getType()!=null)?lt.getType().getCode():null;
+            this.languageType = lt;
+            this.typeLangCode = (this.languageType!=null)?this.languageType.getTypeLangCode():null;
+            this.language = lt.getLanguage();
+            this.languageID = (this.language!=null)?this.language.getISO():null;
+        }
     }
 
     public void setConcept(String concept) {
-        this.concept = concept;
-        this.entityName = concept;
+        if (concept!=null) {
+            this.concept = concept;
+            this.entityName = concept;
+        }
     }
 
     public void setReference(String reference) {
-        this.reference = reference;
+        if (reference!=null)
+            this.reference = reference;
     }
 
     public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
-        this.reference = propertyName;
+        if (propertyName!=null)
+            this.propertyName = propertyName;
     }
 
     public void setEntityName(String entityName) {
         this.entityName = entityName;
+    }
+
+    public void setParentEntityName(String parentEntityName) {
+        this.parentEntityName = parentEntityName;
+    }
+
+    public void setParentPropertyName(String parentPropertyName) {
+        this.parentPropertyName = parentPropertyName;
+    }
+
+    public void setIsEntity(Boolean isEntity) {
+        this.isEntity = isEntity;
+        this.isInstance = false;
+        this.isProperty = false;
+
+    }
+
+    public void setIsProperty(Boolean isProperty) {
+        this.isProperty = isProperty;
+        this.isEntity = false;
+        this.isInstance = false;
+    }
+
+    public void setIsInstance(Boolean isInstance) {
+        this.isInstance = isInstance;
+        this.isEntity = false;
+        this.isProperty = false;
+    }
+
+    public void setCanonicalURI(CanonicalURI canonicalURI) throws Exception {
+        if (canonicalURI==null)
+            throw new Exception("Canonical URI NOT FOUND");
+        this.canonicalURI = canonicalURI;
+        this.fullParentURI = canonicalURI.getFullURI();
+    }
+
+    public void updateParentURI(){
+        if (canonicalURI!=null)
+            this.fullParentURI = canonicalURI.getFullURI();
     }
 
     /**
@@ -263,6 +351,27 @@ public class CanonicalURILanguage implements Serializable {
          * URI column.
          */
         protected static final String FULL_URI = "FULL_URI";
+
+        /**
+         * URI column.
+         */
+        protected static final String FULL_PARENT_URI = "FULL_PARENT_URI";
+
+        /**
+         * IS_ENTITY column.
+         */
+        protected static final String IS_ENTITY = "IS_ENTITY";
+
+        /**
+         * IS_PROPERTY column.
+         */
+        protected static final String IS_PROPERTY = "IS_PROPERTY";
+
+        /**
+         * IS_Instance column.
+         */
+        protected static final String IS_INSTANCE = "IS_INSTANCE";
+
 
         /**
          * ENTITY_NAME column.
@@ -350,17 +459,8 @@ public class CanonicalURILanguage implements Serializable {
             if (this.type != null) {
                 f.add(new SearchCriteria("typeLangCode", this.typeLangCode, SearchOperation.EQUAL));
             }
-            if (this.concept != null) {
-                f.add(new SearchCriteria("concept", this.concept, SearchOperation.EQUAL));
-            }
-            if (this.reference != null) {
+            if (this.isInstance && this.reference != null ) {
                 f.add(new SearchCriteria("reference", this.reference, SearchOperation.EQUAL));
-            }
-            if (this.entityName != null) {
-                f.add(new SearchCriteria("entityName", this.entityName, SearchOperation.EQUAL));
-            }
-            if (this.propertyName != null) {
-                f.add(new SearchCriteria("propertyName", this.propertyName, SearchOperation.EQUAL));
             }
             if (this.parentEntityName != null) {
                 f.add(new SearchCriteria("parentEntityName", this.parentEntityName, SearchOperation.EQUAL));
@@ -373,10 +473,20 @@ public class CanonicalURILanguage implements Serializable {
     }
 
     public void merge(CanonicalURILanguage other){
+        if (other!=null && other.concept!=null)
+            this.concept = other.concept;
         if (other!=null && other.fullURI!=null)
-            this.typeCode = other.fullURI;
+            this.fullURI = other.fullURI;
+        if (other!=null && other.fullParentURI!=null)
+            this.fullParentURI = other.fullParentURI;
+        if (other!=null && other.propertyName!=null)
+            this.propertyName = other.propertyName;
+        if (other!=null && other.fullParentURI!=null)
+            this.fullParentURI = other.fullParentURI;
         if (other!=null && other.typeLangCode!=null)
             this.typeLangCode = other.typeLangCode;
+        if (other!=null && other.reference!=null && !other.isInstance)
+            this.reference = other.reference;
     }
 
     public void generateFullURL() {
@@ -416,6 +526,17 @@ public class CanonicalURILanguage implements Serializable {
         }
 
         this.fullURI = uriSchema;
+    }
+
+    public void updateState(){
+        if (this.propertyName!=null) {
+            setIsProperty(true);
+            setReference(propertyName);
+        } else if (reference!=null) {
+            setIsInstance(true);
+        } else {
+            setIsEntity(true);
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import es.um.asio.service.model.CanonicalURILanguage;
 import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.CanonicalURILanguageProxy;
 import es.um.asio.service.service.CanonicalURILanguageService;
+import es.um.asio.service.service.CanonicalURIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,12 @@ public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy 
      */
     @Autowired
     private CanonicalURILanguageService service;
+
+    /**
+     * Service layer.
+     */
+    @Autowired
+    private CanonicalURIService canonicalService;
 
     /**
      * {@inheritDoc}
@@ -105,5 +112,33 @@ public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy 
         this.service.delete(identifier);
     }
 
+    @Override
+    public List<CanonicalURILanguage> getAllByFullURI(String fullURI) {
+        return this.service.getAllByFullURI(fullURI);
+    }
 
+    @Override
+    public List<CanonicalURILanguage> getAllByEntityNameAndPropertyName(String entityName, String propertyName) {
+        return this.service.getAllByEntityNameAndPropertyName(entityName,propertyName);
+    }
+
+    @Override
+    public List<CanonicalURILanguage> getAllByEntityNameAndReference(String entityName, String reference) {
+        return this.service.getAllByEntityNameAndReference(entityName,reference);
+    }
+
+    @Override
+    public List<CanonicalURILanguage> getAllByEntityName(String entityName) {
+        return this.service.getAllByEntityName(entityName);
+    }
+
+    @Override
+    public List<CanonicalURILanguage> getAllByPropertyName(String propertyName) {
+        return this.service.getAllByPropertyName(propertyName);
+    }
+
+    @Override
+    public List<CanonicalURILanguage> getAllByElements(String domain, String subDomain,String language, String type, String concept, String reference) {
+        return this.service.getAllByElements(domain,subDomain,language, type,concept,reference);
+    }
 }
