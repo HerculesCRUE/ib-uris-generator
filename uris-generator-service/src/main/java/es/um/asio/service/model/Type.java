@@ -89,10 +89,10 @@ public class Type {
     public TypeFilter buildFilterByEntity() {
         TypeFilter f = new TypeFilter();
         if (this.code != null && !this.code.equals("")) {
-            f.add(new SearchCriteria(Columns.CODE, this.code, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("code", this.code, SearchOperation.EQUAL));
         }
         if (this.name != null && !this.name.equals("")) {
-            f.add(new SearchCriteria(Columns.NAME, this.name, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("name", this.name, SearchOperation.EQUAL));
         }
         return f;
     }
@@ -100,7 +100,7 @@ public class Type {
     public TypeFilter buildFilterByEntityUniqueProperties() {
         TypeFilter f = new TypeFilter();
         if (this.code != null && !this.code.equals("")) {
-            f.add(new SearchCriteria(Columns.CODE, this.code, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("code", this.code, SearchOperation.EQUAL));
         }
         return f;
     }

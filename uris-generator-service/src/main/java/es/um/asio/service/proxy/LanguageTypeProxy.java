@@ -7,10 +7,13 @@ import es.um.asio.service.filter.LanguageTypeFilter;
 import es.um.asio.service.model.LanguageType;
 import es.um.asio.service.model.User;
 
+import java.util.List;
+
 /**
  * Proxy service for {@link LanguageType}. Performs DTO conversion and permission checks.
  */
 public interface LanguageTypeProxy
         extends QueryService<LanguageType, String, LanguageTypeFilter>, SaveService<LanguageType>, DeleteService<LanguageType, String> {
 
+    public List<LanguageType> getByLanguageAndType(String l, String t);
 }

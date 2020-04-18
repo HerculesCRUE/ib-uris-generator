@@ -122,4 +122,17 @@ public class LanguageTypeServiceImpl implements LanguageTypeService {
         }
     }
 
+    @Override
+    public List<LanguageType> getByLanguageAndType(String l, String t) {
+        List<LanguageType> languageTypes = new ArrayList<>();
+        for (LanguageType lt : this.repository.findAll()) {
+            if (
+                    ( l == null || (lt.getLanguage()!=null && lt.getLanguage()!=null && lt.getLanguage().getISO().trim().equals(l.trim()))) &&
+                    ( t == null || (lt.getType()!=null && lt.getType().getCode()!=null &&lt.getType().getCode().trim().equals(t.trim())))
+            ) {
+                languageTypes.add(lt);
+            }
+        }
+        return languageTypes;
+    }
 }

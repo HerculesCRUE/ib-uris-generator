@@ -9,9 +9,8 @@ import java.util.regex.Pattern;
 public class Main {
     public static void main(String[] args) {
 
-        Locale l = Locale.forLanguageTag("de-DE-u-co-phonebk");
-        String country = l.getISO3Country();
-        String lang = l.getISO3Language();
-        System.out.println(l.toLanguageTag());
+        String uri = ("http://$domain$/$sub-domain$/$type$/$concept$/$reference$");
+        uri = uri.replaceFirst("\\$domain","dominio");
+        System.out.println(uri);
     }
 }

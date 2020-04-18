@@ -1,5 +1,6 @@
 package es.um.asio.service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.um.asio.service.filter.*;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.util.ValidationConstants;
@@ -51,6 +52,15 @@ public class CanonicalURILanguage implements Serializable {
     private Language language;
 
     /**
+     * TYPE.
+     * Relation Bidirectional ManyToOne
+     */
+    @ApiModelProperty(hidden = true)
+    @Column(name = Columns.LANGUAGE_ID, nullable = true,columnDefinition = "VARCHAR(20)",length = 20)
+    private String languageID;
+
+
+    /**
      * DOMAIN.
      */
     @ApiModelProperty(	example="hercules",allowEmptyValue = false, position =1, readOnly=false, value = "Required: Domain represents the highest level of the namespace for URI resolution, and for providing relevant information about the owner of the information. ", required = true)
@@ -69,23 +79,27 @@ public class CanonicalURILanguage implements Serializable {
     @Column(name = Columns.SUB_DOMAIN, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String subDomain;
 
-    /**
-     * TYPE.
-     * Relation Bidirectional ManyToOne
-     */
-    /*
-    @ApiModelProperty(	example="ref", allowEmptyValue = false, allowableValues = "cat, def, kos, ref",position =3, readOnly=false, value = "Required: " +
-            "Sets the type of information the resource contains. One of this: cat | def | kos | res", required = true)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Transient
     private LanguageType languageType;
-    */
+
     @ApiModelProperty(	example="um", allowEmptyValue = true,position =3, readOnly=true, value = "Optional:"+
             "Type in Language.", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.TYPE, nullable = false,columnDefinition = "VARCHAR(3)",length = 3)
-    private String type;
+    private String typeCode;
+
+    @ApiModelProperty(	example="um", allowEmptyValue = true,position =3, readOnly=true, value = "Optional:"+
+            "Type in Language.", required = true)
+    @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
+    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
+    @Column(name = Columns.TYPE_LANGUAGE, nullable = false,columnDefinition = "VARCHAR(3)",length = 3)
+    private String typeLangCode;
+
+    @JsonIgnore
+    @Transient
+    private Type type;
 
     /**
      * CONCEPT.
@@ -117,6 +131,34 @@ public class CanonicalURILanguage implements Serializable {
     private String fullURI;
 
     /**
+     * Entity Name.
+     */
+    @ApiModelProperty(	value = "name of entity", example="entity", allowEmptyValue = false,position =10, readOnly=false, required = true)
+    @Column(name = Columns.ENTITY_NAME, nullable = false,columnDefinition = "VARCHAR(100)",length = 100)
+    private String entityName;
+
+    /**
+     * Property Name.
+     */
+    @ApiModelProperty(	value = "name of property", example="property", allowEmptyValue = true,position =11, readOnly=false, required = false)
+    @Column(name = Columns.PROPERTY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
+    private String propertyName;
+
+    /**
+     * Entity Name.
+     */
+    @ApiModelProperty(	value = "name of parent entity", example="entity", allowEmptyValue = false,position =10, readOnly=false, required = true)
+    @Column(name = Columns.PARENT_ENTITY_NAME, nullable = false,columnDefinition = "VARCHAR(100)",length = 100)
+    private String parentEntityName;
+
+    /**
+     * Property Name.
+     */
+    @ApiModelProperty(	value = "name of property", example="property", allowEmptyValue = true,position =11, readOnly=false, required = false)
+    @Column(name = Columns.PARENT_PROPERTY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
+    private String parentPropertyName;
+
+    /**
      * TYPE.
      * Relation Bidirectional ManyToOne
      */
@@ -127,6 +169,40 @@ public class CanonicalURILanguage implements Serializable {
      * Table name.
      */
     public static final String TABLE = "CANONICAL_URI_LANGUAGE";
+
+    public CanonicalURILanguage() {
+    }
+
+    public CanonicalURILanguage(CanonicalURI canonicalURI,String domain, String subDomain, Type t,LanguageType lt, String concept, String reference) {
+        this.canonicalURI = canonicalURI;
+        this.domain = domain;
+        this.subDomain = subDomain;
+        this.typeCode = t.getCode();
+        this.type = t;
+        this.typeLangCode = lt.getTypeLangCode();
+        this.languageType = lt;
+        setConcept(concept);
+        setReference(reference);
+        generateFullURL();
+    }
+
+    public void setConcept(String concept) {
+        this.concept = concept;
+        this.entityName = concept;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+        this.reference = propertyName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
+    }
 
     /**
      * Column name constants.
@@ -149,6 +225,11 @@ public class CanonicalURILanguage implements Serializable {
         protected static final String ISO = "LANGUAGE_ISO";
 
         /**
+         * ISO.
+         */
+        protected static final String LANGUAGE_ID = "LANGUAGE_ID";
+
+        /**
          * DOMAIN NAME.
          */
         protected static final String DOMAIN = "DOMAIN";
@@ -162,6 +243,11 @@ public class CanonicalURILanguage implements Serializable {
          * TYPE NAME.
          */
         protected static final String TYPE = "TYPE";
+
+        /**
+         * TYPE_LANGUAGE NAME.
+         */
+        protected static final String TYPE_LANGUAGE = "TYPE_LANGUAGE";
 
         /**
          * CONCEPT column.
@@ -178,6 +264,25 @@ public class CanonicalURILanguage implements Serializable {
          */
         protected static final String FULL_URI = "FULL_URI";
 
+        /**
+         * ENTITY_NAME column.
+         */
+        protected static final String ENTITY_NAME = "ENTITY_NAME";
+
+        /**
+         * PROPERTY_NAME column.
+         */
+        protected static final String PROPERTY_NAME = "PROPERTY_NAME";
+
+        /**
+         * ENTITY_NAME column.
+         */
+        protected static final String PARENT_ENTITY_NAME = "PARENT_ENTITY_NAME";
+
+        /**
+         * PROPERTY_NAME column.
+         */
+        protected static final String PARENT_PROPERTY_NAME = "PARENT_PROPERTY_NAME";
     }
 
     public CanonicalURILanguageFilter buildFilterByEntity() {
@@ -186,28 +291,43 @@ public class CanonicalURILanguage implements Serializable {
             f.add(new SearchCriteria(Columns.ID, this.id, SearchOperation.EQUAL));
         }
         if (this.canonicalURI != null && this.canonicalURI.getId() > 0) {
-            f.add(new SearchCriteria(Columns.CANONICALURI_ID, this.canonicalURI.getId(), SearchOperation.EQUAL));
+            f.add(new SearchCriteria("", this.canonicalURI.getId(), SearchOperation.EQUAL));
         }
         if (this.language != null && this.language.getISO() != null) {
-            f.add(new SearchCriteria(Columns.ISO, this.language.getISO(), SearchOperation.EQUAL));
+            f.add(new SearchCriteria("language", this.language.getISO(), SearchOperation.EQUAL));
         }
         if (this.domain != null) {
-            f.add(new SearchCriteria(Columns.DOMAIN, this.domain, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("domain", this.domain, SearchOperation.EQUAL));
         }
         if (this.subDomain != null) {
-            f.add(new SearchCriteria(Columns.SUB_DOMAIN, this.subDomain, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("subDomain", this.subDomain, SearchOperation.EQUAL));
         }
         if (this.type != null) {
-            f.add(new SearchCriteria(Columns.TYPE, this.type, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("typeCode", this.typeCode, SearchOperation.EQUAL));
+        }
+        if (this.type != null) {
+            f.add(new SearchCriteria("typeLangCode", this.typeLangCode, SearchOperation.EQUAL));
         }
         if (this.concept != null) {
-            f.add(new SearchCriteria(Columns.CONCEPT, this.concept, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("concept", this.concept, SearchOperation.EQUAL));
         }
         if (this.reference != null) {
-            f.add(new SearchCriteria(Columns.REFERENCE, this.reference, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("reference", this.reference, SearchOperation.EQUAL));
         }
         if (this.fullURI != null) {
-            f.add(new SearchCriteria(Columns.FULL_URI, this.fullURI, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("fullURI", this.fullURI, SearchOperation.EQUAL));
+        }
+        if (this.entityName != null) {
+            f.add(new SearchCriteria("entityName", this.entityName, SearchOperation.EQUAL));
+        }
+        if (this.propertyName != null) {
+            f.add(new SearchCriteria("propertyName", this.propertyName, SearchOperation.EQUAL));
+        }
+        if (this.parentEntityName != null) {
+            f.add(new SearchCriteria("parentEntityName", this.parentEntityName, SearchOperation.EQUAL));
+        }
+        if (this.parentPropertyName != null) {
+            f.add(new SearchCriteria("parentPropertyName", this.parentPropertyName, SearchOperation.EQUAL));
         }
         return f;
     }
@@ -216,75 +336,86 @@ public class CanonicalURILanguage implements Serializable {
         CanonicalURILanguageFilter f = new CanonicalURILanguageFilter();
 
         if (this.id != 0) {
-            f.add(new SearchCriteria(Columns.ID, this.id, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
-            if (this.canonicalURI != null && this.canonicalURI.getId() > 0) {
-                f.add(new SearchCriteria(Columns.CANONICALURI_ID, this.canonicalURI.getId(), SearchOperation.EQUAL));
-            }
             if (this.language != null && this.language.getISO() != null) {
-                f.add(new SearchCriteria(Columns.ISO, this.language.getISO(), SearchOperation.EQUAL));
+                f.add(new SearchCriteria("languageID", this.languageID, SearchOperation.EQUAL));
             }
             if (this.domain != null) {
-                f.add(new SearchCriteria(Columns.DOMAIN, this.domain, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("domain", this.domain, SearchOperation.EQUAL));
             }
             if (this.subDomain != null) {
-                f.add(new SearchCriteria(Columns.SUB_DOMAIN, this.subDomain, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("subDomain", this.subDomain, SearchOperation.EQUAL));
             }
             if (this.type != null) {
-                f.add(new SearchCriteria(Columns.TYPE, this.type, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("typeLangCode", this.typeLangCode, SearchOperation.EQUAL));
             }
             if (this.concept != null) {
-                f.add(new SearchCriteria(Columns.CONCEPT, this.concept, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("concept", this.concept, SearchOperation.EQUAL));
             }
             if (this.reference != null) {
-                f.add(new SearchCriteria(Columns.REFERENCE, this.reference, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("reference", this.reference, SearchOperation.EQUAL));
+            }
+            if (this.entityName != null) {
+                f.add(new SearchCriteria("entityName", this.entityName, SearchOperation.EQUAL));
+            }
+            if (this.propertyName != null) {
+                f.add(new SearchCriteria("propertyName", this.propertyName, SearchOperation.EQUAL));
+            }
+            if (this.parentEntityName != null) {
+                f.add(new SearchCriteria("parentEntityName", this.parentEntityName, SearchOperation.EQUAL));
+            }
+            if (this.parentPropertyName != null) {
+                f.add(new SearchCriteria("parentPropertyName", this.parentPropertyName, SearchOperation.EQUAL));
             }
         }
         return f;
     }
 
     public void merge(CanonicalURILanguage other){
-        if (other!=null && other.canonicalURI!=null && other.canonicalURI.getType()!=null)
-            this.type = other.canonicalURI.getType().getCode();
-        this.fullURI = other.fullURI;
+        if (other!=null && other.fullURI!=null)
+            this.typeCode = other.fullURI;
+        if (other!=null && other.typeLangCode!=null)
+            this.typeLangCode = other.typeLangCode;
+    }
+
+    public void generateFullURL() {
+        generateFullURL("http://$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$");
     }
 
     public void generateFullURL(String uriSchema) {
         if (Utils.isValidString(this.domain)) {
-            uriSchema = uriSchema.replaceFirst("$domain$",this.domain);
+            uriSchema = uriSchema.replaceFirst("\\$domain\\$",this.domain);
         } else {
-            throw new IllegalArgumentException("Domain field in CanonicalURI can´t be empty");
+            throw new IllegalArgumentException("Domain field in CanonicalLanguageURI can´t be empty");
         }
         if (Utils.isValidString(this.subDomain)) {
-            uriSchema = uriSchema.replaceFirst("$sub-domain$",this.subDomain);
+            uriSchema = uriSchema.replaceFirst("\\$sub-domain\\$",this.subDomain);
         } else {
-            uriSchema = uriSchema.replaceFirst("$main$",this.subDomain);
+            uriSchema = uriSchema.replaceFirst("/\\$sub-domain\\$","");
         }
-        if (this.language!=null && Utils.isValidString(this.language.getISO())) {
-            uriSchema = uriSchema.replaceFirst("$language$",this.language.getISO());
+        if (Utils.isValidString(this.languageID)) {
+            uriSchema = uriSchema.replaceFirst("\\$language\\$",this.languageID);
         } else {
-            uriSchema = uriSchema.replaceFirst("$main$",this.subDomain);
+            throw new IllegalArgumentException("languageID field in CanonicalLanguageURI can´t be empty");
         }
-        if (this.canonicalURI!=null && this.canonicalURI.getType()!=null && Utils.isValidString(this.canonicalURI.getType().getCode())) {
-            this.type = this.canonicalURI.getType().getCode();
-            uriSchema = uriSchema.replaceFirst("$type$",this.canonicalURI.getType().getCode());
+        if (Utils.isValidString(this.type.getCode())) {
+            uriSchema = uriSchema.replaceFirst("\\$type\\$",this.typeLangCode);
         } else {
-            throw new IllegalArgumentException("Type field in CanonicalURI can´t be empty");
+            throw new IllegalArgumentException("Type field in CanonicalLanguageURI can´t be empty");
         }
         if ( Utils.isValidString(this.concept)) {
-            uriSchema = uriSchema.replaceFirst("$concept$",this.concept);
+            uriSchema = uriSchema.replaceFirst("\\$concept\\$",this.concept);
             if (Utils.isValidString(this.reference)) {
-                uriSchema = uriSchema.replaceFirst("$reference$",this.reference);
+                uriSchema = uriSchema.replaceFirst("\\$reference\\$",this.reference);
             } else {
-                if (canonicalURI!=null && (canonicalURI.getIsInstance() || canonicalURI.getIsProperty() ))
-                    throw new IllegalArgumentException("Type field in CanonicalURI can´t be empty");
-                else
-                    uriSchema = uriSchema.replaceFirst("$reference$","");
+                uriSchema = uriSchema.replaceFirst("\\$reference\\$","");
             }
         } else {
-            throw new IllegalArgumentException("Type field in CanonicalURI can´t be empty");
+            throw new IllegalArgumentException("Concept field in CanonicalLanguageURI can´t be empty");
         }
 
         this.fullURI = uriSchema;
     }
+
 }

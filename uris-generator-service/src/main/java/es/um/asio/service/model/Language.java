@@ -262,28 +262,28 @@ public class Language {
     public LanguageFilter buildFilterByEntity() {
         LanguageFilter f = new LanguageFilter();
         if (this.ISO != null && !this.ISO.equals("")) {
-            f.add(new SearchCriteria(Columns.ISO, this.ISO, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("ISO", this.ISO, SearchOperation.EQUAL));
         }
         if (this.name != null && !this.name.equals("")) {
-            f.add(new SearchCriteria(Columns.NAME, this.name, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("name", this.name, SearchOperation.EQUAL));
         }
         if (this.domain != null && !this.domain.equals("")) {
-            f.add(new SearchCriteria(Columns.DOMAIN, this.domain, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("domain", this.domain, SearchOperation.EQUAL));
         }
         if (this.subDomain != null && !this.subDomain.equals("")) {
-            f.add(new SearchCriteria(Columns.SUB_DOMAIN, this.subDomain, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("subDomain", this.subDomain, SearchOperation.EQUAL));
         }
         if (this.type != null && !this.type.equals("")) {
-            f.add(new SearchCriteria(Columns.TYPE, this.type, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("type", this.type, SearchOperation.EQUAL));
         }
         if (this.concept != null && !this.concept.equals("")) {
-            f.add(new SearchCriteria(Columns.CONCEPT, this.concept, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("concept", this.concept, SearchOperation.EQUAL));
         }
         if (this.reference != null && !this.reference.equals("")) {
-            f.add(new SearchCriteria(Columns.REFERENCE, this.reference, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("reference", this.reference, SearchOperation.EQUAL));
         }
         if (this.isDefault != null) {
-            f.add(new SearchCriteria(Columns.IS_DEFAULT, this.isDefault, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("isDefault", this.isDefault, SearchOperation.EQUAL));
         }
         return f;
     }

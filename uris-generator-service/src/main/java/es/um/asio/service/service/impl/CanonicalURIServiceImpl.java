@@ -4,6 +4,7 @@ import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.filter.CanonicalURILanguageFilter;
 import es.um.asio.service.filter.URIMapFilter;
 import es.um.asio.service.model.CanonicalURI;
+import es.um.asio.service.model.Type;
 import es.um.asio.service.model.URIMap;
 import es.um.asio.service.model.User;
 import es.um.asio.service.repository.CanonicalURIRepository;
@@ -121,5 +122,47 @@ public class CanonicalURIServiceImpl implements CanonicalURIService {
         } else {
             return new ArrayList<CanonicalURI>();
         }
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByFullURI(String fullURI) {
+        return this.repository.findByFullURI(fullURI).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByEntityNameAndPropertyName(String entityName, String propertyName) {
+        return this.repository.findByEntityNameAndPropertyName(entityName,propertyName).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByEntityNameAndReference(String entityName, String reference) {
+        return this.repository.findByEntityNameAndReference(entityName,reference).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByEntityName(String entityName) {
+        return this.repository.findByEntityName(entityName).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByPropertyName(String propertyName) {
+        return this.repository.findByPropertyName(propertyName).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByElements(String domain, String subDomain, String type, String concept, String reference) {
+        List<CanonicalURI> canonicalURIs = new ArrayList<>();
+        for (CanonicalURI cu : this.repository.findAll()) {
+            if (
+                    ( domain == null || (cu!=null && cu.getDomain()!=null && cu.getDomain().trim().equals(domain.trim())))
+                    && ( subDomain == null || (cu!=null && cu.getSubDomain()!=null && cu.getSubDomain().trim().equals(subDomain.trim())))
+                    && ( type == null || (cu!=null && cu.getType()!=null && cu.getType().getCode()!=null && cu.getType().getCode().trim().equals(type.trim())))
+                    && ( concept == null || (cu!=null && cu.getConcept()!=null && cu.getConcept().trim().equals(concept.trim())))
+                    && ( reference == null || (cu!=null && cu.getReference()!=null && cu.getReference().trim().equals(reference.trim())))
+            ) {
+                canonicalURIs.add(cu);
+            }
+        }
+        return canonicalURIs;
     }
 }

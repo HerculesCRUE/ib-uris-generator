@@ -13,4 +13,5 @@ public interface LanguageTypeService
     extends QueryService<LanguageType, String, LanguageTypeFilter>, SaveService<LanguageType>, DeleteService<LanguageType, String> {
 
     List<LanguageType> getAllByLanguageType(final LanguageType languageType);
+    List<LanguageType> getByLanguageAndType(String l ,String t);
 }

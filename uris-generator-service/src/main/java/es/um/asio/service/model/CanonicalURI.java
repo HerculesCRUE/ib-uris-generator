@@ -1,5 +1,6 @@
 package es.um.asio.service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.filter.SearchCriteria;
 import es.um.asio.service.filter.SearchOperation;
@@ -60,11 +61,20 @@ public class CanonicalURI implements Serializable {
      * TYPE.
      * Relation Bidirectional ManyToOne
      */
+
     @ApiModelProperty(	example="ref", allowEmptyValue = false, allowableValues = "cat, def, kos, ref",position =3, readOnly=false, value = "Required: " +
             "Sets the type of information the resource contains. One of this: cat | def | kos | res", required = true)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @ManyToOne(fetch = FetchType.LAZY)
     private Type type;
+
+    /**
+     * TYPE.
+     * Relation Bidirectional ManyToOne
+     */
+    @ApiModelProperty(hidden = true)
+    @Column(name = Columns.TYPE_ID_CODE, nullable = true,columnDefinition = "VARCHAR(3)",length = 3)
+    private String typeIdCode;
+
     /**
      * CONCEPT.
      */
@@ -116,6 +126,20 @@ public class CanonicalURI implements Serializable {
     private Boolean isInstance = false;
 
     /**
+     * Entity Name.
+     */
+    @ApiModelProperty(	value = "name of entity", example="entity", allowEmptyValue = false,position =10, readOnly=false, required = true)
+    @Column(name = Columns.ENTITY_NAME, nullable = false,columnDefinition = "VARCHAR(100)",length = 100)
+    private String entityName;
+
+    /**
+     * Property Name.
+     */
+    @ApiModelProperty(	value = "name of property", example="property", allowEmptyValue = true,position =11, readOnly=false, required = false)
+    @Column(name = Columns.PROPERTY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
+    private String propertyName;
+
+    /**
      * Relation Bidirectional CanonicalURILanguage OneToMany
      */
     @OneToMany(mappedBy = "canonicalURI" , cascade = CascadeType.ALL)
@@ -125,6 +149,73 @@ public class CanonicalURI implements Serializable {
      * Table name.
      */
     public static final String TABLE = "CANONICAL_URI";
+
+    public CanonicalURI() {
+    }
+
+    public CanonicalURI(String domain, String subDomain, Type t, String concept, String reference) {
+        this.domain = domain;
+        this.subDomain = subDomain;
+        setType(t);
+        this.concept = concept;
+        this.reference = reference;
+        generateFullURL();
+        updateState();
+    }
+
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+        generateFullURL();
+        updateState();
+    }
+
+    public void setSubDomain(String subDomain) {
+        this.subDomain = subDomain;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+        if (type!=null)
+            typeIdCode = type.getCode();
+    }
+
+    public void setConcept(String concept) {
+        this.concept = concept;
+        this.entityName = concept;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+        this.reference = propertyName;
+    }
+
+    public void setIsEntity(Boolean isEntity) {
+        this.isEntity = isEntity;
+        this.isInstance = false;
+        this.isProperty = false;
+
+    }
+
+    public void setIsProperty(Boolean isProperty) {
+        this.isProperty = isProperty;
+        this.isEntity = false;
+        this.isInstance = false;
+    }
+
+    public void setIsInstance(Boolean isInstance) {
+        this.isInstance = isInstance;
+        this.isEntity = false;
+        this.isProperty = false;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
+    }
 
     /**
      * Column name constants.
@@ -150,6 +241,11 @@ public class CanonicalURI implements Serializable {
          * Entity column.
          */
         protected static final String TYPE = "TYPE_CODE";
+
+        /**
+         * Entity column.
+         */
+        protected static final String TYPE_ID_CODE = "TYPE_ID_CODE";
 
         /**
          * Property column.
@@ -181,39 +277,54 @@ public class CanonicalURI implements Serializable {
          */
         protected static final String IS_INSTANCE = "IS_INSTANCE";
 
+        /**
+         * IS_PROPERTY column.
+         */
+        protected static final String PROPERTY_NAME = "PROPERTY_NAME";
+
+        /**
+         * IS_Instance column.
+         */
+        protected static final String ENTITY_NAME = "ENTITY_NAME";
     }
 
     public CanonicalURIFilter buildFilterByEntity() {
         CanonicalURIFilter f = new CanonicalURIFilter();
         if (this.id != 0) {
-            f.add(new SearchCriteria(Columns.ID, this.id, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         }
         if (this.domain != null) {
-            f.add(new SearchCriteria(Columns.DOMAIN, this.domain, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("domain", this.domain, SearchOperation.EQUAL));
         }
         if (this.subDomain != null) {
-            f.add(new SearchCriteria(Columns.SUB_DOMAIN, this.subDomain, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("subDomain", this.subDomain, SearchOperation.EQUAL));
         }
         if (this.type != null) {
-            f.add(new SearchCriteria(Columns.TYPE, this.type, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("typeIdCode", this.typeIdCode, SearchOperation.EQUAL));
         }
         if (this.concept != null) {
-            f.add(new SearchCriteria(Columns.CONCEPT, this.concept, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("concept", this.concept, SearchOperation.EQUAL));
         }
         if (this.reference != null) {
-            f.add(new SearchCriteria(Columns.REFERENCE, this.reference, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("reference", this.reference, SearchOperation.EQUAL));
         }
         if (this.fullURI != null) {
-            f.add(new SearchCriteria(Columns.FULL_URI, this.fullURI, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("fullURI", this.fullURI, SearchOperation.EQUAL));
         }
         if (this.isEntity != null) {
-            f.add(new SearchCriteria(Columns.IS_ENTITY, this.isEntity, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("isEntity", this.isEntity, SearchOperation.EQUAL));
         }
         if (this.isProperty != null) {
-            f.add(new SearchCriteria(Columns.IS_PROPERTY, this.isProperty, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("isProperty", this.isProperty, SearchOperation.EQUAL));
         }
         if (this.isInstance != null) {
-            f.add(new SearchCriteria(Columns.IS_INSTANCE, this.isInstance, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("isInstance", this.isInstance, SearchOperation.EQUAL));
+        }
+        if (this.entityName != null) {
+            f.add(new SearchCriteria("entityName", this.entityName, SearchOperation.EQUAL));
+        }
+        if (this.propertyName != null) {
+            f.add(new SearchCriteria("propertyName", this.propertyName, SearchOperation.EQUAL));
         }
         return f;
     }
@@ -222,22 +333,28 @@ public class CanonicalURI implements Serializable {
         CanonicalURIFilter f = new CanonicalURIFilter();
 
         if (this.id != 0) {
-            f.add(new SearchCriteria(Columns.ID, this.id, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
             if (this.domain != null) {
-                f.add(new SearchCriteria(Columns.DOMAIN, this.domain, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("domain", this.domain, SearchOperation.EQUAL));
             }
             if (this.subDomain != null) {
-                f.add(new SearchCriteria(Columns.SUB_DOMAIN, this.subDomain, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("subDomain", this.subDomain, SearchOperation.EQUAL));
             }
             if (this.type != null) {
-                f.add(new SearchCriteria(Columns.TYPE, this.type, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("typeIdCode", this.typeIdCode, SearchOperation.EQUAL));
             }
             if (this.concept != null) {
-                f.add(new SearchCriteria(Columns.CONCEPT, this.concept, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("concept", this.concept, SearchOperation.EQUAL));
             }
             if (this.reference != null) {
-                f.add(new SearchCriteria(Columns.REFERENCE, this.reference, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("reference", this.reference, SearchOperation.EQUAL));
+            }
+            if (this.entityName != null) {
+                f.add(new SearchCriteria("entityName", this.entityName, SearchOperation.EQUAL));
+            }
+            if (this.propertyName != null) {
+                f.add(new SearchCriteria("propertyName", this.propertyName, SearchOperation.EQUAL));
             }
         }
 
@@ -251,36 +368,50 @@ public class CanonicalURI implements Serializable {
         this.fullURI = other.fullURI;
     }
 
+    public void generateFullURL(){
+        generateFullURL("http://$domain$/$sub-domain$/$type$/$concept$/$reference$");
+    }
+
     public void generateFullURL(String uriSchema) {
         if (Utils.isValidString(this.domain)) {
-            uriSchema = uriSchema.replaceFirst("$domain$",this.domain);
+            uriSchema = uriSchema.replaceFirst("\\$domain\\$",this.domain);
         } else {
             throw new IllegalArgumentException("Domain field in CanonicalURI can´t be empty");
         }
         if (Utils.isValidString(this.subDomain)) {
-            uriSchema = uriSchema.replaceFirst("$sub-domain$",this.subDomain);
+            uriSchema = uriSchema.replaceFirst("\\$sub-domain\\$",this.subDomain);
         } else {
-            uriSchema = uriSchema.replaceFirst("$main$",this.subDomain);
+            uriSchema = uriSchema.replaceFirst("\\$main\\$",this.subDomain);
         }
         if (Utils.isValidString(this.type.getCode())) {
-            uriSchema = uriSchema.replaceFirst("$type$",this.type.getCode());
+            uriSchema = uriSchema.replaceFirst("\\$type\\$",this.type.getCode());
         } else {
             throw new IllegalArgumentException("Type field in CanonicalURI can´t be empty");
         }
         if ( Utils.isValidString(this.concept)) {
-            uriSchema = uriSchema.replaceFirst("$concept$",this.concept);
+            uriSchema = uriSchema.replaceFirst("\\$concept\\$",this.concept);
             if (Utils.isValidString(this.reference)) {
-                uriSchema = uriSchema.replaceFirst("$reference$",this.reference);
+                uriSchema = uriSchema.replaceFirst("\\$reference\\$",this.reference);
             } else {
                 if (isInstance || isProperty)
                     throw new IllegalArgumentException("Type field in CanonicalURI can´t be empty");
                 else
-                    uriSchema = uriSchema.replaceFirst("$reference$","");
+                    uriSchema = uriSchema.replaceFirst("\\$reference\\$","");
             }
         } else {
             throw new IllegalArgumentException("Type field in CanonicalURI can´t be empty");
         }
 
         this.fullURI = uriSchema;
+    }
+
+    public void updateState(){
+        if (this.propertyName!=null) {
+            setIsProperty(true);
+        } else if (reference!=null) {
+            setIsInstance(true);
+        } else {
+            setIsEntity(true);
+        }
     }
 }

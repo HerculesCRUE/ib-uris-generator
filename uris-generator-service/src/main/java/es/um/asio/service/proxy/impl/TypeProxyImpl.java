@@ -109,5 +109,13 @@ public class TypeProxyImpl implements TypeProxy {
         this.service.delete(identifier);
     }
 
-
+    @Override
+    public Type findOrCreate(String type) {
+        Type t = find(type).orElse(null);
+        if (t == null) {
+            t = new Type(type,type);
+            save(t);
+        }
+        return t;
+    }
 }

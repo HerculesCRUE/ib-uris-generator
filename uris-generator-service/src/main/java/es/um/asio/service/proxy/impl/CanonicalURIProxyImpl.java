@@ -106,5 +106,33 @@ public class CanonicalURIProxyImpl implements CanonicalURIProxy {
         this.service.delete(identifier);
     }
 
+    @Override
+    public List<CanonicalURI> getAllByFullURI(String fullURI) {
+        return this.service.getAllByFullURI(fullURI);
+    }
 
+    @Override
+    public List<CanonicalURI> getAllByEntityNameAndPropertyName(String entityName, String propertyName) {
+        return this.service.getAllByEntityNameAndPropertyName(entityName,propertyName);
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByEntityNameAndReference(String entityName, String reference) {
+        return this.service.getAllByEntityNameAndReference(entityName,reference);
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByEntityName(String entityName) {
+        return this.service.getAllByEntityName(entityName);
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByPropertyName(String propertyName) {
+        return this.service.getAllByPropertyName(propertyName);
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByElements(String domain, String subDomain, String type, String concept, String reference) {
+        return this.service.getAllByElements(domain,subDomain,type,concept,reference);
+    }
 }

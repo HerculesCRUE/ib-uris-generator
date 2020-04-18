@@ -1,15 +1,15 @@
 package es.um.asio.service.proxy.impl;
 
 import com.izertis.abstractions.exception.NoSuchEntityException;
-import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.filter.LanguageFilter;
-import es.um.asio.service.model.CanonicalURI;
+import es.um.asio.service.filter.LanguageTypeFilter;
 import es.um.asio.service.model.Language;
+import es.um.asio.service.model.LanguageType;
 import es.um.asio.service.model.User;
-import es.um.asio.service.proxy.CanonicalURIProxy;
 import es.um.asio.service.proxy.LanguageProxy;
-import es.um.asio.service.service.CanonicalURIService;
+import es.um.asio.service.proxy.LanguageTypeProxy;
 import es.um.asio.service.service.LanguageService;
+import es.um.asio.service.service.LanguageTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +22,7 @@ import java.util.Optional;
  * Proxy service implementation for {@link User}. Performs DTO conversion and permission checks.
  */
 @Service
-public class LanguageProxyImpl implements LanguageProxy {
+public class LanguageTypeProxyImpl implements LanguageTypeProxy {
 
 
 
@@ -30,13 +30,13 @@ public class LanguageProxyImpl implements LanguageProxy {
      * Service layer.
      */
     @Autowired
-    private LanguageService service;
+    private LanguageTypeService service;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<Language> find(final String identifier) {
+    public Optional<LanguageType> find(final String identifier) {
         return this.service.find(identifier);
     }
 
@@ -44,7 +44,7 @@ public class LanguageProxyImpl implements LanguageProxy {
      * {@inheritDoc}
      */
     @Override
-    public Page<Language> findPaginated(final LanguageFilter filter, final Pageable pageable) {
+    public Page<LanguageType> findPaginated(final LanguageTypeFilter filter, final Pageable pageable) {
         return this.service.findPaginated(filter,pageable);
     }
 
@@ -52,7 +52,7 @@ public class LanguageProxyImpl implements LanguageProxy {
      * {@inheritDoc}
      */
     @Override
-    public List<Language> findAll() {
+    public List<LanguageType> findAll() {
         return this.service.findAll();
     }
 
@@ -60,19 +60,12 @@ public class LanguageProxyImpl implements LanguageProxy {
      * {@inheritDoc}
      */
     @Override
-    public Language save(final Language entity) {
-        if (entity.getIsDefault()) {
-            this.service.setNotIsDefaultAllLanguages();
-        } else {
-            if (this.service.getDefaultLanguages().size()==0) {
-                entity.isDefault = true;
-            }
-        }
-        List<Language> filtered = this.service.getAllByLanguage(entity);
+    public LanguageType save(final LanguageType entity) {
+        List<LanguageType> filtered = this.service.getByLanguageAndType(entity.getLanguage().getISO(),entity.getType().getCode());
         if (filtered.size() == 0) {
             return this.service.save(entity);
         } else {
-            for (Language e :filtered) {
+            for (LanguageType e :filtered) {
                 e.merge(entity);
                 try {
                     return this.service.update(e);
@@ -88,7 +81,7 @@ public class LanguageProxyImpl implements LanguageProxy {
      * {@inheritDoc}
      */
     @Override
-    public List<Language> save(final Iterable<Language> entities) {
+    public List<LanguageType> save(final Iterable<LanguageType> entities) {
         return this.service.save(entities);
     }
 
@@ -96,7 +89,7 @@ public class LanguageProxyImpl implements LanguageProxy {
      * {@inheritDoc}
      */
     @Override
-    public Language update(final Language entity) throws NoSuchEntityException {
+    public LanguageType update(final LanguageType entity) throws NoSuchEntityException {
         return this.service.update(entity);
     }
 
@@ -104,7 +97,7 @@ public class LanguageProxyImpl implements LanguageProxy {
      * {@inheritDoc}
      */
     @Override
-    public void delete(final Language entity) {
+    public void delete(final LanguageType entity) {
         this.service.delete(entity);
     }
 
@@ -117,13 +110,7 @@ public class LanguageProxyImpl implements LanguageProxy {
     }
 
     @Override
-    public Language findOrCreate(String ISO) {
-        Language l = find(ISO).orElse(null);
-        if (l == null) {
-            l = new Language();
-            l.setISO(ISO);
-            save(l);
-        }
-        return l;
+    public List<LanguageType> getByLanguageAndType(String l, String t) {
+        return this.service.getByLanguageAndType(l,t);
     }
 }
