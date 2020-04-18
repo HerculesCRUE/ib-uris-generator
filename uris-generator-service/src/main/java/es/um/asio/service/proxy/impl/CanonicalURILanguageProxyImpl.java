@@ -113,7 +113,7 @@ public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy 
     }
 
     @Override
-    public List<CanonicalURILanguage> getAllByFullURI(String fullURI) {
+    public CanonicalURILanguage getAllByFullURI(String fullURI) {
         return this.service.getAllByFullURI(fullURI);
     }
 

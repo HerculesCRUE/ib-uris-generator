@@ -101,7 +101,7 @@ public class CanonicalURI implements Serializable {
     @ApiModelProperty(	example="12345", allowEmptyValue = true, position =6, readOnly=true, value = "Full URI Result", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
-    @Column(name = Columns.FULL_URI, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
+    @Column(name = Columns.FULL_URI, unique = true,nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String fullURI;
 
     /**

@@ -2,7 +2,6 @@ package es.um.asio.service.filter;
 
 import com.izertis.abstractions.filter.AbstractJpaSpecification;
 import com.izertis.abstractions.filter.EntityFilter;
-import es.um.asio.service.model.LocalURI;
 import es.um.asio.service.model.StorageType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Filter for {@link LocalURI}.
+ * Filter for {@link StorageType}.
  */
 @Getter
 @Setter

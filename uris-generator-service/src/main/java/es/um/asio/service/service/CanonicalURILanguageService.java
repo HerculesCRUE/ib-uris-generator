@@ -15,7 +15,7 @@ public interface CanonicalURILanguageService
 
     List<CanonicalURILanguage> getAllByCanonicalURILanguage(final CanonicalURILanguage canonicalURILanguage);
 
-    List<CanonicalURILanguage> getAllByFullURI(final String fullURI);
+    CanonicalURILanguage getAllByFullURI(final String fullURI);
 
     List<CanonicalURILanguage> getAllByEntityNameAndPropertyName(final String entityName,final String propertyName);
 

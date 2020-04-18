@@ -128,8 +128,8 @@ public class CanonicalURILanguageServiceImpl implements CanonicalURILanguageServ
     }
 
     @Override
-    public List<CanonicalURILanguage> getAllByFullURI(String fullURI) {
-        return this.repository.findByFullURI(fullURI).orElse(new ArrayList<>());
+    public CanonicalURILanguage getAllByFullURI(String fullURI) {
+        return this.repository.findByFullURI(fullURI).orElse(null);
     }
 
     @Override

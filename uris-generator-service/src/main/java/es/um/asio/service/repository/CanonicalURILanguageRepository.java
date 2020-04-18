@@ -19,7 +19,7 @@ public interface CanonicalURILanguageRepository extends JpaRepository<CanonicalU
      *            The fullURI to search for
      * @return an {@link CanonicalURILanguage} entity stored in the database or {@literal Optional#empty()} if none found
      */
-    Optional<List<CanonicalURILanguage>> findByFullURI(String fullURI);
+    Optional<CanonicalURILanguage> findByFullURI(String fullURI);
 
     /**
      * Finds a CanonicalURILanguage using the entityName field and propertyName field.

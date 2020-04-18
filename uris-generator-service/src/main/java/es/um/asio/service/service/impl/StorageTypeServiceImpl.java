@@ -122,4 +122,15 @@ public class StorageTypeServiceImpl implements StorageTypeService {
         }
     }
 
+    @Override
+    public StorageType getAllByName(String name) {
+        return this.repository.findByName(name).orElse(null);
+    }
+
+    @Override
+    public void deleteByName(String name) {
+        StorageType st = this.repository.findByName(name).orElse(null);
+        if (st!=null)
+            this.repository.delete(st);
+    }
 }

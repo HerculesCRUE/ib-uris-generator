@@ -13,4 +13,9 @@ import es.um.asio.service.model.StorageType;
 public interface StorageTypeProxy
         extends QueryService<StorageType, String, StorageTypeFilter>, SaveService<StorageType>, DeleteService<StorageType, String> {
 
+    StorageType findOrCreate(String storageTypeName);
+
+    StorageType findByName(String storageTypeName);
+
+    void deleteByName(final String name);
 }

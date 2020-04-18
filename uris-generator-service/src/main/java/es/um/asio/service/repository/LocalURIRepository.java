@@ -20,5 +20,16 @@ public interface LocalURIRepository extends JpaRepository<LocalURI, String>, Jpa
      */
     Optional<LocalURI> findByLocalURI(String localUri);
 
+    /**
+     * Finds a LocalURI using the fullURI field.
+     *
+     * @param storageTypeStr
+     *            The storageTypeStr to search for
+     * @param canonicalURILanguageStr
+     *            The canonicalURILanguageStr to search for
+     * @return an {@link LocalURI} entity stored in the database or {@literal Optional#empty()} if none found
+     */
+    Optional<LocalURI> findByStorageTypeStrAndCanonicalURILanguageStr(String storageTypeStr, String canonicalURILanguageStr);
+
 
 }

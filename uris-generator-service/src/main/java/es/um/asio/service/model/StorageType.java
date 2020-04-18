@@ -1,9 +1,11 @@
 package es.um.asio.service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.um.asio.service.filter.SearchCriteria;
 import es.um.asio.service.filter.SearchOperation;
 import es.um.asio.service.filter.StorageTypeFilter;
 import es.um.asio.service.filter.TypeFilter;
+import es.um.asio.service.util.Utils;
 import es.um.asio.service.util.ValidationConstants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -49,7 +51,7 @@ public class StorageType {
     @ApiModelProperty(	example="",allowEmptyValue = true, position =3, readOnly=false, value = "Optional: API URL.", required = false)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
-    @Column(name = Columns.API_URL, nullable = false,columnDefinition = "VARCHAR(400)",length = 400)
+    @Column(name = Columns.API_URL, unique = true, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String apiURL;
 
     /**
@@ -58,7 +60,7 @@ public class StorageType {
     @ApiModelProperty(	example="",allowEmptyValue = true, position =4, readOnly=false, value = "Optional: SPARQL ENDPOINT URL.", required = false)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
-    @Column(name = Columns.ENDPOINT_URL, nullable = false,columnDefinition = "VARCHAR(400)",length = 400)
+    @Column(name = Columns.ENDPOINT_URL, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String endPointURL;
 
     /**
@@ -67,15 +69,30 @@ public class StorageType {
     @ApiModelProperty(	example="",allowEmptyValue = true, position =5, readOnly=false, value = "Optional: URI Schema in local storage.", required = false)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
-    @Column(name = Columns.URI_SCHEMA, nullable = false,columnDefinition = "VARCHAR(400)",length = 400)
+    @Column(name = Columns.URI_SCHEMA, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String schemaURI;
 
     /**
      * Relation Bidirectional LocalURI OneToMany
      */
+    @JsonIgnore
     @OneToMany(mappedBy = "storageType", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private Set<LocalURI> localURIs;
+
+    public StorageType() {
+    }
+
+    public StorageType(@Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE) String name) {
+        this.name = name;
+    }
+
+    public StorageType(@Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE) String name, @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE) String apiURL, @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE) String endPointURL, @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE) String schemaURI) {
+        this.name = (name!=null)?name.toLowerCase().trim():null;
+        this.apiURL = apiURL;
+        this.endPointURL = endPointURL;
+        this.schemaURI = schemaURI;
+    }
 
     /**
      * Table name.
@@ -116,19 +133,19 @@ public class StorageType {
     public StorageTypeFilter buildFilterByEntity() {
         StorageTypeFilter f = new StorageTypeFilter();
         if (this.id > 0) {
-            f.add(new SearchCriteria(Columns.ID, this.id, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         }
         if (this.name != null && !this.name.equals("")) {
-            f.add(new SearchCriteria(Columns.NAME, this.name, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("name", this.name, SearchOperation.EQUAL));
         }
         if (this.apiURL != null && !this.apiURL.equals("")) {
-            f.add(new SearchCriteria(Columns.API_URL, this.apiURL, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("apiURL", this.apiURL, SearchOperation.EQUAL));
         }
         if (this.endPointURL != null && !this.endPointURL.equals("")) {
-            f.add(new SearchCriteria(Columns.ENDPOINT_URL, this.endPointURL, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("endPointURL", this.endPointURL, SearchOperation.EQUAL));
         }
         if (this.schemaURI != null && !this.schemaURI.equals("")) {
-            f.add(new SearchCriteria(Columns.URI_SCHEMA, this.schemaURI, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("schemaURI", this.schemaURI, SearchOperation.EQUAL));
         }
         return f;
     }
@@ -136,8 +153,30 @@ public class StorageType {
     public StorageTypeFilter buildFilterByEntityUniqueProperties() {
         StorageTypeFilter f = new StorageTypeFilter();
         if (this.id > 0) {
-            f.add(new SearchCriteria(Columns.ID, this.id, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
+        } else {
+            if (Utils.isValidString(this.name)) {
+                f.add(new SearchCriteria("name", this.name, SearchOperation.EQUAL));
+
+            }
         }
         return f;
+    }
+
+    public void merge(StorageType other){
+        this.apiURL = other.apiURL;
+        this.endPointURL = other.endPointURL;
+        this.schemaURI = other.schemaURI;
+    }
+
+    @Override
+    public String toString() {
+        return "StorageType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", apiURL='" + apiURL + '\'' +
+                ", endPointURL='" + endPointURL + '\'' +
+                ", schemaURI='" + schemaURI + '\'' +
+                '}';
     }
 }

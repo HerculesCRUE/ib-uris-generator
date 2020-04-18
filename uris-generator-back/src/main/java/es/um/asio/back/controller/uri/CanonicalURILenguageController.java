@@ -176,7 +176,7 @@ public class CanonicalURILenguageController {
     }
 
     @GetMapping("uri")
-    public List<CanonicalURILanguage> getFullURI(
+    public CanonicalURILanguage getFullURI(
             @RequestParam(required = true) @Validated(Create.class) final String fullURI
     ) {
         return this.proxy.getAllByFullURI(fullURI);
@@ -239,11 +239,10 @@ public class CanonicalURILenguageController {
     public void deleteURI(
             @RequestParam(required = true) @Validated(Create.class) final String fullURI
     ) {
-        List<CanonicalURILanguage> culs = this.proxy.getAllByFullURI(fullURI);
-        for (CanonicalURILanguage cul:culs) {
-            if (cul != null)
-                this.proxy.delete(cul);
-        }
+        CanonicalURILanguage cul = this.proxy.getAllByFullURI(fullURI);
+
+        if (cul != null)
+            this.proxy.delete(cul);
     }
 
     @DeleteMapping

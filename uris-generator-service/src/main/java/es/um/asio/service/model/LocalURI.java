@@ -45,12 +45,13 @@ public class LocalURI {
      */
     @ApiModelProperty(hidden = true)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
-    @Column(name = Columns.CANONICAL_URI_LANGUAGE, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
+    @Column(name = Columns.CANONICAL_URI_LANGUAGE_ID, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String canonicalURILanguageStr;
 
     /**
      * Relation Bidirectional CanonicalURI ManyToOne
      */
+    @JsonIgnore
     @EqualsAndHashCode.Include
     @ApiModelProperty(	example="ES",allowEmptyValue = false, position=2, readOnly=false, value = "Required: Storage Type", required = true)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,7 +62,7 @@ public class LocalURI {
      */
     @ApiModelProperty(hidden = true)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
-    @Column(name = Columns.STORAGETYPE, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
+    @Column(name = Columns.STORAGETYPE_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String storageTypeStr;
 
     /**
@@ -70,8 +71,24 @@ public class LocalURI {
     @ApiModelProperty(	example="12345", allowEmptyValue = true, position =3, readOnly=true, value = "Full URI Result", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
-    @Column(name = Columns.LOCAL_URI, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
+    @Column(name = Columns.LOCAL_URI, unique = true, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String localURI;
+
+
+    public LocalURI() {
+    }
+
+    public LocalURI(String localURI, CanonicalURILanguage cul, StorageType st) {
+        this.localURI = localURI;
+        this.canonicalURILanguage = cul;
+        if (this.canonicalURILanguage!=null) {
+            this.canonicalURILanguageStr = this.canonicalURILanguage.getFullURI();
+        }
+        this.storageType = st;
+        if (this.storageType!=null) {
+            this.storageTypeStr = this.storageType.getName();
+        }
+    }
 
     /**
      * Table name.
@@ -100,7 +117,7 @@ public class LocalURI {
         /**
          * TYPE STO STORAGETYPE_ID.
          */
-        protected static final String STORAGETYPE_ID = "STORAGETYPE_ID";
+        protected static final String STORAGETYPE_NAME= "STORAGETYPE_NAME";
 
         /**
          * TYPE STO STORAGETYPE_ID.
@@ -116,7 +133,7 @@ public class LocalURI {
     public LocalURIFilter buildFilterByEntity() {
         LocalURIFilter f = new LocalURIFilter();
         if (this.id != 0) {
-            f.add(new SearchCriteria(Columns.ID, this.id, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
             if (Utils.isValidString(this.localURI)) {
                 f.add(new SearchCriteria("localURI", this.localURI, SearchOperation.EQUAL));
@@ -135,11 +152,21 @@ public class LocalURI {
         LocalURIFilter f = new LocalURIFilter();
 
         if (this.id != 0) {
-            f.add(new SearchCriteria(Columns.ID, this.id, SearchOperation.EQUAL));
+            f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
-
+            if (Utils.isValidString(this.localURI)) {
+                f.add(new SearchCriteria("canonicalURILanguageStr", this.canonicalURILanguageStr, SearchOperation.EQUAL));
+            }
+            if (Utils.isValidString(this.localURI)) {
+                f.add(new SearchCriteria("storageTypeStr", this.storageTypeStr, SearchOperation.EQUAL));
+            }
         }
 
         return f;
     }
+
+    public void merge(LocalURI other){
+        this.localURI = other.localURI;
+    }
+
 }

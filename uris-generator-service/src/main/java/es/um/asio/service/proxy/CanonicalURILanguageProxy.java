@@ -16,7 +16,7 @@ import java.util.List;
 public interface CanonicalURILanguageProxy
         extends QueryService<CanonicalURILanguage, String, CanonicalURILanguageFilter>, SaveService<CanonicalURILanguage>, DeleteService<CanonicalURILanguage, String> {
 
-    List<CanonicalURILanguage> getAllByFullURI(String fullURI);
+    CanonicalURILanguage getAllByFullURI(String fullURI);
 
     List<CanonicalURILanguage> getAllByEntityNameAndPropertyName(String entityName, String propertyName);
 
