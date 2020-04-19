@@ -1,13 +1,22 @@
 package es.um.asio.back.controller;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
+import es.um.asio.back.controller.uri.CanonicalURILanguageController;
+import es.um.asio.service.model.CanonicalURILanguage;
+import es.um.asio.service.proxy.CanonicalURILanguageProxy;
+import es.um.asio.service.util.Utils;
+import es.um.asio.service.validation.group.Create;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import es.um.asio.abstractions.constants.Constants;
 import lombok.AccessLevel;
@@ -23,7 +32,15 @@ public class URISController {
 	
 	/** The logger. */
 	private final Logger logger = LoggerFactory.getLogger(URISController.class);
-	
+
+
+
+    /**
+     * Proxy service implementation for {@link CanonicalURILanguage}.
+     */
+    @Autowired
+    private CanonicalURILanguageController canonicalController;
+
 	/**
     * Creates the resourceID URI
     * <p>
@@ -50,19 +67,40 @@ public class URISController {
     */
     @SuppressWarnings({ "rawtypes", "unused" })
 	@PostMapping(URISController.Mappings.RESOURCE_ID)
-    public String createResourceID(@RequestBody final Object input) {
+    public Map<String,String> createResourceID(
+            @ApiParam( name = "domain", value = "Domain: hercules.org", defaultValue = "hercules.org", required = false)
+            @RequestParam(required = true) @Validated(Create.class) final String domain,
+            @ApiParam( name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = "um", required = false)
+            @RequestParam(required = true) @Validated(Create.class) final String subDomain,
+            @ApiParam( name = "lang", value = "Language of data", defaultValue = "es-ES", required = false)
+            @RequestParam(required = true) @Validated(Create.class) final String lang,
+            @RequestBody final Object input) {
         logger.info(input.toString());
-        HashMap map = (HashMap) input;
-        Object obj = map.get(Constants.OBJECT);
-        String className = (String) map.get(Constants.CLASS_NAME);
-        String language = (String) map.get(Constants.LANGUAGE);
-    	String university = (String) map.get(Constants.UNIVERSITY);
-        
-        // FIXME
-        return "http://www.jan107.es/10886753";
+        try {
+            HashMap map = (HashMap) input;
+            String dom = (domain!=null)?domain:"hercules.org";
+            String subDom = (subDomain!=null)?subDomain:"um";
+            String language = (lang!=null)?lang:"es-ES";
+            String type = "res";
+            String entity = Utils.getClassNameFromPath( (String) (map.get("className")!=null?(map.get("className")):(map.get("class"))) );
+            String pEntity = Utils.getClassNameFromPath( (String) (map.get("canonicalClassName")!=null?(map.get("canonicalClassName")):(map.get("canonicalClass"))) );
+            String ref = Utils.generateUUIDFromOject(input);
+
+            CanonicalURILanguage canonicalURILanguage = canonicalController.save(dom, subDom, language, type, entity, ref,null,(pEntity!=null)?pEntity:entity,(pEntity!=null)?pEntity:entity, true);
+            Map<String,String> response = new HashMap<>();
+            response.put("canonicalURI", canonicalURILanguage.getFullParentURI());
+            response.put("language", lang);
+            response.put("canonicalLanguageURI", canonicalURILanguage.getFullURI());
+            return response;
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
     
-    /**
+    /** http://hercules.org/um/es-ES/rec/ConceptoGrupo/8d606c3a-13c7-3cc7-ab78-fb8f8595771b
     * Creates the property URI
     * <p>
     * Example
@@ -89,19 +127,34 @@ public class URISController {
     */
     @SuppressWarnings({ "rawtypes", "unused" })
     @PostMapping(URISController.Mappings.PROPERTY_URI)
-    public String createPropertyURI(@RequestBody final Object input) {
+    public Map<String,String> createPropertyURI(
+            @ApiParam( name = "domain", value = "Domain: hercules.org", defaultValue = "hercules.org", required = false)
+            @RequestParam(required = true) @Validated(Create.class) final String domain,
+            @ApiParam( name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = "um", required = false)
+            @RequestParam(required = true) @Validated(Create.class) final String subDomain,
+            @ApiParam( name = "lang", value = "Language of data", defaultValue = "es-ES", required = false)
+            @RequestParam(required = true) @Validated(Create.class) final String lang,
+            @RequestBody final Object input) {
         logger.info("Creating property URI");
 
         HashMap map = (HashMap) input;
-        Object obj = map.get(Constants.OBJECT);
-        String className = (String) map.get(Constants.CLASS_NAME);
-        String property = (String) map.get(Constants.PROPERTY);
-        String resourceID = (String) map.get(Constants.RESOURCE_ID);
-        String language = (String) map.get(Constants.LANGUAGE);
-    	String university = (String) map.get(Constants.UNIVERSITY);
-        
-        // FIXME
-        return "http://www.w3.org/2001/asio-rdf/3.0#";
+        String dom = (domain!=null)?domain:"hercules.org";
+        String subDom = (subDomain!=null)?subDomain:"um";
+        String language = (lang!=null)?lang:"es-ES";
+        String type = "res";
+        HashMap objMap = (HashMap) map.get("obj");
+        String entity = Utils.getClassNameFromPath( (String) (objMap.get("className")!=null?(objMap.get("className")):(objMap.get("class"))) );
+        String pEntity = Utils.getClassNameFromPath( (String) (objMap.get("canonicalClassName")!=null?(objMap.get("canonicalClassName")):(objMap.get("canonicalClass"))) );
+        String property = Utils.getClassNameFromPath( (String) map.get("property") );
+        String cProperty = Utils.getClassNameFromPath( (String) map.get("canonicalProperty") );
+
+
+        CanonicalURILanguage canonicalURILanguage = canonicalController.save(dom, subDom, language, type, entity, null,property,(pEntity!=null)?pEntity:entity,(cProperty!=null)?cProperty:property, true);
+        Map<String,String> response = new HashMap<>();
+        response.put("canonicalURI", canonicalURILanguage.getFullParentURI());
+        response.put("language", lang);
+        response.put("canonicalLanguageURI", canonicalURILanguage.getFullURI());
+        return response;
     }
     
     /**
@@ -121,16 +174,29 @@ public class URISController {
      */
     @SuppressWarnings({ "rawtypes", "unused" })
     @PostMapping(URISController.Mappings.RESOURCE_TYPE_URI)
-    public String createResourceTypeURI(@RequestBody final Object input) {
+    public Map<String,String> createResourceTypeURI(
+            @ApiParam( name = "domain", value = "Domain: hercules.org", defaultValue = "hercules.org", required = false)
+            @RequestParam(required = true) @Validated(Create.class) final String domain,
+            @ApiParam( name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = "um", required = false)
+            @RequestParam(required = true) @Validated(Create.class) final String subDomain,
+            @ApiParam( name = "lang", value = "Language of data", defaultValue = "es-ES", required = false)
+            @RequestParam(required = true) @Validated(Create.class) final String lang,
+            @RequestBody final Object input) {
     	logger.info("Creating resource type uri: ");
-    	
-    	HashMap map = (HashMap) input;
-    	String className = (String) map.get(Constants.CLASS_NAME);
-    	String language = (String) map.get(Constants.LANGUAGE);
-    	String university = (String) map.get(Constants.UNIVERSITY);
-    	
-    	// FIXME
-        return "http://example.org/" + className;
+
+        HashMap map = (HashMap) input;
+        String dom = (domain!=null)?domain:"hercules.org";
+        String subDom = (subDomain!=null)?subDomain:"um";
+        String language = (lang!=null)?lang:"es-ES";
+        String type = "res";
+        String entity = Utils.getClassNameFromPath( (String) (map.get("className")!=null?(map.get("className")):(map.get("class"))) );
+        String pEntity = Utils.getClassNameFromPath( (String) (map.get("canonicalClassName")!=null?(map.get("canonicalClassName")):(map.get("canonicalClass"))) );
+        CanonicalURILanguage canonicalURILanguage = canonicalController.save(dom, subDom, language, type, entity, null,null,(pEntity!=null)?pEntity:entity,null, true);
+        Map<String,String> response = new HashMap<>();
+        response.put("canonicalURI", canonicalURILanguage.getFullParentURI());
+        response.put("language", lang);
+        response.put("canonicalLanguageURI", canonicalURILanguage.getFullURI());
+        return response;
     }
 	
 	 /**
@@ -145,17 +211,17 @@ public class URISController {
         
 
     	/** The Constant RESOURCE_ID. */
-    	public static final String RESOURCE_ID = "/resource-id";
+    	public static final String RESOURCE_ID = "canonical/resource";
     	
 		/** The Constant PROPERTY_URI. */
-		public static final String PROPERTY_URI = "/property";
+		public static final String PROPERTY_URI = "canonical/property";
 
 		/** The Constant RESOURCE_TYPE_URI. */
-		public static final String RESOURCE_TYPE_URI = "/resource-type";
+		public static final String RESOURCE_TYPE_URI = "canonical/entity";
 		/**
          * Controller request mapping.
          */
-        protected static final String BASE = "/uri";
+        protected static final String BASE = "/uri-factory";
 
     }
 }

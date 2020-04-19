@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(CanonicalURILenguageController.Mappings.BASE)
-public class CanonicalURILenguageController {
+@RequestMapping(CanonicalURILanguageController.Mappings.BASE)
+public class CanonicalURILanguageController {
 
     /**
      * Proxy service implementation for {@link CanonicalURILanguage}.
@@ -47,6 +47,7 @@ public class CanonicalURILenguageController {
      */
     @Autowired
     private LanguageTypeProxy languageTypeProxy;
+
 
     /**
      * Save.
@@ -96,7 +97,9 @@ public class CanonicalURILenguageController {
             @ApiParam(name = "parentEntity", value = "Property Element", defaultValue = "")
             @RequestParam(required = true) @Validated(Create.class) final String parentEntity,
             @ApiParam(name = "parentProperty", value = "Property Element", defaultValue = "")
-            @RequestParam(required = false) @Validated(Create.class) final String parentProperty
+            @RequestParam(required = false) @Validated(Create.class) final String parentProperty,
+            @ApiParam(name = "createCanonicalIfNotExist", value = "Create canonical URI if not exist", allowableValues = "true, false", defaultValue = "false")
+            @RequestParam(required = false) @Validated(Create.class) final boolean createCanonicalIfNotExist
     )  {
         Type t = typeProxy.findOrCreate(typeCode);
         Language l = languageProxy.findOrCreate(language);
@@ -132,9 +135,24 @@ public class CanonicalURILenguageController {
             }
         }
         try {
-            if (canonicalURIs.size()!=1) {
+            if (canonicalURIs.size()>1) {
                 throw new CustomNotFoundException();
             } else {
+                if (canonicalURIs.size()==0) {
+                    if (createCanonicalIfNotExist) {
+                        CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity,reference);
+                        cu.setEntityName(cu.getConcept());
+                        cu.updateState();
+                        if (property!=null) {
+                            cu.setPropertyName(property);
+                            cu.updateState();
+                        }
+                        CanonicalURI canonicalURI = canonicalProxy.save(cu);
+                        canonicalURIs.add(canonicalURI);
+                    }
+                    else
+                        throw new CustomNotFoundException();
+                }
                 entity.setCanonicalURI(canonicalURIs.get(0));
                 entity.setParentEntityName(parentEntity);
                 entity.setParentPropertyName(parentProperty);
