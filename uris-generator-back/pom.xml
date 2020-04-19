@@ -16,13 +16,21 @@
 
 	<properties>
 		<artifact.packaging>war</artifact.packaging>
+		<uris-generator-service.version>1.0-SNAPSHOT</uris-generator-service.version>
+		<asio-abstractions.version>1.0-SNAPSHOT</asio-abstractions.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>es.um.asio</groupId>
 			<artifactId>uris-generator-service</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${uris-generator-service.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.um.asio</groupId>
+			<artifactId>asio-abstractions</artifactId>
+			<version>${asio-abstractions.version}</version>
 		</dependency>
 
 		<dependency>
@@ -65,7 +73,6 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
 		</dependency>
 		<!-- Testing -->
 
