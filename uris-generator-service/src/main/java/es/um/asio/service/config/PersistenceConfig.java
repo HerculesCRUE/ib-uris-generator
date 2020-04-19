@@ -51,6 +51,7 @@ public class PersistenceConfig {
     @Autowired
     private PersistenceProperties properties;
 
+
     /**
      * Configures de datasource for the application.<br>
      * If {@link DatasourceProperties#jndiName} has a value, it will be used to obtain one instead of using

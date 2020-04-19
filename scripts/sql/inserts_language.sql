@@ -1,0 +1,2 @@
+INSERT INTO public.language (iso, concept_name, domain_name, is_default, language, name, reference_name, region, script, sub_domain_name, type_name, variant) VALUES ('en-EN', 'concept', 'domain', false, 'inglés', 'English', 'reference', 'EN', null, 'sub-domain', 'type', null);
+INSERT INTO public.language (iso, concept_name, domain_name, is_default, language, name, reference_name, region, script, sub_domain_name, type_name, variant) VALUES ('es-ES', 'concepto', 'dominio', true, 'español', 'Español', 'referencia', 'España', null, 'sub-dominio', 'tipo', null);

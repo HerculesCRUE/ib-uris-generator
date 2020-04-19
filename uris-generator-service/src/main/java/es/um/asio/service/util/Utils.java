@@ -19,4 +19,13 @@ public class Utils {
         String pattern = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
         return Pattern.matches(pattern, uuid);
     }
+
+    public static boolean isValidString(String s) {
+        if (s==null || s.equals(""))
+            return false;
+        else
+            return true;
+    }
+
+
 }
