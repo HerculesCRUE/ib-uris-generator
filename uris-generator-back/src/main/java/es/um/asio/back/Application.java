@@ -2,9 +2,11 @@ package es.um.asio.back;
 
 import es.um.asio.service.model.Language;
 import es.um.asio.service.model.LanguageType;
+import es.um.asio.service.model.StorageType;
 import es.um.asio.service.model.Type;
 import es.um.asio.service.proxy.LanguageProxy;
 import es.um.asio.service.proxy.LanguageTypeProxy;
+import es.um.asio.service.proxy.StorageTypeProxy;
 import es.um.asio.service.proxy.TypeProxy;
 import es.um.asio.service.repository.LanguageRepository;
 import es.um.asio.service.repository.LanguageTypeRepository;
@@ -38,6 +40,9 @@ public class Application {
 
     @Autowired
     LanguageTypeProxy languageTypeProxy;
+
+    @Autowired
+    StorageTypeProxy storageTypeProxy;
     /**
      * Main method for embedded deployment.
      *
@@ -87,6 +92,11 @@ public class Application {
             languageTypeProxy.save(lt6);
             languageTypeProxy.save(lt7);
             languageTypeProxy.save(lt8);
+
+            StorageType st1 = new StorageType("trellis");
+            StorageType st2 = new StorageType("wikibase");
+            storageTypeProxy.save(st1);
+            storageTypeProxy.save(st2);
         };
     }
 }

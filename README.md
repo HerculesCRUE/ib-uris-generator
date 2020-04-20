@@ -1,6 +1,5 @@
 # URIs generator service
-
-Arquetipo Java para API Rest con base de datos relacional
+EndPoint API Rest para operaciones CRUD sobre entidades y EndPoint de factoría de URIs, con base de datos relacional.
 
 ## OnBoarding
 
@@ -50,5 +49,25 @@ Para pararlo:
 ## Metodología de desarrollo
 
 La metodología de desarrollo es Git Flow.
+
+## Swagger
+
+Todos los endPoint se encuentran desplegados en Swagger:
+
+http://localhost:8080/swagger-ui.html#/
+
+## Modelo de datos
+
+ ![model](./images/model_data.png)
+
+ ## Mapeo de URIs
+
+El mapeo de URIS sigue el siguiente esquema, donde cada URI canónica se mapea a n URIS en distintos idiomas y cada URI canónica en un determinado idioma a las URIs locales (1 por almacenamiento)
+
+
+
+ ![mapper_url](./images/multi_languege_map_language.png)
+
+  
 
  
