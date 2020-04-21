@@ -101,7 +101,7 @@ public class URISController {
             String ref = Utils.generateUUIDFromOject(input);
             String entityId = Utils.getClassNameFromPath( (String) (map.get("entityId")!=null?(map.get("entityId")):(map.get("id"))));
 
-            CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(dom, subDom, language, type, entity,(Utils.isValidString(entityId)?entityId:ref),null,(pEntity!=null)?pEntity:entity,(pEntity!=null)?pEntity:entity, true);
+            CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(dom, subDom, language, type, entity,(Utils.isValidString(entityId)?entityId:ref),null,(pEntity!=null)?pEntity:entity,null, true);
             Map<String,String> response = new HashMap<>();
             response.put("canonicalURI", canonicalURILanguage.getFullParentURI());
             response.put("language", lang);

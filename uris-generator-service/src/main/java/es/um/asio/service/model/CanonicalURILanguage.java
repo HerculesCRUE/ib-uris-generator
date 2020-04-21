@@ -461,13 +461,15 @@ public class CanonicalURILanguage implements Serializable {
             }
             if (this.isInstance && this.reference != null ) {
                 f.add(new SearchCriteria("reference", this.reference, SearchOperation.EQUAL));
+            } else {
+                if (this.parentEntityName != null) {
+                    f.add(new SearchCriteria("parentEntityName", this.parentEntityName, SearchOperation.EQUAL));
+                }
+                if (this.parentPropertyName != null) {
+                    f.add(new SearchCriteria("parentPropertyName", this.parentPropertyName, SearchOperation.EQUAL));
+                }
             }
-            if (this.parentEntityName != null) {
-                f.add(new SearchCriteria("parentEntityName", this.parentEntityName, SearchOperation.EQUAL));
-            }
-            if (this.parentPropertyName != null) {
-                f.add(new SearchCriteria("parentPropertyName", this.parentPropertyName, SearchOperation.EQUAL));
-            }
+
         }
         return f;
     }

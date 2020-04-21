@@ -156,6 +156,7 @@ public class CanonicalURILanguageController {
                 entity.setCanonicalURI(canonicalURIs.get(0));
                 entity.setParentEntityName(parentEntity);
                 entity.setParentPropertyName(parentProperty);
+                entity.generateFullURL();
                 return this.proxy.save(entity);
             }
         } catch (Exception e) {
