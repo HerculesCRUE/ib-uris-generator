@@ -447,6 +447,9 @@ public class CanonicalURILanguage implements Serializable {
         if (this.id != 0) {
             f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
+            getFullURI();
+            f.add(new SearchCriteria("fullURI",this.fullURI,SearchOperation.EQUAL));
+            /*
             if (this.language != null && this.language.getISO() != null) {
                 f.add(new SearchCriteria("languageID", this.languageID, SearchOperation.EQUAL));
             }
@@ -469,6 +472,7 @@ public class CanonicalURILanguage implements Serializable {
                     f.add(new SearchCriteria("parentPropertyName", this.parentPropertyName, SearchOperation.EQUAL));
                 }
             }
+             */
 
         }
         return f;

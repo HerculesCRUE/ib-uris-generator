@@ -335,6 +335,9 @@ public class CanonicalURI implements Serializable {
         if (this.id != 0) {
             f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
+            getFullURI();
+            f.add(new SearchCriteria("fullURI",this.fullURI,SearchOperation.EQUAL));
+            /*
             if (this.domain != null) {
                 f.add(new SearchCriteria("domain", this.domain, SearchOperation.EQUAL));
             }
@@ -356,6 +359,7 @@ public class CanonicalURI implements Serializable {
             if (this.propertyName != null) {
                 f.add(new SearchCriteria("propertyName", this.propertyName, SearchOperation.EQUAL));
             }
+             */
         }
 
         return f;
