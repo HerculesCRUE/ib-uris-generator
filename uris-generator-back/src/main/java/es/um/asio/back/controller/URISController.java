@@ -1,10 +1,20 @@
 package es.um.asio.back.controller;
 
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+
+import es.um.asio.abstractions.constants.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import es.um.asio.back.controller.error.CustomNotFoundException;
 import es.um.asio.back.controller.uri.CanonicalURILanguageController;
@@ -13,17 +23,9 @@ import es.um.asio.back.controller.uri.StorageTypeController;
 import es.um.asio.service.model.CanonicalURILanguage;
 import es.um.asio.service.model.LocalURI;
 import es.um.asio.service.model.StorageType;
-import es.um.asio.service.proxy.CanonicalURILanguageProxy;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.validation.group.Create;
 import io.swagger.annotations.ApiParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import es.um.asio.abstractions.constants.Constants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -33,54 +35,68 @@ import lombok.NoArgsConstructor;
 @RestController
 @RequestMapping(URISController.Mappings.BASE)
 public class URISController {
-	
-	
+
 	/** The logger. */
 	private final Logger logger = LoggerFactory.getLogger(URISController.class);
 
+	/**
+	 * Controller implementation for {@link CanonicalURILanguage}.
+	 */
+	@Autowired
+	private CanonicalURILanguageController canonicalURILanguageControllerController;
 
+	/**
+	 * Controller implementation for {@link StorageType}.
+	 */
+	@Autowired
+	private StorageTypeController storageTypeController;
 
-    /**
-     * Controller implementation for {@link CanonicalURILanguage}.
-     */
-    @Autowired
-    private CanonicalURILanguageController canonicalURILanguageControllerController;
+	/**
+	 * Controller implementation for {@link LocalURI}.
+	 */
+	@Autowired
+	private LocalURIController localURIController;
 
-    /**
-     * Controller implementation for {@link StorageType}.
-     */
-    @Autowired
-    private StorageTypeController storageTypeController;
+	/**
+	 * Returns the root URI
+	 * 
+	 * @return
+	 */
+	@GetMapping(URISController.Mappings.ROOT_URI)
+	public String rootURI() {
+		return Constants.ROOT_URI;
+	}
 
-    /**
-     * Controller implementation for {@link LocalURI}.
-     */
-    @Autowired
-    private LocalURIController localURIController;
+	/**
+	 * Creates the resourceID URI
+	 * <p>
+	 * Example
+	 * <p>
+	 * 
+	 * <pre>
+	 * {
+	 *    obj: 
+	 *    {
+	 *      Arrobaclass:es.um.asio.service.util.data.ConceptoGrupo,
+	 *      entityId:null,
+	 *      version:0,
+	 *      idGrupoInvestigacion:E0A6-01,
+	 *      numero:5,
+	 *      codTipoConcepto:DESCRIPTORES,
+	 *      texto:LENGUAJES PLASTICOS
+	 *    }
+	 * }
+	 * </pre>
+	 * 
+	 * @param domain
+	 * @param subDomain
+	 * @param lang
+	 * @param input
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes" })
+	@PostMapping(Mappings.RESOURCE_ID)
 
-
-
-    /**
-    * Creates the resourceID URI
-    * <p>
-    * Example
-    * <p>
-    * <pre>
-    * {
-    *    "class": "es.um.asio.service.util.data.ConceptoGrupo",
-    *    "entityId": null,
-    *    "version": 0,
-    *    "idGrupoInvestigacion": "E0A6-01",
-    *    "numero": 5,
-    *    "codTipoConcepto": "DESCRIPTORES",
-    *    "texto": "LENGUAJES PLASTICOS"
-    * }
-    * </pre>
-    * @param input HashMap.
-    * @return URI for the input property.
-    */
-    @SuppressWarnings({ "rawtypes", "unused" })
-	@PostMapping(URISController.Mappings.RESOURCE_ID)
     public Map<String,String> createResourceID(
             @ApiParam( name = "domain", value = "Domain: hercules.org", defaultValue = "hercules.org", required = false)
             @RequestParam(required = true) @Validated(Create.class) final String domain,
@@ -91,17 +107,17 @@ public class URISController {
             @RequestBody final Object input) {
         logger.info(input.toString());
         try {
-            HashMap map = (HashMap) input;
-            String dom = (domain!=null)?domain:"hercules.org";
-            String subDom = (subDomain!=null)?subDomain:"um";
-            String language = (lang!=null)?lang:"es-ES";
-            String type = "res";
-            String entity = Utils.getClassNameFromPath( (String) (map.get("className")!=null?(map.get("className")):(map.get("class"))) );
-            String pEntity = Utils.getClassNameFromPath( (String) (map.get("canonicalClassName")!=null?(map.get("canonicalClassName")):(map.get("canonicalClass"))) );
-            String ref = Utils.generateUUIDFromOject(input);
-            String entityId = Utils.getClassNameFromPath( (String) (map.get("entityId")!=null?(map.get("entityId")):(map.get("id"))));
+			final String type = Constants.TYPE_REST;
 
-            CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(dom, subDom, language, type, entity,(Utils.isValidString(entityId)?entityId:ref),null,(pEntity!=null)?pEntity:entity,null, true);
+			final HashMap map = (HashMap) input;
+			final String entity = Utils.getClassNameFromPath((String) map.get(Constants.CLASS));
+			final String pEntity = Utils.getClassNameFromPath((String) (map.get(Constants.CANONICAL_CLASS_NAME) != null ? (map.get(Constants.CANONICAL_CLASS_NAME))	: (map.get(Constants.CANONICAL_CLASS))));
+			final String ref = Utils.generateUUIDFromOject(input);
+			String entityId = Utils.getClassNameFromPath((String) (map.get(Constants.ENTITY_ID) != null ? (map.get(Constants.ENTITY_ID)) : (map.get(Constants.ID))));
+
+			CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(domain, subDomain,
+					lang, type, entity, (Utils.isValidString(entityId) ? entityId : ref), null,
+					(pEntity != null) ? pEntity : entity, null, true);
             Map<String,String> response = new HashMap<>();
             response.put("canonicalURI", canonicalURILanguage.getFullParentURI());
             response.put("language", lang);
@@ -217,23 +233,15 @@ public class URISController {
 
     /**
      * Associate a local uri with a canonical uri in a language, for a storage system
-     * <p>
-     * Example
-     * <p>
-     * <pre>
-     * {
-     *   className: ConceptoGrupo,
-     *   language: es,
-     *   university: https://www.um.es
-     * }
-     * </pre>
-     * @param input HashMap.
+     * @param canonicalLanguageURI The canonical language URI.
+	 * @param localURI The local URI.
+	 * @param storageName The Storage name.
      * @return URI for the input property.
      */
     @SuppressWarnings({ "rawtypes", "unused" })
     @PostMapping(URISController.Mappings.LOCAL_URI)
-    public LocalURI createResourceTypeURI(
-            @ApiParam( name = "canonicalLanguageURI", value = "Canonical Uri Language retorned in the creation", required = true)
+    public LocalURI createResourceLocalURI(
+            @ApiParam( name = "canonicalLanguageURI", value = "Canonical Uri Language returned in the creation", required = true)
             @RequestParam(required = true) @Validated(Create.class) final String canonicalLanguageURI,
             @ApiParam( name = "localURI", value = "local URI where resource is Storage", required = true)
             @RequestParam(required = true) @Validated(Create.class) final String localURI,
@@ -264,24 +272,27 @@ public class URISController {
      */
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static final class Mappings {
-        
 
-    	/** The Constant RESOURCE_ID. */
-    	public static final String RESOURCE_ID = "canonical/resource";
-    	
+
+		/** The Constant ROOT_URI. */
+		public static final String ROOT_URI = "root/uri";
+
+		/** The Constant RESOURCE_ID. */
+		public static final String RESOURCE_ID = "canonical/resource";
+
 		/** The Constant PROPERTY_URI. */
 		public static final String PROPERTY_URI = "canonical/property";
 
 		/** The Constant RESOURCE_TYPE_URI. */
 		public static final String RESOURCE_TYPE_URI = "canonical/entity";
 
-        /** The Constant LOCAL_RESOURCE. */
-        public static final String LOCAL_URI = "local";
+		/** The Constant LOCAL_RESOURCE. */
+		public static final String LOCAL_URI = "local";
 
 		/**
-         * Controller request mapping.
-         */
-        protected static final String BASE = "/uri-factory";
+		 * Controller request mapping.
+		 */
+		protected static final String BASE = "/uri-factory";
 
-    }
+	}
 }
