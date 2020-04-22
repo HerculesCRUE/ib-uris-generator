@@ -2,12 +2,12 @@
 app:
   persistence:
     datasource:
-      driver-class-name: org.postgresql.Driver
-      username: postgres
-      password: admin123
-      url: jdbc:postgresql://127.0.0.1:5432/app?ssl=false
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: app
+      password: sqlpass
+      url: jdbc:mariadb://127.0.0.1:3307/app?ssl=false
     jpa:
-      dialect: org.hibernate.dialect.PostgreSQL95Dialect
+      dialect: org.hibernate.dialect.MariaDB53Dialect
       generate-ddl: false
       show-sql: true
       properties:
