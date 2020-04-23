@@ -322,13 +322,13 @@ public class URISController {
 	 */
 	@PostMapping(URISController.Mappings.LOCAL_ENTITY_URI)
 	public LocalURI setEntityInLanguageToLocalURI(
-			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@ApiParam( name = "domain", value = "Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String domain,
-			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
-			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@ApiParam(name = "typeCode", value = "Type Code", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
@@ -394,13 +394,13 @@ public class URISController {
 	 */
 	@PostMapping(URISController.Mappings.LOCAL_RESOURCE_ID_URI)
 	public LocalURI setInstanceInLanguageToLocalURI(
-			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@ApiParam( name = "domain", value = "Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String domain,
-			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
-			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@ApiParam(name = "typeCode", value = "Type Code", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
@@ -468,13 +468,13 @@ public class URISController {
 	 */
 	@PostMapping(Mappings.LOCAL_PROPERTY_URI)
 	public LocalURI setPropertyInLanguageToLocalURI(
-			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@ApiParam( name = "domain", value = "Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String domain,
-			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
-			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@ApiParam(name = "typeCode", value = "Type Code", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "property", value = "instance id", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String property,
@@ -564,13 +564,13 @@ public class URISController {
 	 */
 	@DeleteMapping(URISController.Mappings.LOCAL_ENTITY_URI)
 	public void deleteEntityInLanguageToLocalURI(
-			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@ApiParam( name = "domain", value = "Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String domain,
-			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
-			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@ApiParam(name = "typeCode", value = "Type Code", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
@@ -634,13 +634,13 @@ public class URISController {
 	 */
 	@DeleteMapping(URISController.Mappings.LOCAL_RESOURCE_ID_URI)
 	public void deleteInstanceInLanguageToLocalURI(
-			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@ApiParam( name = "domain", value = "Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String domain,
-			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
-			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@ApiParam(name = "typeCode", value = "Type Code", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
@@ -707,13 +707,13 @@ public class URISController {
 	 */
 	@DeleteMapping(Mappings.LOCAL_PROPERTY_URI)
 	public void deletePropertyInLanguageToLocalURI(
-			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@ApiParam( name = "domain", value = "Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String domain,
-			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
-			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@ApiParam(name = "typeCode", value = "Type Code", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "property", value = "instance id", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String property,
