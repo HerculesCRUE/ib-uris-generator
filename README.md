@@ -50,6 +50,20 @@ Para pararlo:
 
 La metodología de desarrollo es Git Flow.
 
+## Variables de entorno
+
+La configuración se encuentra en el fichero application.yml
+
+Esta puede ser sustituida por las siguentes variables de entorno
+
+| Nombre | Valor |
+|--------|:-----:|
+| APP_PERSISTENCE_DATASOURCE_DRIVER-CLASS-NAME | org.mariadb.jdbc.Driver  |
+| APP_PERSISTENCE_DATASOURCE_USERNAME | app  |
+| APP_PERSISTENCE_DATASOURCE_PASSWORD | sqlpass  |
+| APP_PERSISTENCE_DATASOURCE_URL | jdbc:mariadb://127.0.0.1:3307/app?ssl=false  |
+
+
 ## Swagger
 
 Todos los endPoint se encuentran desplegados en Swagger:
