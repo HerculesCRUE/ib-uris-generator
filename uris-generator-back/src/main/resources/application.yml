@@ -55,3 +55,6 @@ management:
       enabled: false
     redis:
       enabled: false
+## In case of configure web endpoints, remove it or change port number
+server:
+  port: ${management.server.port}

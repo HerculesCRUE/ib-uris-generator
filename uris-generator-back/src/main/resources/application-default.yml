@@ -5,6 +5,8 @@ app:
     jpa:
       generate-ddl: true
       show-sql: true
+    datasource:
+       url: jdbc:mariadb://127.0.0.1:3307/uris?ssl=false
   # Swagger
   swagger:
     enabled: true
@@ -18,3 +20,5 @@ management:
   health:
     redis:
       enabled: false
+  server:
+    port: 9326
