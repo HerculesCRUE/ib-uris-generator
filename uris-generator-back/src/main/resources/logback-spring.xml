@@ -6,6 +6,9 @@
 	<springProperty scope="context" name="theGraylogHost"
 		source="graylog.host" defaultValue="localhost" />
 
+	<springProperty scope="context" name="theAppName"
+		source="graylog.app.name" defaultValue="back" />
+
 	<appender name="GELF"
 		class="de.siegmar.logbackgelf.GelfUdpAppender">
 		<graylogHost>${theGraylogHost}</graylogHost>
@@ -24,7 +27,7 @@
 			<fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
 				<pattern>%m</pattern>
 			</fullPatternLayout>
-			<staticField>app_name:back</staticField>
+			<staticField>app_name:${theAppName}</staticField>
 			<staticField>os_arch:${os.arch}</staticField>
 			<staticField>os_name:${os.name}</staticField>
 			<staticField>os_version:${os.version}</staticField>
