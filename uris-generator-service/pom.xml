@@ -10,8 +10,8 @@
 	</parent>
 
 	<artifactId>uris-generator-service</artifactId>
-	<name>Archetype - Java JPA Rest API - Service</name>
-	<description>Archetype - Java JPA Rest API - Service</description>
+	<name>UM - ASIO - uris-generator-service</name>
+	<description>UM - ASIO - uris-generator-service</description>
 
 	<dependencies>
 		<!-- Spring starters -->
