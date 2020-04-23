@@ -180,15 +180,17 @@ public class URISController {
 		final HashMap map = (HashMap) input;
 		final String property = Utils.getClassNameFromPath((String) map.get(Constants.PROPERTY));
 		final String cProperty = Utils.getClassNameFromPath((String) map.get(Constants.CANONICAL_PROPERTY));
-		final String entity = Utils.getClassNameFromPath((String) map.get(Constants.CLASS));
+		// final String entity = Utils.getClassNameFromPath((String) map.get(Constants.CLASS));
 
 		HashMap objMap = (HashMap) map.get(Constants.OBJECT);
+		/*
 		String pEntity = Utils.getClassNameFromPath((String) (objMap.get(Constants.CANONICAL_CLASS_NAME) != null
 				? (objMap.get(Constants.CANONICAL_CLASS_NAME))
 				: (objMap.get(Constants.CANONICAL_CLASS))));
+		 */
 
 		CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(domain, subDomain,
-				lang, type, entity, null, property, (pEntity != null) ? pEntity : entity,
+				lang, type, null, null, property, null,
 				(cProperty != null) ? cProperty : property, true);
 
 		// response
@@ -208,7 +210,7 @@ public class URISController {
 	 * 
 	 * <pre>
 	 * {
-	 *   Arrobaclass: es.um.asio.service.util.data.ConceptoGrupo,
+	 *   @class: es.um.asio.service.util.data.ConceptoGrupo,
 	 * }
 	 * </pre>
 	 * 

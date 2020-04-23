@@ -140,7 +140,7 @@ public class CanonicalURILanguageController {
             } else {
                 if (canonicalURIs.size()==0) {
                     if (createCanonicalIfNotExist) {
-                        CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity,reference);
+                        CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity,reference, parentProperty);
                         cu.setEntityName(cu.getConcept());
                         cu.updateState();
                         if (property!=null) {

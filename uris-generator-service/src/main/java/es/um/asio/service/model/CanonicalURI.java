@@ -129,7 +129,7 @@ public class CanonicalURI implements Serializable {
      * Entity Name.
      */
     @ApiModelProperty(	value = "name of entity", example="entity", allowEmptyValue = false,position =10, readOnly=false, required = true)
-    @Column(name = Columns.ENTITY_NAME, nullable = false,columnDefinition = "VARCHAR(100)",length = 100)
+    @Column(name = Columns.ENTITY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String entityName;
 
     /**
@@ -159,8 +159,19 @@ public class CanonicalURI implements Serializable {
         setType(t);
         this.concept = concept;
         this.reference = reference;
-        generateFullURL();
         updateState();
+        generateFullURL();
+    }
+
+    public CanonicalURI(String domain, String subDomain, Type t, String concept, String reference, String propertyName) {
+        this.domain = domain;
+        this.subDomain = subDomain;
+        setType(t);
+        this.concept = concept;
+        this.reference = reference;
+        setPropertyName(propertyName);
+        updateState();
+        generateFullURL();
     }
 
 
@@ -190,8 +201,10 @@ public class CanonicalURI implements Serializable {
     }
 
     public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
-        this.reference = propertyName;
+        if (propertyName!=null) {
+            this.propertyName = propertyName;
+            this.reference = propertyName;
+        }
     }
 
     public void setIsEntity(Boolean isEntity) {
@@ -392,18 +405,27 @@ public class CanonicalURI implements Serializable {
         } else {
             throw new IllegalArgumentException("Type field in CanonicalURI can´t be empty");
         }
-        if ( Utils.isValidString(this.concept)) {
-            uriSchema = uriSchema.replaceFirst("\\$concept\\$",this.concept);
-            if (Utils.isValidString(this.reference)) {
+        if (isEntity || isInstance) {
+            if (Utils.isValidString(this.concept))
+                uriSchema = uriSchema.replaceFirst("\\$concept\\$",this.concept);
+            else
+                throw new IllegalArgumentException("Concept field in CanonicalURI can´t be empty if is a class or instance");
+        }
+
+        if (isProperty) {
+            if (Utils.isValidString(this.propertyName)) {
+                uriSchema = uriSchema.replaceFirst("\\$concept\\$",this.propertyName);
+            } else
+                throw new IllegalArgumentException("propertyName field in CanonicalURI can´t be empty if is a property");
+        }
+
+        if (isInstance) {
+            if (Utils.isValidString(this.reference))
                 uriSchema = uriSchema.replaceFirst("\\$reference\\$",this.reference);
-            } else {
-                if (isInstance || isProperty)
-                    throw new IllegalArgumentException("Type field in CanonicalURI can´t be empty");
-                else
-                    uriSchema = uriSchema.replaceFirst("\\$reference\\$","");
-            }
+            else
+                throw new IllegalArgumentException("Reference field in CanonicalURI can´t be empty if is a class or instance");
         } else {
-            throw new IllegalArgumentException("Type field in CanonicalURI can´t be empty");
+            uriSchema = uriSchema.replaceFirst("\\$reference\\$","");
         }
 
         this.fullURI = uriSchema;

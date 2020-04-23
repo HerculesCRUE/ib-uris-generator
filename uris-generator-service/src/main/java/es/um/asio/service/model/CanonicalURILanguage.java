@@ -163,7 +163,7 @@ public class CanonicalURILanguage implements Serializable {
      * Entity Name.
      */
     @ApiModelProperty(	value = "name of entity", example="entity", allowEmptyValue = false,position =10, readOnly=false, required = true)
-    @Column(name = Columns.ENTITY_NAME, nullable = false,columnDefinition = "VARCHAR(100)",length = 100)
+    @Column(name = Columns.ENTITY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String entityName;
 
     /**
@@ -177,7 +177,7 @@ public class CanonicalURILanguage implements Serializable {
      * Entity Name.
      */
     @ApiModelProperty(	value = "name of parent entity", example="entity", allowEmptyValue = false,position =10, readOnly=false, required = true)
-    @Column(name = Columns.PARENT_ENTITY_NAME, nullable = false,columnDefinition = "VARCHAR(100)",length = 100)
+    @Column(name = Columns.PARENT_ENTITY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String parentEntityName;
 
     /**
@@ -520,15 +520,28 @@ public class CanonicalURILanguage implements Serializable {
         } else {
             throw new IllegalArgumentException("Type field in CanonicalLanguageURI can´t be empty");
         }
-        if ( Utils.isValidString(this.concept)) {
-            uriSchema = uriSchema.replaceFirst("\\$concept\\$",this.concept);
-            if (Utils.isValidString(this.reference)) {
+
+        if (isEntity || isInstance) {
+            if (Utils.isValidString(this.concept))
+                uriSchema = uriSchema.replaceFirst("\\$concept\\$",this.concept);
+            else
+                throw new IllegalArgumentException("Concept field in CanonicalLanguageURI can´t be empty if is a class or instance");
+        }
+
+        if (isProperty) {
+           if (Utils.isValidString(this.propertyName)) {
+                uriSchema = uriSchema.replaceFirst("\\$concept\\$",this.propertyName);
+            } else
+            throw new IllegalArgumentException("propertyName field in CanonicalLanguageURI can´t be empty if is a property");
+        }
+
+        if (isInstance) {
+            if (Utils.isValidString(this.reference))
                 uriSchema = uriSchema.replaceFirst("\\$reference\\$",this.reference);
-            } else {
-                uriSchema = uriSchema.replaceFirst("\\$reference\\$","");
-            }
+            else
+                throw new IllegalArgumentException("Reference field in CanonicalLanguageURI can´t be empty if is a class or instance");
         } else {
-            throw new IllegalArgumentException("Concept field in CanonicalLanguageURI can´t be empty");
+            uriSchema = uriSchema.replaceFirst("\\$reference\\$","");
         }
 
         this.fullURI = uriSchema;
