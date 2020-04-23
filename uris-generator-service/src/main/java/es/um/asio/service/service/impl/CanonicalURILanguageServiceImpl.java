@@ -159,10 +159,10 @@ public class CanonicalURILanguageServiceImpl implements CanonicalURILanguageServ
             if (
                     ( domain == null || (cul!=null && cul.getDomain()!=null && cul.getDomain().trim().equals(domain.trim())))
                             && ( subDomain == null || (cul!=null && cul.getSubDomain()!=null && cul.getSubDomain().trim().equals(subDomain.trim())))
-                            && ( type == null || (cul!=null && cul.getType()!=null && cul.getType().getCode()!=null && cul.getType().getCode().trim().equals(type.trim())))
+                            && ( type == null || (cul!=null  && cul.getTypeLangCode()!=null && cul.getTypeLangCode().trim().equals(type.trim())))
                             && ( language == null || (cul!=null && cul.getLanguage()!=null && cul.getLanguage().getISO()!=null && cul.getLanguage().getISO().trim().equals(language.trim())))
                             && ( concept == null || (cul!=null && cul.getConcept()!=null && cul.getConcept().trim().equals(concept.trim())))
-                            && ( reference == null || (cul!=null && cul.getReference()!=null && cul.getReference().trim().equals(reference.trim())))
+                            && ( (reference == null && cul.getReference() == null) || (reference != null && cul!=null && cul.getReference()!=null && cul.getReference().trim().equals(reference.trim())))
             ) {
                 canonicalURILanguages.add(cul);
             }

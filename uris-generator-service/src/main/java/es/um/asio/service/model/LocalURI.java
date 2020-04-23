@@ -37,7 +37,7 @@ public class LocalURI {
     private long id;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.DETACH)
     private CanonicalURILanguage canonicalURILanguage;
 
     /**
@@ -71,7 +71,7 @@ public class LocalURI {
     @ApiModelProperty(	example="12345", allowEmptyValue = true, position =3, readOnly=true, value = "Full URI Result", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
-    @Column(name = Columns.LOCAL_URI, unique = true, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
+    @Column(name = Columns.LOCAL_URI, unique = false, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String localURI;
 
 
@@ -154,6 +154,9 @@ public class LocalURI {
         if (this.id != 0) {
             f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
+            if (Utils.isValidString(this.localURI)) {
+                f.add(new SearchCriteria("localURI", this.localURI, SearchOperation.EQUAL));
+            }
             if (Utils.isValidString(this.localURI)) {
                 f.add(new SearchCriteria("canonicalURILanguageStr", this.canonicalURILanguageStr, SearchOperation.EQUAL));
             }

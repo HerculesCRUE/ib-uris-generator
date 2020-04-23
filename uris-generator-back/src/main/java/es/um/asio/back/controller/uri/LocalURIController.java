@@ -198,6 +198,14 @@ public class LocalURIController {
         return this.proxy.save(entity);
     }
 
+    @DeleteMapping()
+    public void deleteURI(
+            @RequestParam(required = true) @Validated(Create.class) final LocalURI localURI
+    ) {
+        if (localURI != null)
+            this.proxy.delete(localURI);
+    }
+
     @GetMapping("all")
     public List<LocalURI> getAll() {
         return this.proxy.findAll();

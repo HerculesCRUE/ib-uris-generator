@@ -126,4 +126,9 @@ public class LanguageProxyImpl implements LanguageProxy {
         }
         return l;
     }
+
+    @Override
+    public List<Language> getDefaultLanguages() {
+        return this.service.getDefaultLanguages();
+    }
 }

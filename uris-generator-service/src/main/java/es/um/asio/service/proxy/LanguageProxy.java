@@ -6,6 +6,7 @@ import com.izertis.abstractions.service.SaveService;
 import es.um.asio.service.filter.LanguageFilter;
 import es.um.asio.service.model.Language;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,4 +16,6 @@ public interface LanguageProxy
         extends QueryService<Language, String, LanguageFilter>, SaveService<Language>, DeleteService<Language, String> {
 
     Language findOrCreate(String ISO);
+
+    List<Language> getDefaultLanguages();
 }

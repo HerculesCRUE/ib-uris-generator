@@ -2,27 +2,26 @@ package es.um.asio.back.controller;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import es.um.asio.service.model.*;
+import es.um.asio.service.proxy.LanguageProxy;
+import es.um.asio.service.proxy.LanguageTypeProxy;
+import es.um.asio.service.proxy.LocalURIProxy;
+import es.um.asio.service.proxy.TypeProxy;
+import es.um.asio.service.service.CanonicalURILanguageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import es.um.asio.abstractions.constants.Constants;
 import es.um.asio.back.controller.error.CustomNotFoundException;
 import es.um.asio.back.controller.uri.CanonicalURILanguageController;
 import es.um.asio.back.controller.uri.LocalURIController;
 import es.um.asio.back.controller.uri.StorageTypeController;
-import es.um.asio.service.model.CanonicalURILanguage;
-import es.um.asio.service.model.LocalURI;
-import es.um.asio.service.model.StorageType;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.validation.group.Create;
 import io.swagger.annotations.ApiParam;
@@ -46,6 +45,11 @@ public class URISController {
 	private CanonicalURILanguageController canonicalURILanguageControllerController;
 
 	/**
+	 * Service implementation for {@link CanonicalURILanguage}.
+	 */
+	@Autowired
+	private CanonicalURILanguageService canonicalURILanguageControllerService;
+	/**
 	 * Controller implementation for {@link StorageType}.
 	 */
 	@Autowired
@@ -56,6 +60,30 @@ public class URISController {
 	 */
 	@Autowired
 	private LocalURIController localURIController;
+
+	/**
+	 * Proxy implementation for {@link LocalURI}.
+	 */
+	@Autowired
+	private LocalURIProxy localURIProxy;
+
+	/**
+	 * Proxy implementation for {@link LocalURI}.
+	 */
+	@Autowired
+	private LanguageProxy languageProxy;
+
+	/**
+	 * Proxy implementation for {@link LocalURI}.
+	 */
+	@Autowired
+	private LanguageTypeProxy languageTypeProxy;
+
+	/**
+	 * Proxy implementation for {@link LocalURI}.
+	 */
+	@Autowired
+	private TypeProxy typeProxy;
 
 	/**
 	 * Returns the root URI
@@ -254,25 +282,15 @@ public class URISController {
 	}
 
 	/**
-	 * Associate a local uri with a canonical uri in a language, for a storage
-	 * system
-	 * <p>
-	 * Example
-	 * <p>
+	 * Associate a local uri with a canonical uri in a language, for a storage system by CanonicalURIInLanguage
 	 * 
-	 * <pre>
-	 * {
-	 *   className: ConceptoGrupo,
-	 *   language: es,
-	 *   university: https://www.um.es
-	 * }
-	 * </pre>
-	 * 
-	 * @param input HashMap.
+	 * @param String canonicalLanguageURI Canonical URI In Language.
+     * @param String localURI in URI in storage system.
+	 * @param String storageName Storae Name for Local Storage (ej wikibase, trellis, weso-wikibase). If not exists it´s will be created
 	 * @return URI for the input property.
 	 */
 	@PostMapping(URISController.Mappings.LOCAL_URI)
-	public LocalURI createResourceTypeURI(
+	public LocalURI linkCanonicalURIToLocalURI(
 			@ApiParam(name = "canonicalLanguageURI", value = "Canonical Uri Language retorned in the creation", required = true) 
 			@RequestParam(required = true) @Validated(Create.class) final String canonicalLanguageURI,
 			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true) 
@@ -292,6 +310,456 @@ public class URISController {
 		LocalURI lr = new LocalURI(localURI, cu, storageType);
 		localURIController.save(lr);
 		return lr;
+	}
+
+	/**
+	 * Associate a Entity with a canonical uri in a language, for a storage system by CanonicalURIInLanguage
+	 *
+	 * @param String canonicalLanguageURI Canonical URI In Language.
+	 * @param String localURI in URI in storage system.
+	 * @param String storageName Storae Name for Local Storage (ej wikibase, trellis, weso-wikibase). If not exists it´s will be created
+	 * @return URI for the input property.
+	 */
+	@PostMapping(URISController.Mappings.LOCAL_ENTITY_URI)
+	public LocalURI setEntityInLanguageToLocalURI(
+			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String domain,
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
+			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@ApiParam(name = "entity", value = "entity name in language", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String entity,
+			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String localURI,
+			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
+		logger.info("Creating resource type uri: ");
+
+		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
+		String defSubdomain = (subDomain!=null)?subDomain:Constants.SUBDOMAIN_VALUE;
+		String defLang = null;
+		String defType = Constants.TYPE_REST;
+		if (languageCode == null) {
+			List<Language> l = languageProxy.getDefaultLanguages();
+			defLang = (l.size() > 0 ? l.get(0).getISO() : Constants.SPANISH_LANGUAGE);
+		} else
+			defLang = languageCode;
+
+		if (typeCode == null) {
+			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
+			if (defLang!=null && type!=null) {
+				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
+				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null)
+					defType = tls.get(0).getTypeLangCode();
+			}
+		}
+
+		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByElements(
+				defDomain,
+				defSubdomain,
+				defLang,
+				defType,
+				entity,
+				null
+		);
+
+		CanonicalURILanguage cu = null;
+
+		if (cus.size() == 0)
+			throw new CustomNotFoundException("Canonical Language URI  Not Found");
+		else if (cus.size() > 1)
+			throw new CustomNotFoundException("Ambiguous Canonical Language URI Founds: "+cus.size() +" results");
+		else
+			cu = cus.get(0);
+		StorageType storageType = storageTypeController.get(storageName);
+		if (storageType == null)
+			throw new CustomNotFoundException("Storage type " + storageName + " Not Found");
+		if (Utils.isValidURL(localURI))
+			throw new CustomNotFoundException("Not valid format URI Local:  " + localURI);
+		LocalURI lr = new LocalURI(localURI, cu, storageType);
+		localURIController.save(lr);
+		return lr;
+	}
+
+	/**
+	 * Associate a Entity with a canonical uri in a language, for a storage system by CanonicalURIInLanguage
+	 *
+	 * @param String canonicalLanguageURI Canonical URI In Language.
+	 * @param String localURI in URI in storage system.
+	 * @param String storageName Storae Name for Local Storage (ej wikibase, trellis, weso-wikibase). If not exists it´s will be created
+	 * @return URI for the input property.
+	 */
+	@PostMapping(URISController.Mappings.LOCAL_RESOURCE_ID_URI)
+	public LocalURI setInstanceInLanguageToLocalURI(
+			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String domain,
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
+			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@ApiParam(name = "entity", value = "entity name in language", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String entity,
+			@ApiParam(name = "reference", value = "instance id", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String reference,
+			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String localURI,
+			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
+		logger.info("Creating resource type uri: ");
+
+		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
+		String defSubdomain = (subDomain!=null)?subDomain:Constants.SUBDOMAIN_VALUE;
+		String defLang = null;
+		String defType = Constants.TYPE_REST;
+		if (languageCode == null) {
+			List<Language> l = languageProxy.getDefaultLanguages();
+			defLang = (l.size() > 0 ? l.get(0).getISO() : Constants.SPANISH_LANGUAGE);
+		} else
+			defLang = languageCode;
+
+		if (typeCode == null) {
+			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
+			if (defLang!=null && type!=null) {
+				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
+				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null)
+					defType = tls.get(0).getTypeLangCode();
+			}
+		}
+
+		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByElements(
+				defDomain,
+				defSubdomain,
+				defLang,
+				defType,
+				entity,
+				reference
+		);
+
+		CanonicalURILanguage cu = null;
+
+		if (cus.size() == 0)
+			throw new CustomNotFoundException("Canonical Language URI  Not Found");
+		else if (cus.size() > 1)
+			throw new CustomNotFoundException("Ambiguous Canonical Language URI Founds: "+cus.size() +" results");
+		else
+			cu = cus.get(0);
+		StorageType storageType = storageTypeController.get(storageName);
+		if (storageType == null)
+			throw new CustomNotFoundException("Storage type " + storageName + " Not Found");
+		if (Utils.isValidURL(localURI))
+			throw new CustomNotFoundException("Not valid format URI Local:  " + localURI);
+		LocalURI lr = new LocalURI(localURI, cu, storageType);
+		localURIController.save(lr);
+		return lr;
+	}
+
+	/**
+	 * Associate a Property with a canonical uri in a language, for a storage system by CanonicalURIInLanguage
+	 *
+	 * @param String canonicalLanguageURI Canonical URI In Language.
+	 * @param String localURI in URI in storage system.
+	 * @param String storageName Storae Name for Local Storage (ej wikibase, trellis, weso-wikibase). If not exists it´s will be created
+	 * @return URI for the input property.
+	 */
+	@PostMapping(Mappings.LOCAL_PROPERTY_URI)
+	public LocalURI setPropertyInLanguageToLocalURI(
+			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String domain,
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
+			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@ApiParam(name = "property", value = "instance id", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String property,
+			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String localURI,
+			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
+		logger.info("Creating resource type uri: ");
+
+		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
+		String defSubdomain = (subDomain!=null)?subDomain:Constants.SUBDOMAIN_VALUE;
+		String defLang = null;
+		String defType = Constants.TYPE_REST;
+		if (languageCode == null) {
+			List<Language> l = languageProxy.getDefaultLanguages();
+			defLang = (l.size() > 0 ? l.get(0).getISO() : Constants.SPANISH_LANGUAGE);
+		} else
+			defLang = languageCode;
+
+		if (typeCode == null) {
+			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
+			if (defLang!=null && type!=null) {
+				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
+				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null)
+					defType = tls.get(0).getTypeLangCode();
+			}
+		}
+
+		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByPropertyName(property);
+
+
+		CanonicalURILanguage cu = null;
+
+		if (cus.size() == 0)
+			throw new CustomNotFoundException("Canonical Language URI  Not Found");
+		else if (cus.size() > 1)
+			throw new CustomNotFoundException("Ambiguous Canonical Language URI Founds: "+cus.size() +" results");
+		else
+			cu = cus.get(0);
+		StorageType storageType = storageTypeController.get(storageName);
+		if (storageType == null)
+			throw new CustomNotFoundException("Storage type " + storageName + " Not Found");
+		if (Utils.isValidURL(localURI))
+			throw new CustomNotFoundException("Not valid format URI Local:  " + localURI);
+		LocalURI lr = new LocalURI(localURI, cu, storageType);
+		localURIController.save(lr);
+		return lr;
+	}
+
+	/**
+	 * Delete a local uri with a canonical uri in a language, for a storage system by CanonicalURIInLanguage
+	 *
+	 * @param String canonicalLanguageURI Canonical URI In Language.
+	 * @param String localURI in URI in storage system.
+	 * @param String storageName Storae Name for Local Storage (ej wikibase, trellis, weso-wikibase). If not exists it´s will be created
+	 * @return URI for the input property.
+	 */
+	@DeleteMapping(URISController.Mappings.LOCAL_URI)
+	public void unlinkCanonicalURIToLocalURI(
+			@ApiParam(name = "canonicalLanguageURI", value = "Canonical Uri Language retorned in the creation", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String canonicalLanguageURI,
+			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String localURI,
+			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
+		logger.info("Creating resource type uri: ");
+
+		CanonicalURILanguage cu = canonicalURILanguageControllerController.getFullURI(canonicalLanguageURI);
+		if (cu == null)
+			throw new CustomNotFoundException("Canonical Language URI: " + canonicalLanguageURI + " Not Found");
+		StorageType storageType = storageTypeController.get(storageName);
+		if (storageType == null)
+			throw new CustomNotFoundException("Storage type " + storageName + " Not Found");
+		if (Utils.isValidURL(localURI))
+			throw new CustomNotFoundException("Not valid format URI Local:  " + localURI);
+		for (LocalURI luAux : localURIProxy.getAllByLocalURI(new LocalURI(localURI, cu, storageType)))
+			localURIController.deleteURI(luAux);
+	}
+
+	/**
+	 * Delete a Entity with a canonical uri in a language, for a storage system by CanonicalURIInLanguage
+	 *
+	 * @param String canonicalLanguageURI Canonical URI In Language.
+	 * @param String localURI in URI in storage system.
+	 * @param String storageName Storae Name for Local Storage (ej wikibase, trellis, weso-wikibase). If not exists it´s will be created
+	 * @return URI for the input property.
+	 */
+	@DeleteMapping(URISController.Mappings.LOCAL_ENTITY_URI)
+	public void deleteEntityInLanguageToLocalURI(
+			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String domain,
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
+			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@ApiParam(name = "entity", value = "entity name in language", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String entity,
+			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String localURI,
+			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
+
+		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
+		String defSubdomain = (subDomain!=null)?subDomain:Constants.SUBDOMAIN_VALUE;
+		String defLang = null;
+		String defType = Constants.TYPE_REST;
+		if (languageCode == null) {
+			List<Language> l = languageProxy.getDefaultLanguages();
+			defLang = (l.size() > 0 ? l.get(0).getISO() : Constants.SPANISH_LANGUAGE);
+		} else
+			defLang = languageCode;
+
+		if (typeCode == null) {
+			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
+			if (defLang!=null && type!=null) {
+				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
+				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null)
+					defType = tls.get(0).getTypeLangCode();
+			}
+		}
+
+		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByElements(
+				defDomain,
+				defSubdomain,
+				defLang,
+				defType,
+				entity,
+				null
+		);
+
+		CanonicalURILanguage cu = null;
+
+		if (cus.size() == 0)
+			throw new CustomNotFoundException("Canonical Language URI  Not Found");
+		else if (cus.size() > 1)
+			throw new CustomNotFoundException("Ambiguous Canonical Language URI Founds: "+cus.size() +" results");
+		else
+			cu = cus.get(0);
+		StorageType storageType = storageTypeController.get(storageName);
+		if (storageType == null)
+			throw new CustomNotFoundException("Storage type " + storageName + " Not Found");
+		if (Utils.isValidURL(localURI))
+			throw new CustomNotFoundException("Not valid format URI Local:  " + localURI);
+		for (LocalURI luAux : localURIProxy.getAllByLocalURI(new LocalURI(localURI, cu, storageType)))
+			localURIProxy.delete(luAux);
+	}
+
+	/**
+	 * Delete a Entity with a canonical uri in a language, for a storage system by CanonicalURIInLanguage
+	 *
+	 * @param String canonicalLanguageURI Canonical URI In Language.
+	 * @param String localURI in URI in storage system.
+	 * @param String storageName Storae Name for Local Storage (ej wikibase, trellis, weso-wikibase). If not exists it´s will be created
+	 * @return URI for the input property.
+	 */
+	@DeleteMapping(URISController.Mappings.LOCAL_RESOURCE_ID_URI)
+	public void deleteInstanceInLanguageToLocalURI(
+			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String domain,
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
+			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@ApiParam(name = "entity", value = "entity name in language", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String entity,
+			@ApiParam(name = "reference", value = "instance id", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String reference,
+			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String localURI,
+			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
+		logger.info("Creating resource type uri: ");
+
+		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
+		String defSubdomain = (subDomain!=null)?subDomain:Constants.SUBDOMAIN_VALUE;
+		String defLang = null;
+		String defType = Constants.TYPE_REST;
+		if (languageCode == null) {
+			List<Language> l = languageProxy.getDefaultLanguages();
+			defLang = (l.size() > 0 ? l.get(0).getISO() : Constants.SPANISH_LANGUAGE);
+		} else
+			defLang = languageCode;
+
+		if (typeCode == null) {
+			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
+			if (defLang!=null && type!=null) {
+				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
+				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null)
+					defType = tls.get(0).getTypeLangCode();
+			}
+		}
+
+		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByElements(
+				defDomain,
+				defSubdomain,
+				defLang,
+				defType,
+				entity,
+				reference
+		);
+
+		CanonicalURILanguage cu = null;
+
+		if (cus.size() == 0)
+			throw new CustomNotFoundException("Canonical Language URI  Not Found");
+		else if (cus.size() > 1)
+			throw new CustomNotFoundException("Ambiguous Canonical Language URI Founds: "+cus.size() +" results");
+		else
+			cu = cus.get(0);
+		StorageType storageType = storageTypeController.get(storageName);
+		if (storageType == null)
+			throw new CustomNotFoundException("Storage type " + storageName + " Not Found");
+		if (Utils.isValidURL(localURI))
+			throw new CustomNotFoundException("Not valid format URI Local:  " + localURI);
+		for (LocalURI luAux : localURIProxy.getAllByLocalURI(new LocalURI(localURI, cu, storageType)))
+			localURIProxy.delete(luAux);
+	}
+
+	/**
+	 * Associate a Property with a canonical uri in a language, for a storage system by CanonicalURIInLanguage
+	 *
+	 * @param String canonicalLanguageURI Canonical URI In Language.
+	 * @param String localURI in URI in storage system.
+	 * @param String storageName Storae Name for Local Storage (ej wikibase, trellis, weso-wikibase). If not exists it´s will be created
+	 * @return URI for the input property.
+	 */
+	@DeleteMapping(Mappings.LOCAL_PROPERTY_URI)
+	public void deletePropertyInLanguageToLocalURI(
+			@ApiParam( name = "domain", value = "Domain Element", defaultValue = "hercules.org", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String domain,
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", defaultValue = "um", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", defaultValue = "es-ES", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
+			@ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@ApiParam(name = "property", value = "instance id", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String property,
+			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String localURI,
+			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
+		logger.info("Creating resource type uri: ");
+
+		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
+		String defSubdomain = (subDomain!=null)?subDomain:Constants.SUBDOMAIN_VALUE;
+		String defLang = null;
+		String defType = Constants.TYPE_REST;
+		if (languageCode == null) {
+			List<Language> l = languageProxy.getDefaultLanguages();
+			defLang = (l.size() > 0 ? l.get(0).getISO() : Constants.SPANISH_LANGUAGE);
+		} else
+			defLang = languageCode;
+
+		if (typeCode == null) {
+			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
+			if (defLang!=null && type!=null) {
+				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
+				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null)
+					defType = tls.get(0).getTypeLangCode();
+			}
+		}
+
+		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByPropertyName(property);
+
+
+		CanonicalURILanguage cu = null;
+
+		if (cus.size() == 0)
+			throw new CustomNotFoundException("Canonical Language URI  Not Found");
+		else if (cus.size() > 1)
+			throw new CustomNotFoundException("Ambiguous Canonical Language URI Founds: "+cus.size() +" results");
+		else
+			cu = cus.get(0);
+		StorageType storageType = storageTypeController.get(storageName);
+		if (storageType == null)
+			throw new CustomNotFoundException("Storage type " + storageName + " Not Found");
+		if (Utils.isValidURL(localURI))
+			throw new CustomNotFoundException("Not valid format URI Local:  " + localURI);
+		for (LocalURI luAux : localURIProxy.getAllByLocalURI(new LocalURI(localURI, cu, storageType)))
+			localURIProxy.delete(luAux);
 	}
 
 	/**
@@ -318,6 +786,15 @@ public class URISController {
 
 		/** The Constant LOCAL_RESOURCE. */
 		public static final String LOCAL_URI = "local";
+
+		/** The Constant LOCAL_RESOURCE. */
+		public static final String LOCAL_ENTITY_URI = "local/entity";
+
+		/** The Constant LOCAL_RESOURCE. */
+		public static final String LOCAL_RESOURCE_ID_URI = "local/resource";
+
+		/** The Constant LOCAL_RESOURCE. */
+		public static final String LOCAL_PROPERTY_URI = "local/property";
 
 		/**
 		 * Controller request mapping.

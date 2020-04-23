@@ -94,6 +94,46 @@ public class StorageType {
         this.schemaURI = schemaURI;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getApiURL() {
+        return apiURL;
+    }
+
+    public void setApiURL(String apiURL) {
+        this.apiURL = apiURL;
+    }
+
+    public String getEndPointURL() {
+        return endPointURL;
+    }
+
+    public void setEndPointURL(String endPointURL) {
+        this.endPointURL = endPointURL;
+    }
+
+    public String getSchemaURI() {
+        return schemaURI;
+    }
+
+    public void setSchemaURI(String schemaURI) {
+        this.schemaURI = schemaURI;
+    }
+
     /**
      * Table name.
      */
