@@ -11,8 +11,8 @@
 
 	<artifactId>uris-generator-back</artifactId>
 	<packaging>${artifact.packaging}</packaging>
-	<name>Archetype - Java JPA Rest API - Back</name>
-	<description>Archetype - Java JPA Rest API - Back</description>
+	<name>UM - ASIO - uris-generator-back</name>
+	<description>UM - ASIO - uris-generator-back</description>
 
 	<properties>
 		<artifact.packaging>war</artifact.packaging>

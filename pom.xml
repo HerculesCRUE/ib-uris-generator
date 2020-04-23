@@ -12,8 +12,9 @@
 	<artifactId>uris-generator</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Archetype - Java JPA Rest API</name>
-	<description>Archetype - Java JPA Rest API</description>
+	<name>UM - ASIO - uris-generator</name>
+	<description>UM - ASIO - uris-generator</description>
+	
 
 	<scm>
 		<url>https://git.izertis.com/izertis-archetypes/java-jpa-rest-baseapp</url>
