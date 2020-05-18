@@ -12,6 +12,7 @@ import es.um.asio.service.repository.URIMapRepository;
 import es.um.asio.service.service.CanonicalURILanguageService;
 import es.um.asio.service.service.CanonicalURIService;
 import es.um.asio.service.service.URIMapService;
+import io.swagger.annotations.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,7 @@ import java.util.Optional;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class CanonicalURIServiceImpl implements CanonicalURIService {
+
 
     /**
      * Spring Data repository for {@link CanonicalURI}.

@@ -136,19 +136,24 @@ public class Language {
     /**
      * Relation Bidirectional LanguageType OneToMany
      */
+    /* TODO: FIX IT*/
+    /*
     @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "language", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private Set<LanguageType> languageTypes;
+     */
 
     /**
      * Relation Bidirectional CanonicalURILanguage OneToMany
      */
+    /* TODO: FIX IT*/
+    /*
     @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "language", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private Set<CanonicalURILanguage> canonicalURILanguages;
-
+     */
     public Language() {
     }
 

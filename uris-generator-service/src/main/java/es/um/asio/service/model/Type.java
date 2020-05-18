@@ -46,17 +46,21 @@ public class Type {
     /**
      * Relation Bidirectional CanonicalURI OneToMany
      */
+    /* TODO: FIX IT*/
+    /*
     @OneToMany(mappedBy = "type", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private Set<CanonicalURI> canonicalURIs;
+     */
     /**
      * Relation Bidirectional LanguageType OneToMany
      */
-
+    /* TODO: FIX IT*/
+    /*
     @OneToMany(mappedBy = "language", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private Set<LanguageType> languageTypes;
-
+    */
     /**
      * Table name.
      */

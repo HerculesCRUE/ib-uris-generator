@@ -105,7 +105,7 @@ public class URISController {
 	 * {
 	 *    obj: 
 	 *    {
-	 *      Arrobaclass:es.um.asio.service.util.data.ConceptoGrupo,
+	 *      @class:es.um.asio.service.util.data.ConceptoGrupo,
 	 *      entityId:null,
 	 *      version:0,
 	 *      idGrupoInvestigacion:E0A6-01,
@@ -322,13 +322,13 @@ public class URISController {
 	 */
 	@PostMapping(URISController.Mappings.LOCAL_ENTITY_URI)
 	public LocalURI setEntityInLanguageToLocalURI(
-			@ApiParam( name = "domain", value = "Domain Element", required = false)
+			@ApiParam( name = "domain", value = "Domain Element", required = false, defaultValue = Constants.DOMAIN_VALUE)
 			@RequestParam(required = false) @Validated(Create.class) final String domain,
-			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false)
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false, defaultValue = Constants.SUBDOMAIN_VALUE)
 			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false, defaultValue = Constants.SPANISH_LANGUAGE)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
-			@ApiParam(name = "typeCode", value = "Type Code", required = false)
+			@ApiParam(name = "typeCode", value = "Type Code", required = false, defaultValue = Constants.TYPE_REST)
 			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
@@ -348,15 +348,22 @@ public class URISController {
 		} else
 			defLang = languageCode;
 
+		LanguageType lt = null;
 		if (typeCode == null) {
 			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
 			if (defLang!=null && type!=null) {
 				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
-				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null)
+				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null) {
 					defType = tls.get(0).getTypeLangCode();
+					lt = tls.get(0);
+				}
+
 			}
 		}
 
+		CanonicalURILanguage aux = new CanonicalURILanguage(defDomain,defSubdomain,lt,entity , null, null);
+		// (String domain, String subDomain,LanguageType lt, String concept, String reference, String property)
+		/*
 		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByElements(
 				defDomain,
 				defSubdomain,
@@ -365,7 +372,10 @@ public class URISController {
 				entity,
 				null
 		);
+		 */
+		CanonicalURILanguage cu =  canonicalURILanguageControllerService.getAllByFullURI(aux.getFullURI());
 
+		/*
 		CanonicalURILanguage cu = null;
 
 		if (cus.size() == 0)
@@ -374,6 +384,10 @@ public class URISController {
 			throw new CustomNotFoundException("Ambiguous Canonical Language URI Founds: "+cus.size() +" results");
 		else
 			cu = cus.get(0);
+
+		 */
+		if (cu == null)
+			throw new CustomNotFoundException("Canonical Language URI  Not Found");
 		StorageType storageType = storageTypeController.get(storageName);
 		if (storageType == null)
 			throw new CustomNotFoundException("Storage type " + storageName + " Not Found");
@@ -394,13 +408,13 @@ public class URISController {
 	 */
 	@PostMapping(URISController.Mappings.LOCAL_RESOURCE_ID_URI)
 	public LocalURI setInstanceInLanguageToLocalURI(
-			@ApiParam( name = "domain", value = "Domain Element", required = false)
+			@ApiParam( name = "domain", value = "Domain Element", required = false, defaultValue = Constants.DOMAIN_VALUE)
 			@RequestParam(required = false) @Validated(Create.class) final String domain,
-			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false)
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false, defaultValue = Constants.SUBDOMAIN_VALUE)
 			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
+			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false, defaultValue = Constants.SPANISH_LANGUAGE)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
-			@ApiParam(name = "typeCode", value = "Type Code", required = false)
+			@ApiParam(name = "typeCode", value = "Type Code", required = false, defaultValue = Constants.TYPE_REST)
 			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
@@ -422,32 +436,26 @@ public class URISController {
 		} else
 			defLang = languageCode;
 
-		if (typeCode == null) {
+		LanguageType lt = null;
+		if (typeCode != null) {
 			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
 			if (defLang!=null && type!=null) {
 				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
-				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null)
+				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null) {
 					defType = tls.get(0).getTypeLangCode();
+					lt = tls.get(0);
+				}
 			}
 		}
 
-		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByElements(
-				defDomain,
-				defSubdomain,
-				defLang,
-				defType,
-				entity,
-				reference
-		);
+		CanonicalURILanguage aux = new CanonicalURILanguage(defDomain,defSubdomain,lt,entity , reference, null);
 
-		CanonicalURILanguage cu = null;
 
-		if (cus.size() == 0)
+		CanonicalURILanguage cu = canonicalURILanguageControllerService.getAllByFullURI(aux.getFullURI());
+
+		if (cu == null)
 			throw new CustomNotFoundException("Canonical Language URI  Not Found");
-		else if (cus.size() > 1)
-			throw new CustomNotFoundException("Ambiguous Canonical Language URI Founds: "+cus.size() +" results");
-		else
-			cu = cus.get(0);
+
 		StorageType storageType = storageTypeController.get(storageName);
 		if (storageType == null)
 			throw new CustomNotFoundException("Storage type " + storageName + " Not Found");
@@ -468,13 +476,13 @@ public class URISController {
 	 */
 	@PostMapping(Mappings.LOCAL_PROPERTY_URI)
 	public LocalURI setPropertyInLanguageToLocalURI(
-			@ApiParam( name = "domain", value = "Domain Element", required = false)
+			@ApiParam( name = "domain", value = "Domain Element", required = false, defaultValue = Constants.DOMAIN_VALUE)
 			@RequestParam(required = false) @Validated(Create.class) final String domain,
-			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false)
+			@ApiParam(name = "subDomain", value = "Sub Domain Element", required = false, defaultValue = Constants.SUBDOMAIN_VALUE)
 			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
+			@ApiParam(name = "languageCode", value = "Language", required = false, defaultValue = Constants.SPANISH_LANGUAGE)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
-			@ApiParam(name = "typeCode", value = "Type Code", required = false)
+			@ApiParam(name = "typeCode", value = "Type Code", required = false, defaultValue = Constants.TYPE_REST)
 			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "property", value = "instance id", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String property,
@@ -503,7 +511,7 @@ public class URISController {
 			}
 		}
 
-		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByPropertyName(property);
+		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByEntityNameAndPropertyName(null,property);
 
 
 		CanonicalURILanguage cu = null;
@@ -662,32 +670,26 @@ public class URISController {
 		} else
 			defLang = languageCode;
 
+		LanguageType lt = null;
 		if (typeCode == null) {
 			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
 			if (defLang!=null && type!=null) {
 				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
-				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null)
+				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null) {
 					defType = tls.get(0).getTypeLangCode();
+					lt = tls.get(0);
+				}
 			}
 		}
 
-		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByElements(
-				defDomain,
-				defSubdomain,
-				defLang,
-				defType,
-				entity,
-				reference
-		);
+		CanonicalURILanguage aux = new CanonicalURILanguage(defDomain,defSubdomain,lt,entity , reference, null);
 
-		CanonicalURILanguage cu = null;
 
-		if (cus.size() == 0)
+		CanonicalURILanguage cu = canonicalURILanguageControllerService.getAllByFullURI(aux.getFullURI());
+
+		if (cu == null)
 			throw new CustomNotFoundException("Canonical Language URI  Not Found");
-		else if (cus.size() > 1)
-			throw new CustomNotFoundException("Ambiguous Canonical Language URI Founds: "+cus.size() +" results");
-		else
-			cu = cus.get(0);
+
 		StorageType storageType = storageTypeController.get(storageName);
 		if (storageType == null)
 			throw new CustomNotFoundException("Storage type " + storageName + " Not Found");
@@ -742,8 +744,7 @@ public class URISController {
 			}
 		}
 
-		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByPropertyName(property);
-
+		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByEntityNameAndPropertyName(null,property);
 
 		CanonicalURILanguage cu = null;
 
