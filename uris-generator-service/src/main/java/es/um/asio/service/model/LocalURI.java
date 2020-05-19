@@ -90,6 +90,30 @@ public class LocalURI {
         }
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setCanonicalURILanguage(CanonicalURILanguage canonicalURILanguage) {
+        this.canonicalURILanguage = canonicalURILanguage;
+    }
+
+    public void setCanonicalURILanguageStr(String canonicalURILanguageStr) {
+        this.canonicalURILanguageStr = canonicalURILanguageStr;
+    }
+
+    public void setStorageType(StorageType storageType) {
+        this.storageType = storageType;
+    }
+
+    public void setStorageTypeStr(String storageTypeStr) {
+        this.storageTypeStr = storageTypeStr;
+    }
+
+    public void setLocalURI(String localURI) {
+        this.localURI = localURI;
+    }
+
     /**
      * Table name.
      */

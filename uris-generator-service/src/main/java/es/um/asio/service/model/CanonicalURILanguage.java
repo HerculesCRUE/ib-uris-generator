@@ -1,12 +1,15 @@
 package es.um.asio.service.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import es.um.asio.service.config.properties.PersistenceProperties;
+import es.um.asio.service.config.properties.URISChemaProperties;
 import es.um.asio.service.filter.*;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.util.ValidationConstants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hibernate.validator.constraints.SafeHtml;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.*;
@@ -26,6 +29,8 @@ public class CanonicalURILanguage implements Serializable {
      * Version ID.
      */
     private static final long serialVersionUID = -8605786237765754621L;
+
+    private static String schema = "http://$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$";
 
     /**
      * The id.
@@ -199,12 +204,21 @@ public class CanonicalURILanguage implements Serializable {
      */
     public static final String TABLE = "CANONICAL_URI_LANGUAGE";
 
+    public static String getSchema() {
+        return schema;
+    }
+
+    public static void setSchema(String schema) {
+        CanonicalURILanguage.schema = schema;
+    }
+
     public CanonicalURILanguage() {
         updateParentURI();
     }
 
 
-    public CanonicalURILanguage(String domain, String subDomain,LanguageType lt, String concept, String reference, String property) {
+    public CanonicalURILanguage(String domain, String subDomain,LanguageType lt, String concept, String reference, String property, String schema) {
+        this.schema = schema;
         this.domain = domain;
         this.subDomain = subDomain;
         setLanguageType(lt);
@@ -496,7 +510,8 @@ public class CanonicalURILanguage implements Serializable {
     }
 
     public void generateFullURL() {
-        generateFullURL("http://$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$");
+
+        generateFullURL(this.schema);
     }
 
     public void generateFullURL(String uriSchema) {

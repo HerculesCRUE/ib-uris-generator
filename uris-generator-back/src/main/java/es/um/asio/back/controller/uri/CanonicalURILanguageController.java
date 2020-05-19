@@ -3,6 +3,7 @@ package es.um.asio.back.controller.uri;
 import es.um.asio.back.controller.error.CustomNotFoundException;
 import es.um.asio.service.model.*;
 import es.um.asio.service.proxy.*;
+import es.um.asio.service.service.SchemaService;
 import es.um.asio.service.validation.group.Create;
 import io.swagger.annotations.ApiParam;
 import lombok.AccessLevel;
@@ -47,6 +48,12 @@ public class CanonicalURILanguageController {
      */
     @Autowired
     private LanguageTypeProxy languageTypeProxy;
+
+    /**
+     * Schema service
+     */
+    @Autowired
+    private SchemaService schemaService;
 
 
     /**
@@ -109,7 +116,8 @@ public class CanonicalURILanguageController {
         if (lts.size()>0) {
             lt = lts.get(lts.size()-1);
         }
-        CanonicalURILanguage entity = new CanonicalURILanguage(domain,subDomain,lt,concept,reference,property);
+        String schema = schemaService.getCanonicalLanguageSchema();
+        CanonicalURILanguage entity = new CanonicalURILanguage(domain,subDomain,lt,concept,reference,property,schema);
         entity.setParentPropertyName(parentProperty);
         List<CanonicalURI> canonicalURIs = new ArrayList<>();
         if (entity.getIsEntity()) {
@@ -140,7 +148,8 @@ public class CanonicalURILanguageController {
             } else {
                 if (canonicalURIs.size()==0) {
                     if (createCanonicalIfNotExist) {
-                        CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity,reference, parentProperty);
+                        String canonicalSchema = schemaService.getCanonicalLanguageSchema();
+                        CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity,reference, parentProperty,canonicalSchema);
                         cu.setEntityName(cu.getConcept());
                         cu.updateState();
                         if (property!=null) {

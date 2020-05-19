@@ -10,11 +10,13 @@ app:
       dialect: org.hibernate.dialect.MariaDB53Dialect
       generate-ddl: false
       show-sql: true
+      format_sql: true
+      use_sql_comments: true
       properties:
         hibernate.temp.use_jdbc_metadata_defaults: false
-    uri:
-      canonicalURISchema: http://$domain$/$sub-domain$/$type$/$concept$/$reference$
-      canonicalURILanguageSchema: http://$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$
+  uri:
+    canonicalURISchema: http://$domain$/$sub-domain$/$type$/$reference$/$concept$
+    canonicalURILanguageSchema: http://$domain$/$sub-domain$/$language$/$type$/$reference$/$concept$
 
   # CORS
   cors:
@@ -55,3 +57,7 @@ management:
       enabled: false
     redis:
       enabled: false
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE

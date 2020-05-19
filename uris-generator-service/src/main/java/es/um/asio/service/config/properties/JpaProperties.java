@@ -31,6 +31,16 @@ public class JpaProperties {
     private boolean showSql = false;
 
     /**
+     * Whether to enable logging of SQL statements.
+     */
+    private boolean formatSql = false;
+
+    /**
+     * Whether to enable logging of SQL statements.
+     */
+    private boolean useSqlComments = false;
+
+    /**
      * JPA dialect for the database.
      */
     private String dialect;

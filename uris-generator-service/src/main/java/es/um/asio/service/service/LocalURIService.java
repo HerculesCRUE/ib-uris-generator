@@ -14,7 +14,7 @@ public interface LocalURIService
 
     List<LocalURI> getAllByLocalURI(final LocalURI localURI);
 
-    LocalURI getAllByLocalURIStr(final String localURI);
+    List<LocalURI> getAllByLocalURIStr(final String localURI);
 
-    LocalURI getAllByCanonicalURILanguageStrAndStorageTypeStr(final String canonicalURILanguage,final String storageTypeStr );
+    List<LocalURI> getAllByCanonicalURILanguageStrAndStorageTypeStr(final String canonicalURILanguage,final String storageTypeStr );
 }

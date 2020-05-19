@@ -115,12 +115,12 @@ public class LocalURIProxyImpl implements LocalURIProxy {
     }
 
     @Override
-    public LocalURI getAllByLocalURIStr(String localURI) {
+    public List<LocalURI> getAllByLocalURIStr(String localURI) {
         return this.service.getAllByLocalURIStr(localURI);
     }
 
     @Override
-    public LocalURI getAllByCanonicalURILanguageStrAndStorageTypeStr(String canonicalURILanguage, String storageTypeStr) {
+    public List<LocalURI> getAllByCanonicalURILanguageStrAndStorageTypeStr(String canonicalURILanguage, String storageTypeStr) {
         return this.service.getAllByCanonicalURILanguageStrAndStorageTypeStr(canonicalURILanguage,storageTypeStr);
     }
 }

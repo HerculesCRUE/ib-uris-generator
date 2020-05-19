@@ -1,9 +1,11 @@
 package es.um.asio.service.util;
 
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
 
 import static java.util.regex.Pattern.matches;
 
@@ -13,8 +15,15 @@ public class Utils {
     }
 
     public static boolean isValidURL(String url) {
-        String pattern = "^(\\/[a-z0-9_.~%-]*)*$";
-        return Pattern.matches(pattern, url);
+        try
+        {
+            URL i_url = new URL(url);
+            i_url.toURI();
+            return true;
+        } catch (Exception exception)
+        {
+            return false;
+        }
     }
 
     public static boolean isValidUUID(String uuid) {

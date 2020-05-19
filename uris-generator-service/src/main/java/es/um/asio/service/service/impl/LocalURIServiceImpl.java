@@ -123,12 +123,13 @@ public class LocalURIServiceImpl implements LocalURIService {
     }
 
     @Override
-    public LocalURI getAllByLocalURIStr(String localURIStr) {
+    public List<LocalURI> getAllByLocalURIStr(String localURIStr) {
         return this.repository.findByLocalURI(localURIStr).orElse(null);
     }
 
     @Override
-    public LocalURI getAllByCanonicalURILanguageStrAndStorageTypeStr(String canonicalURILanguage, String storageTypeStr) {
-        return this.repository.findByStorageTypeStrAndCanonicalURILanguageStr(canonicalURILanguage,storageTypeStr).orElse(null);
+    public List<LocalURI> getAllByCanonicalURILanguageStrAndStorageTypeStr(String canonicalURILanguage, String storageTypeStr) {
+        List<LocalURI> localURIS = this.repository.findByStorageTypeStrAndCanonicalURILanguageStr(storageTypeStr,canonicalURILanguage).orElse(new ArrayList<>());
+        return localURIS;
     }
 }

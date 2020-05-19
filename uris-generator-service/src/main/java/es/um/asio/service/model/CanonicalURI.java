@@ -28,6 +28,8 @@ public class CanonicalURI implements Serializable {
      */
     private static final long serialVersionUID = -8605786237765754616L;
 
+    private static String schema = "http://$domain$/$sub-domain$/$type$/$concept$/$reference$";
+
     /**
      * The id.
      */
@@ -163,7 +165,16 @@ public class CanonicalURI implements Serializable {
         generateFullURL();
     }
 
-    public CanonicalURI(String domain, String subDomain, Type t, String concept, String reference, String propertyName) {
+    public static String getSchema() {
+        return schema;
+    }
+
+    public static void setSchema(String schema) {
+        CanonicalURI.schema = schema;
+    }
+
+    public CanonicalURI(String domain, String subDomain, Type t, String concept, String reference, String propertyName, String schema) {
+        this.schema = schema;
         this.domain = domain;
         this.subDomain = subDomain;
         setType(t);
@@ -386,7 +397,7 @@ public class CanonicalURI implements Serializable {
     }
 
     public void generateFullURL(){
-        generateFullURL("http://$domain$/$sub-domain$/$type$/$concept$/$reference$");
+        generateFullURL(this.schema);
     }
 
     public void generateFullURL(String uriSchema) {

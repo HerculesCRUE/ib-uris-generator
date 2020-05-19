@@ -5,6 +5,7 @@ import es.um.asio.service.model.LocalURI;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,7 +19,7 @@ public interface LocalURIRepository extends JpaRepository<LocalURI, String>, Jpa
      *            The fullURI to search for
      * @return an {@link LocalURI} entity stored in the database or {@literal Optional#empty()} if none found
      */
-    Optional<LocalURI> findByLocalURI(String localUri);
+    Optional<List<LocalURI>> findByLocalURI(String localUri);
 
     /**
      * Finds a LocalURI using the fullURI field.
@@ -29,7 +30,7 @@ public interface LocalURIRepository extends JpaRepository<LocalURI, String>, Jpa
      *            The canonicalURILanguageStr to search for
      * @return an {@link LocalURI} entity stored in the database or {@literal Optional#empty()} if none found
      */
-    Optional<LocalURI> findByStorageTypeStrAndCanonicalURILanguageStr(String storageTypeStr, String canonicalURILanguageStr);
+    Optional<List<LocalURI>> findByStorageTypeStrAndCanonicalURILanguageStr(String storageTypeStr, String canonicalURILanguageStr);
 
 
 }

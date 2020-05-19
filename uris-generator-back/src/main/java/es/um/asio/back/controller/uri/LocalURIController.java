@@ -212,11 +212,19 @@ public class LocalURIController {
     }
 
 
-    @GetMapping("uri")
-    public LocalURI getFullURI(
+    @GetMapping("uri/local")
+    public List<LocalURI> getFullURI(
             @RequestParam(required = true) @Validated(Create.class) final String fullURI
     ) {
         return this.proxy.getAllByLocalURIStr(fullURI);
+    }
+
+    @GetMapping("uri/canonical")
+    public List<LocalURI> getFullURI(
+            @RequestParam(required = true) @Validated(Create.class) final String fullURI,
+            @RequestParam(required = true) @Validated(Create.class) final String storageType
+    ) {
+        return this.proxy.getAllByCanonicalURILanguageStrAndStorageTypeStr(fullURI,storageType);
     }
 
 
@@ -224,9 +232,10 @@ public class LocalURIController {
     public void deleteURI(
             @RequestParam(required = true) @Validated(Create.class) final String fullURI
     ) {
-        LocalURI lu = this.proxy.getAllByLocalURIStr(fullURI);
-        if (lu != null)
+        List<LocalURI> lus = this.proxy.getAllByLocalURIStr(fullURI);
+        for (LocalURI lu : lus) {
             this.proxy.delete(lu);
+        }
     }
 
 

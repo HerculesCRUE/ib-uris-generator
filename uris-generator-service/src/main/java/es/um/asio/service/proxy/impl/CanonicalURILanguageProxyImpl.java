@@ -7,6 +7,7 @@ import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.CanonicalURILanguageProxy;
 import es.um.asio.service.service.CanonicalURILanguageService;
 import es.um.asio.service.service.CanonicalURIService;
+import es.um.asio.service.service.SchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,12 @@ public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy 
      */
     @Autowired
     private CanonicalURIService canonicalService;
+
+    /**
+     * Service layer.
+     */
+    @Autowired
+    private SchemaService schemaService;
 
     /**
      * {@inheritDoc}
