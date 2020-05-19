@@ -7,6 +7,7 @@ import es.um.asio.service.model.CanonicalURI;
 import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.CanonicalURIProxy;
 import es.um.asio.service.service.CanonicalURIService;
+import es.um.asio.service.service.SchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,12 @@ public class CanonicalURIProxyImpl implements CanonicalURIProxy {
      */
     @Autowired
     private CanonicalURIService service;
+
+    /**
+     * Service layer.
+     */
+    @Autowired
+    private SchemaService schemaService;
 
     /**
      * {@inheritDoc}
@@ -57,7 +64,7 @@ public class CanonicalURIProxyImpl implements CanonicalURIProxy {
      */
     @Override
     public CanonicalURI save(final CanonicalURI entity) {
-        entity.generateFullURL("http://$domain$/$sub-domain$/$type$/$concept$/$reference$");
+        entity.generateFullURL(schemaService.getCanonicalSchema());
         List<CanonicalURI> filtered = this.service.getAllByCanonicalURI(entity);
         if (filtered.size() == 0) {
             return this.service.save(entity);

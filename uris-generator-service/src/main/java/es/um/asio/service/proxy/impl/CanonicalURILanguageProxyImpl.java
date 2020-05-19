@@ -70,7 +70,7 @@ public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy 
      */
     @Override
     public CanonicalURILanguage save(final CanonicalURILanguage entity) {
-        entity.generateFullURL("http://$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$");
+        entity.generateFullURL(schemaService.getCanonicalLanguageSchema());
         List<CanonicalURILanguage> filtered = this.service.getAllByCanonicalURILanguage(entity);
         if (filtered.size() == 0) {
             return this.service.save(entity);
