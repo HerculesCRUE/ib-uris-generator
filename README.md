@@ -32,7 +32,7 @@ La inicialización de la base de datos y solr se realiza con docker. En primer l
 
 En el directorio docker-devenv se ha configurado un fichero docker-compose.yml para poder arrancar el entorno de desarrollo. Actualmente contiene los siguientes elementos:
 
-* Postgre 11.1
+* MariaDB 10.3
 
 En caso de querer cambiar una versión o añadir un nuevo elemento al docker-compose, se puede buscar la imagen apropiada en https://hub.docker.com/
 
@@ -62,7 +62,8 @@ Esta puede ser sustituida por las siguentes variables de entorno
 | APP_PERSISTENCE_DATASOURCE_USERNAME | app  |
 | APP_PERSISTENCE_DATASOURCE_PASSWORD | sqlpass  |
 | APP_PERSISTENCE_DATASOURCE_URL | jdbc:mariadb://127.0.0.1:3307/app?ssl=false  |
-
+| APP_URI_CANONICALURISCHEMA| http://$domain$/$sub-domain$/$type$/$concept$/$reference$  |
+| APP_URI_CANONICALURILANGUAGESCHEMA| http://$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$  |
 
 ## Swagger
 
