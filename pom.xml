@@ -17,7 +17,7 @@
 	
 
 	<scm>
-		<url>https://git.izertis.com/izertis-archetypes/java-jpa-rest-baseapp</url>
+		<url>scm:git:https://github.com/HerculesCRUE/ib-uris-generator.git</url>
 	</scm>
 
   <modules>
