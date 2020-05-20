@@ -1,54 +1,43 @@
-# URIs generator service
+# ASIO - URIs generator service
 EndPoint API Rest para operaciones CRUD sobre entidades y EndPoint de factoría de URIs, con base de datos relacional.
 
 ## OnBoarding
 
 Para iniciar el entorno de desarrollo se necesita cumplir los siguientes requisitos:
 
-* OpenJDK 11 (en caso de querer JDK8: Oracle JDK 8)
+* OpenJDK 11
 * Eclipse JEE 2019-09 con plugins:
-** Spring Tools 4
-** m2e-apt
-** Lombok
+  * Spring Tools 4
+  * m2e-apt
+  * Lombok
 * Docker
 
-### Instalar Lombok
+## Módulos disponibles
 
-Para la instalación de Lombok, es preciso descargar la última versión desde [https://projectlombok.org/download](https://projectlombok.org/download). Se descargará un jar que precisa ser ejecutado:
-
-	java -jar lombok.jar
-
-Se seleccionará la ubicación en la que se encuentra instalado Eclipse.
-
-En caso que de problemas a la hora de generar las clases de Mapstruct, es preciso utilizar una versión parcheada de lombok. Para ello, se ha dejado en \\rackstation\Desarrollo\fuentes\Entorno de desarrollo\Eclipses el fichero lombok-patched-1.18.6.jar. Se deberá configurar en el fichero eclipse.ini, sustituyendo el jar que tiene configurado actualmente por el parcheado
-
-```
--javaagent:C:\desarrollo\java\install\eclipse-jee-2018-12-R-win32-x86_64\lombok-patched-1.18.6.jar
-```
-
-## Inicialización de la base de datos
-
-La inicialización de la base de datos y solr se realiza con docker. En primer lugar es preciso modificar el fichero ```docker-devenv\.env``` y actualizar la variable de entorno ```COMPOSE_PROJECT_NAME```
-
-En el directorio docker-devenv se ha configurado un fichero docker-compose.yml para poder arrancar el entorno de desarrollo. Actualmente contiene los siguientes elementos:
-
-* Postgre 11.1
-
-En caso de querer cambiar una versión o añadir un nuevo elemento al docker-compose, se puede buscar la imagen apropiada en https://hub.docker.com/
-
-Se pueden eliminar los elementos que no se vayan a utilizar.
-
-Para arrancar el entorno:
-
-	docker-compose up -d
-
-Para pararlo:
-
-	docker-compose down
+* **Módulo back**: módulo que añade una capa de servicios REST a la funcionalidad de la aplicación. Genera un artefacto JAR bootable
+* **Módulo service**: módulo que contiene la lógica de la aplicación. Puede ser utilizado como librería independiente para ser integrado en otras aplicaciones
 
 ## Metodología de desarrollo
 
 La metodología de desarrollo es Git Flow.
+
+## Entorno de desarrollo Docker
+
+La inicialización de los elementos adicionales al entorno de desarrollo se realiza con docker. 
+
+En el directorio docker-devenv se ha configurado un fichero docker-compose.yml para poder arrancar el entorno de desarrollo.
+
+Para arrancar el entorno:
+
+```bash
+docker-compose up -d
+```
+
+Para pararlo:
+
+```bash
+docker-compose down
+```
 
 ## Variables de entorno
 
@@ -58,17 +47,30 @@ Esta puede ser sustituida por las siguentes variables de entorno
 
 | Nombre | Valor |
 |--------|:-----:|
-| APP_PERSISTENCE_DATASOURCE_DRIVER-CLASS-NAME | org.mariadb.jdbc.Driver  |
-| APP_PERSISTENCE_DATASOURCE_USERNAME | app  |
-| APP_PERSISTENCE_DATASOURCE_PASSWORD | sqlpass  |
-| APP_PERSISTENCE_DATASOURCE_URL | jdbc:mariadb://127.0.0.1:3307/app?ssl=false  |
+| `APP_PERSISTENCE_DATASOURCE_DRIVER-CLASS-NAME` | org.mariadb.jdbc.Driver  |
+| `APP_PERSISTENCE_DATASOURCE_USERNAME` | app  |
+| `APP_PERSISTENCE_DATASOURCE_PASSWORD` | sqlpass  |
+| `APP_PERSISTENCE_DATASOURCE_URL` | jdbc:mariadb://127.0.0.1:3307/app?ssl=false  |
 
+## Ejecución
+
+Al generarse un JAR bootable la ejecución se realizará mediante el siguiente comando:
+
+```bash
+java -jar {jar-name}.jar
+```
+
+Sustituyendo `{jar-name}` por el nombre del fichero JAR generado.
+
+No es necesario especificar la clase de inicio de la aplicación, ya que el fichero MANIFEST.MF generado ya contiene la información necesaria. Solamente se especificarán los parametros necesarios.
 
 ## Swagger
 
-Todos los endPoint se encuentran desplegados en Swagger:
+Se ha añadido la posibilidad de utilizar Swagger. Para acceder a Swagger, se utilizará la siguiente URL:
 
-http://localhost:8080/swagger-ui.html#/
+* http://localhost:8080/swagger-ui.html
+
+Para activar swagger se utilizará la variable `app.swagger.enabled`
 
 ## Modelo de datos
 
@@ -78,10 +80,9 @@ http://localhost:8080/swagger-ui.html#/
 
 El mapeo de URIS sigue el siguiente esquema, donde cada URI canónica se mapea a n URIS en distintos idiomas y cada URI canónica en un determinado idioma a las URIs locales (1 por almacenamiento)
 
-
-
  ![mapper_url](./images/multi_languege_map_language.png)
 
-  
+##  Documentación adicional
 
- 
+* [Compilación](docs/build.md)
+* [Generación Docker](docs/docker.md)
