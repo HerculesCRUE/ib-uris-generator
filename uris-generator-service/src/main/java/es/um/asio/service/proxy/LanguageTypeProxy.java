@@ -1,8 +1,8 @@
 package es.um.asio.service.proxy;
 
-import com.izertis.abstractions.service.DeleteService;
-import com.izertis.abstractions.service.QueryService;
-import com.izertis.abstractions.service.SaveService;
+import es.um.asio.audit.abstractions.service.DeleteService;
+import es.um.asio.audit.abstractions.service.QueryService;
+import es.um.asio.audit.abstractions.service.SaveService;
 import es.um.asio.service.filter.LanguageTypeFilter;
 import es.um.asio.service.model.LanguageType;
 import es.um.asio.service.model.User;

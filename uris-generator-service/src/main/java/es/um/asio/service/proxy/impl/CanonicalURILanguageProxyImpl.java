@@ -1,6 +1,6 @@
 package es.um.asio.service.proxy.impl;
 
-import com.izertis.abstractions.exception.NoSuchEntityException;
+import es.um.asio.audit.abstractions.exception.NoSuchEntityException;
 import es.um.asio.service.filter.CanonicalURILanguageFilter;
 import es.um.asio.service.model.CanonicalURILanguage;
 import es.um.asio.service.model.User;

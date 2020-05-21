@@ -42,3 +42,27 @@ Los artefactos se encuentran dentro de uris-generator-service/target
 * Artefacto: uris-generator-service-{version}.jar
 * JavaDoc: uris-generator-service-{version}-javadoc.jar
 * Sources: uris-generator-service-{version}-sources.jar
+
+### Service Abstractions
+
+Los artefactos se encuentran dentro de triples-storage-adapter-service-abstractions/target
+
+* Artefacto: triples-storage-adapter-service-abstractions-{version}.jar
+* JavaDoc: triples-storage-adapter-service-abstractions-{version}-javadoc.jar
+* Sources: triples-storage-adapter-service-abstractions-{version}-sources.jar
+
+### JPA Abstractions
+
+Los artefactos se encuentran dentro de triples-storage-adapter-jpa-abstractions/target
+
+* Artefacto: triples-storage-adapter-jpa-abstractions-{version}.jar
+* JavaDoc: triples-storage-adapter-jpa-abstractions-{version}-javadoc.jar
+* Sources: triples-storage-adapter-jpa-abstractions-{version}-sources.jar
+
+### Swagger
+
+Los artefactos se encuentran dentro de triples-storage-adapter-swagger/target
+
+* Artefacto: triples-storage-adapter-swagger-{version}.jar
+* JavaDoc: triples-storage-adapter-swagger-{version}-javadoc.jar
+* Sources: triples-storage-adapter-swagger-{version}-sources.jar

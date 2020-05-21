@@ -1,7 +1,7 @@
 package es.um.asio.service.filter;
 
-import com.izertis.abstractions.filter.AbstractJpaSpecification;
-import com.izertis.abstractions.filter.EntityFilter;
+import es.um.asio.abstractions.filter.AbstractJpaSpecification;
+import es.um.asio.audit.abstractions.filter.EntityFilter;
 import es.um.asio.service.model.StorageType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -28,8 +28,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.izertis.abstractions.exception.NoSuchEntityException;
-import com.izertis.abstractions.search.PageImplHelper;
+
+import es.um.asio.audit.abstractions.exception.NoSuchEntityException;
+import es.um.asio.audit.abstractions.search.PageImplHelper;
 import es.um.asio.back.controller.security.UserController;
 import es.um.asio.service.dto.UserDto;
 import es.um.asio.service.filter.UserFilter;
