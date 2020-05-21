@@ -20,7 +20,7 @@ mvn clean package
 En caso de querer generar al mismo tiempo Sources el comando siguiente: 
 
 ```bash
-mvn clean package javadoc:jar source:jar
+mvn clean package source:jar
 ```
 
 También sería posible instalar o desplegar los artefactos sustituyendo `package` por `install` o `deploy` respectivamente.
