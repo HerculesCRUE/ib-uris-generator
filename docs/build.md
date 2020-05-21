@@ -17,7 +17,7 @@ Para realizar la compilación se ejecutará el siguiente comando:
 mvn clean package
 ```
 
-En caso de querer generar al mismo tiempo JavaDoc y Sources el comando siguiente: 
+En caso de querer generar al mismo tiempo Sources el comando siguiente: 
 
 ```bash
 mvn clean package javadoc:jar source:jar
@@ -32,7 +32,6 @@ Los artefactos se generarán dentro del directorio `target` de cada uno de los m
 Los artefactos se encuentran dentro de uris-generator-back/target
 
 * Artefacto: uris-generator-back-{version}.jar
-* JavaDoc: uris-generator-back-{version}-javadoc.jar
 * Sources: uris-generator-back-{version}-sources.jar
 
 ### Service
@@ -40,7 +39,6 @@ Los artefactos se encuentran dentro de uris-generator-back/target
 Los artefactos se encuentran dentro de uris-generator-service/target
 
 * Artefacto: uris-generator-service-{version}.jar
-* JavaDoc: uris-generator-service-{version}-javadoc.jar
 * Sources: uris-generator-service-{version}-sources.jar
 
 ### Service Abstractions
@@ -48,7 +46,6 @@ Los artefactos se encuentran dentro de uris-generator-service/target
 Los artefactos se encuentran dentro de triples-storage-adapter-service-abstractions/target
 
 * Artefacto: triples-storage-adapter-service-abstractions-{version}.jar
-* JavaDoc: triples-storage-adapter-service-abstractions-{version}-javadoc.jar
 * Sources: triples-storage-adapter-service-abstractions-{version}-sources.jar
 
 ### JPA Abstractions
@@ -56,7 +53,6 @@ Los artefactos se encuentran dentro de triples-storage-adapter-service-abstracti
 Los artefactos se encuentran dentro de triples-storage-adapter-jpa-abstractions/target
 
 * Artefacto: triples-storage-adapter-jpa-abstractions-{version}.jar
-* JavaDoc: triples-storage-adapter-jpa-abstractions-{version}-javadoc.jar
 * Sources: triples-storage-adapter-jpa-abstractions-{version}-sources.jar
 
 ### Swagger
@@ -64,5 +60,4 @@ Los artefactos se encuentran dentro de triples-storage-adapter-jpa-abstractions/
 Los artefactos se encuentran dentro de triples-storage-adapter-swagger/target
 
 * Artefacto: triples-storage-adapter-swagger-{version}.jar
-* JavaDoc: triples-storage-adapter-swagger-{version}-javadoc.jar
 * Sources: triples-storage-adapter-swagger-{version}-sources.jar
