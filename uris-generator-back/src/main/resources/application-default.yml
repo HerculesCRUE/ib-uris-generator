@@ -18,3 +18,7 @@ management:
   health:
     redis:
       enabled: false
+  server:
+    port: 9326
+server:
+    port: 9326
