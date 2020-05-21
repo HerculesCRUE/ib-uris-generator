@@ -6,7 +6,6 @@ import com.izertis.abstractions.service.SaveService;
 import es.um.asio.service.filter.LocalURIFilter;
 import es.um.asio.service.model.LocalURI;
 
-
 import java.util.List;
 
 public interface LocalURIService

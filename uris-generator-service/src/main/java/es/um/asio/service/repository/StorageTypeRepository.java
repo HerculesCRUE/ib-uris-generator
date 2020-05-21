@@ -1,6 +1,5 @@
 package es.um.asio.service.repository;
 
-import es.um.asio.service.model.LocalURI;
 import es.um.asio.service.model.StorageType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

@@ -2,12 +2,9 @@ package es.um.asio.service.service.impl;
 
 import es.um.asio.service.filter.LocalURIFilter;
 import es.um.asio.service.model.CanonicalURI;
-
 import es.um.asio.service.model.LocalURI;
 import es.um.asio.service.model.User;
-
 import es.um.asio.service.repository.LocalURIRepository;
-
 import es.um.asio.service.service.LocalURIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -114,22 +111,20 @@ public class LocalURIServiceImpl implements LocalURIService {
     public List<LocalURI> getAllByLocalURI(LocalURI entity) {
         LocalURIFilter f = entity.buildFilterByEntityUniqueProperties();
 
-        if (f.getList().size()>0) {
-            List<LocalURI> filteredList = this.repository.findAll(f);
-            return filteredList;
+        if (!f.getList().isEmpty()) {
+            return this.repository.findAll(f);
         } else {
-            return new ArrayList<LocalURI>();
+            return new ArrayList<>();
         }
     }
 
     @Override
     public List<LocalURI> getAllByLocalURIStr(String localURIStr) {
-        return this.repository.findByLocalURI(localURIStr).orElse(null);
+        return this.repository.findByLocalUri(localURIStr).orElse(null);
     }
 
     @Override
     public List<LocalURI> getAllByCanonicalURILanguageStrAndStorageTypeStr(String canonicalURILanguage, String storageTypeStr) {
-        List<LocalURI> localURIS = this.repository.findByStorageTypeStrAndCanonicalURILanguageStr(storageTypeStr,canonicalURILanguage).orElse(new ArrayList<>());
-        return localURIS;
+        return this.repository.findByStorageTypeStrAndCanonicalURILanguageStr(storageTypeStr,canonicalURILanguage).orElse(new ArrayList<>());
     }
 }

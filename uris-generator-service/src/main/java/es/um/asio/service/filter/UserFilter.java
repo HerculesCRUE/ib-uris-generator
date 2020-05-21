@@ -1,23 +1,20 @@
 package es.um.asio.service.filter;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.izertis.abstractions.filter.AbstractJpaSpecification;
+import com.izertis.abstractions.filter.EntityFilter;
+import es.um.asio.service.model.User;
+import es.um.asio.service.model.User_;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.izertis.abstractions.filter.AbstractJpaSpecification;
-import com.izertis.abstractions.filter.EntityFilter;
-import es.um.asio.service.model.User;
-import es.um.asio.service.model.User_;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Filter for {@link User}.

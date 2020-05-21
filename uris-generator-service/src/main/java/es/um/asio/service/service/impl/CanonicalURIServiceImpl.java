@@ -1,18 +1,15 @@
 package es.um.asio.service.service.impl;
 
 import es.um.asio.service.filter.CanonicalURIFilter;
-import es.um.asio.service.filter.CanonicalURILanguageFilter;
-import es.um.asio.service.filter.URIMapFilter;
+import es.um.asio.service.filter.SearchCriteria;
+import es.um.asio.service.filter.SearchOperation;
 import es.um.asio.service.model.CanonicalURI;
 import es.um.asio.service.model.Type;
-import es.um.asio.service.model.URIMap;
 import es.um.asio.service.model.User;
 import es.um.asio.service.repository.CanonicalURIRepository;
-import es.um.asio.service.repository.URIMapRepository;
-import es.um.asio.service.service.CanonicalURILanguageService;
+import es.um.asio.service.repository.TypeRepository;
 import es.um.asio.service.service.CanonicalURIService;
-import es.um.asio.service.service.URIMapService;
-import io.swagger.annotations.Scope;
+import es.um.asio.service.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -38,6 +35,12 @@ public class CanonicalURIServiceImpl implements CanonicalURIService {
      */
     @Autowired
     private CanonicalURIRepository repository;
+
+    /**
+     * Spring Data repository for {@link CanonicalURI}.
+     */
+    @Autowired
+    private TypeRepository typeRepository;
 
     /**
      * Solr enabled
@@ -118,11 +121,10 @@ public class CanonicalURIServiceImpl implements CanonicalURIService {
     public List<CanonicalURI> getAllByCanonicalURI(CanonicalURI entity) {
         CanonicalURIFilter f = entity.buildFilterByEntityUniqueProperties();
 
-        if (f.getList().size()>0) {
-            List<CanonicalURI> filteredList = this.repository.findAll(f);
-            return filteredList;
+        if (!f.getList().isEmpty()) {
+            return this.repository.findAll(f);
         } else {
-            return new ArrayList<CanonicalURI>();
+            return new ArrayList<>();
         }
     }
 
@@ -154,17 +156,35 @@ public class CanonicalURIServiceImpl implements CanonicalURIService {
     @Override
     public List<CanonicalURI> getAllByElements(String domain, String subDomain, String type, String concept, String reference) {
         List<CanonicalURI> canonicalURIs = new ArrayList<>();
-        for (CanonicalURI cu : this.repository.findAll()) {
-            if (
-                    ( domain == null || (cu!=null && cu.getDomain()!=null && cu.getDomain().trim().equals(domain.trim())))
-                    && ( subDomain == null || (cu!=null && cu.getSubDomain()!=null && cu.getSubDomain().trim().equals(subDomain.trim())))
-                    && ( type == null || (cu!=null && cu.getType()!=null && cu.getType().getCode()!=null && cu.getType().getCode().trim().equals(type.trim())))
-                    && ( concept == null || (cu!=null && cu.getConcept()!=null && cu.getConcept().trim().equals(concept.trim())))
-                    && ( reference == null || (cu!=null && cu.getReference()!=null && cu.getReference().trim().equals(reference.trim())))
-            ) {
-                canonicalURIs.add(cu);
-            }
+
+        CanonicalURIFilter f = new CanonicalURIFilter();
+
+        if (Utils.isValidString(domain)) {
+            f.add(new SearchCriteria("domain", domain, SearchOperation.EQUAL));
         }
+
+        if (Utils.isValidString(subDomain)) {
+            f.add(new SearchCriteria("subDomain", subDomain, SearchOperation.EQUAL));
+        }
+
+        if (Utils.isValidString(type)) {
+            f.add(new SearchCriteria("typeIdCode", type, SearchOperation.EQUAL));
+        }
+
+        if (Utils.isValidString(concept)) {
+            f.add(new SearchCriteria("concept", concept, SearchOperation.EQUAL));
+        }
+
+        if (Utils.isValidString(reference)) {
+            f.add(new SearchCriteria("reference", reference, SearchOperation.EQUAL));
+        } else {
+            f.add(new SearchCriteria("reference", reference, SearchOperation.IS_NULL));
+        }
+
+
+
+
+        canonicalURIs = this.repository.findAll(f);
         return canonicalURIs;
     }
 }

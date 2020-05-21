@@ -1,6 +1,5 @@
 package es.um.asio.service.model;
 
-import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.filter.SearchCriteria;
 import es.um.asio.service.filter.SearchOperation;
 import es.um.asio.service.filter.TypeFilter;
@@ -9,9 +8,12 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hibernate.validator.constraints.SafeHtml;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
-import java.util.Set;
+import java.io.Serializable;
 
 @Entity
 @Table(name = Type.TABLE)
@@ -23,7 +25,7 @@ public class Type {
     /**
      * Version ID.
      */
-    private static final long serialVersionUID = -8605786237765754617L;
+    private static final long serialVersionUID = 1905122041950251207L;
 
     /**
      * The id.
@@ -31,36 +33,24 @@ public class Type {
     @Id
     @Column(name = Columns.CODE, columnDefinition = "VARCHAR(3)", length = 3)
     @EqualsAndHashCode.Include
-    @ApiModelProperty(	example="cat",allowEmptyValue = false, position=1, readOnly=false, value = "Required: TYPE Code (3 characters)", required = true)
+    @ApiModelProperty(	example="cat",allowEmptyValue = false, position=1, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Required: TYPE Code (3 characters)", required = true)
     private String code;
 
     /**
      * NAME.
      */
-    @ApiModelProperty(	example="category",allowEmptyValue = true, position =2, readOnly=false, value = "Optional: Extended name of Type.", required = true)
+    @ApiModelProperty(	example="category",allowEmptyValue = true, position =2, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional: Extended name of Type.", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.NAME, nullable = false,columnDefinition = "VARCHAR(100)",length = 100)
     private String name;
 
     /**
      * Relation Bidirectional CanonicalURI OneToMany
      */
-    /* TODO: FIX IT*/
-    /*
-    @OneToMany(mappedBy = "type", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
-    private Set<CanonicalURI> canonicalURIs;
-     */
+
     /**
      * Relation Bidirectional LanguageType OneToMany
      */
-    /* TODO: FIX IT*/
-    /*
-    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
-    private Set<LanguageType> languageTypes;
-    */
     /**
      * Table name.
      */

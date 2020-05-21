@@ -1,13 +1,10 @@
 package es.um.asio.service.service.impl;
 
-import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.filter.LanguageFilter;
 import es.um.asio.service.model.CanonicalURI;
 import es.um.asio.service.model.Language;
 import es.um.asio.service.model.User;
-import es.um.asio.service.repository.CanonicalURIRepository;
 import es.um.asio.service.repository.LanguageRepository;
-import es.um.asio.service.service.CanonicalURIService;
 import es.um.asio.service.service.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -113,19 +110,18 @@ public class LanguageServiceImpl implements LanguageService {
     public List<Language> getAllByLanguage(Language entity) {
         LanguageFilter f = entity.buildFilterByEntityUniqueProperties();
 
-        if (f.getList().size()>0) {
-            List<Language> filteredList = this.repository.findAll(f);
-            return filteredList;
+        if (!f.getList().isEmpty()) {
+            return this.repository.findAll(f);
         } else {
-            return new ArrayList<Language>();
+            return new ArrayList<>();
         }
     }
 
     @Override
     public void setNotIsDefaultAllLanguages() {
         Optional<List<Language>> languages = this.repository.findByIsDefault(true);
-        languages.ifPresent((ls)->ls.forEach(
-                (l)-> {
+        languages.ifPresent(ls->ls.forEach(
+                l-> {
                     l.isDefault = false;
                     this.repository.save(l);
                 }

@@ -1,9 +1,10 @@
 package es.um.asio.back.controller.uri;
 
-import es.um.asio.service.model.*;
+import es.um.asio.service.model.CanonicalURI;
+import es.um.asio.service.model.Type;
 import es.um.asio.service.proxy.CanonicalURIProxy;
 import es.um.asio.service.proxy.TypeProxy;
-import es.um.asio.service.proxy.URIMapProxy;
+import es.um.asio.service.service.SchemaService;
 import es.um.asio.service.validation.group.Create;
 import io.swagger.annotations.ApiParam;
 import lombok.AccessLevel;
@@ -29,6 +30,12 @@ public class CanonicalURIController {
      */
     @Autowired
     private TypeProxy typeProxy;
+
+    /**
+     * Schema service
+     */
+    @Autowired
+    private SchemaService schemaService;
 
     /**
      * Save.
@@ -66,14 +73,14 @@ public class CanonicalURIController {
             @ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res")
             @RequestParam(required = true) @Validated(Create.class) final String typeCode,
             @ApiParam(name = "concept", value = "Concept (Entity) Element", defaultValue = "")
-            @RequestParam(required = true) @Validated(Create.class) final String concept,
+            @RequestParam(required = false) @Validated(Create.class) final String concept,
             @ApiParam(name = "reference", value = "Reference (Instance) Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String reference,
             @ApiParam(name = "property", value = "Property Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String property
     ) {
         Type t = typeProxy.findOrCreate(typeCode);
-        CanonicalURI entity = new CanonicalURI(domain,subDomain,t,concept,reference);
+        CanonicalURI entity = new CanonicalURI(domain,subDomain,t,concept,reference,property,schemaService.getCanonicalSchema());
         if (property!=null) {
             entity.setPropertyName(property);
             entity.setIsProperty(true);

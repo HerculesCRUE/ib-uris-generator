@@ -1,15 +1,13 @@
 package es.um.asio.service.proxy.impl;
 
 import com.izertis.abstractions.exception.NoSuchEntityException;
-import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.filter.LocalURIFilter;
-import es.um.asio.service.model.CanonicalURI;
 import es.um.asio.service.model.LocalURI;
 import es.um.asio.service.model.User;
-import es.um.asio.service.proxy.CanonicalURIProxy;
 import es.um.asio.service.proxy.LocalURIProxy;
-import es.um.asio.service.service.CanonicalURIService;
 import es.um.asio.service.service.LocalURIService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +22,7 @@ import java.util.Optional;
 @Service
 public class LocalURIProxyImpl implements LocalURIProxy {
 
-
+    private final  Logger logger = LoggerFactory.getLogger(LocalURIProxyImpl.class);
 
     /**
      * Service layer.
@@ -62,7 +60,7 @@ public class LocalURIProxyImpl implements LocalURIProxy {
     @Override
     public LocalURI save(final LocalURI entity) {
         List<LocalURI> filtered = this.service.getAllByLocalURI(entity);
-        if (filtered.size() == 0) {
+        if (filtered.isEmpty()) {
             return this.service.save(entity);
         } else {
             for (LocalURI e :filtered) {
@@ -70,7 +68,7 @@ public class LocalURIProxyImpl implements LocalURIProxy {
                 try {
                     return this.service.update(e);
                 } catch (NoSuchEntityException ex) {
-                    ex.printStackTrace();
+                    logger.error("NoSuchEntityException: {}",ex);
                 }
             }
             return null;

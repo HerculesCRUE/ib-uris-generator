@@ -1,12 +1,11 @@
 package es.um.asio.service.config.properties;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.validation.annotation.Validated;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * JPA related properties.

@@ -1,11 +1,8 @@
 package es.um.asio.service.repository;
 
 import es.um.asio.service.model.CanonicalURI;
-import es.um.asio.service.model.URIMap;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;

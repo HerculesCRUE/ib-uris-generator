@@ -8,8 +8,6 @@ import es.um.asio.service.validation.group.Update;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.validator.constraints.SafeHtml;
-import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 
 import javax.validation.constraints.*;
 import java.util.Set;
@@ -20,7 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString(includeFieldNames = true)
-public class UserDto extends AuditableDto {
+public class CanonicalUriDto extends AuditableDto {
 
     /**
      * The id.
@@ -30,18 +28,18 @@ public class UserDto extends AuditableDto {
     private String id;
 
     /**
-     * User real name.
-     */
-    @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    private String name;
-
-    /**
-     * Email.
+     * domain component.
      */
     @NotEmpty
-    @Email
-    @Size(max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    private String email;
+    @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
+    private String domain;
+
+    /**
+     * subDomain component.
+     */
+    @NotEmpty
+    @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
+    private String subDomain;
 
     /**
      * Flag that indicates whether user is enabled or not.

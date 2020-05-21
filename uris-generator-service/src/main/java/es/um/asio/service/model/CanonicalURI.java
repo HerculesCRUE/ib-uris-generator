@@ -4,12 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.filter.SearchCriteria;
 import es.um.asio.service.filter.SearchOperation;
-import es.um.asio.service.filter.URIMapFilter;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.util.ValidationConstants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -21,7 +19,7 @@ import java.util.Set;
 @Getter
 @ToString(includeFieldNames = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class CanonicalURI implements Serializable {
+public class CanonicalURI  {
 
     /**
      * Version ID.
@@ -43,19 +41,17 @@ public class CanonicalURI implements Serializable {
     /**
      * DOMAIN.
      */
-    @ApiModelProperty(	example="hercules",allowEmptyValue = false, position =1, readOnly=false, value = "Required: Domain represents the highest level of the namespace for URI resolution, and for providing relevant information about the owner of the information. ", required = true)
+    @ApiModelProperty(	example="hercules",allowEmptyValue = false, position =1, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Required: Domain represents the highest level of the namespace for URI resolution, and for providing relevant information about the owner of the information. ", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.DOMAIN, nullable = false,columnDefinition = "VARCHAR(100)",length = 100)
     private String domain;
 
     /**
      * SUB_DOMAIN.
      */
-    @ApiModelProperty(	example="um", allowEmptyValue = true,position =2, readOnly=false, value = "Optional: \n" +
+    @ApiModelProperty(	example="um", allowEmptyValue = true,position =2, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional: \n" +
             "It provides information about the entity or department within the entity to which the information resource belongs. Represents the lowest level of the namespace for URI resolution, and for providing relevant information about the owner of the information.", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.SUB_DOMAIN, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String subDomain;
 
@@ -63,11 +59,12 @@ public class CanonicalURI implements Serializable {
      * TYPE.
      * Relation Bidirectional ManyToOne
      */
-
+    @JsonIgnore
     @ApiModelProperty(	example="ref", allowEmptyValue = false, allowableValues = "cat, def, kos, ref",position =3, readOnly=false, value = "Required: " +
             "Sets the type of information the resource contains. One of this: cat | def | kos | res", required = true)
     @ManyToOne(fetch = FetchType.LAZY)
     private Type type;
+
 
     /**
      * TYPE.
@@ -80,70 +77,68 @@ public class CanonicalURI implements Serializable {
     /**
      * CONCEPT.
      */
-    @ApiModelProperty(	example="university", allowEmptyValue = true, position =4, readOnly=false, value = "Optional:"+
+    @ApiModelProperty(	example="university", allowEmptyValue = true, position =4, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional:"+
             "Concepts are abstract representations that correspond to the classes or properties of the vocabularies or ontologies used to semantically represent resources. In addition to the concept, an unambiguous reference to specific instances may be represented. Required only if is a ref type", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.CONCEPT, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String concept;
 
     /**
      * REFERENCE.
      */
-    @ApiModelProperty(	example="12345", allowEmptyValue = true, position =5, readOnly=false, value = "Optional:"+
+    @ApiModelProperty(	example="12345", allowEmptyValue = true, position =5, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional:"+
             "Instances are representations in real world that correspond to the instances of the class defined in concepts. In addition to the concept, an unambiguous reference to specific instances may be represented. Required only if is a ref type, and concept is defined", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.REFERENCE, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String reference;
 
     /**
      * FULL_URI.
      */
-    @ApiModelProperty(	example="12345", allowEmptyValue = true, position =6, readOnly=true, value = "Full URI Result", required = true)
+    @ApiModelProperty(	example="12345", allowEmptyValue = true, position =6, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Full URI Result", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.FULL_URI, unique = true,nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String fullURI;
 
     /**
      * Is Entity.
      */
-    @ApiModelProperty(	value = "true if is entity", example="true", allowEmptyValue = false, allowableValues = "true, false",position =7, readOnly=false, required = true)
+    @ApiModelProperty(	value = "true if is entity", example="true", allowEmptyValue = false, allowableValues = "true, false",position =7, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
     @Column(name = URIMap.Columns.IS_ENTITY)
     private Boolean isEntity = false;
 
     /**
      * Is Property.
      */
-    @ApiModelProperty(	value = "true if is property", example="true", allowEmptyValue = false, allowableValues = "true, false",position =8, readOnly=false, required = true)
+    @ApiModelProperty(	value = "true if is property", example="true", allowEmptyValue = false, allowableValues = "true, false",position =8, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
     @Column(name = URIMap.Columns.IS_PROPERTY)
     private Boolean isProperty = false;
 
     /**
      * Is Instance.
      */
-    @ApiModelProperty(	value = "true if is instance", example="true", allowEmptyValue = false, allowableValues = "true, false",position =9, readOnly=false, required = true)
+    @ApiModelProperty(	value = "true if is instance", example="true", allowEmptyValue = false, allowableValues = "true, false",position =9, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
     @Column(name = URIMap.Columns.IS_INSTANCE)
     private Boolean isInstance = false;
 
     /**
      * Entity Name.
      */
-    @ApiModelProperty(	value = "name of entity", example="entity", allowEmptyValue = false,position =10, readOnly=false, required = true)
+    @ApiModelProperty(	value = "name of entity", example="entity", allowEmptyValue = false,position =10, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
     @Column(name = Columns.ENTITY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String entityName;
 
     /**
      * Property Name.
      */
-    @ApiModelProperty(	value = "name of property", example="property", allowEmptyValue = true,position =11, readOnly=false, required = false)
+    @ApiModelProperty(	value = "name of property", example="property", allowEmptyValue = true,position =11, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = false)
     @Column(name = Columns.PROPERTY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String propertyName;
 
     /**
      * Relation Bidirectional CanonicalURILanguage OneToMany
      */
+
     @OneToMany(mappedBy = "canonicalURI" , cascade = CascadeType.ALL)
     private Set<CanonicalURILanguage> canonicalURILanguages;
 
@@ -173,8 +168,8 @@ public class CanonicalURI implements Serializable {
         CanonicalURI.schema = schema;
     }
 
-    public CanonicalURI(String domain, String subDomain, Type t, String concept, String reference, String propertyName, String schema) {
-        this.schema = schema;
+    public CanonicalURI(String domain, String subDomain, Type t, String concept, String reference, String propertyName, String shemaParam) {
+        setSchema(shemaParam);
         this.domain = domain;
         this.subDomain = subDomain;
         setType(t);
@@ -236,6 +231,7 @@ public class CanonicalURI implements Serializable {
         this.isEntity = false;
         this.isProperty = false;
     }
+
 
     public void setEntityName(String entityName) {
         this.entityName = entityName;
@@ -361,29 +357,6 @@ public class CanonicalURI implements Serializable {
         } else {
             getFullURI();
             f.add(new SearchCriteria("fullURI",this.fullURI,SearchOperation.EQUAL));
-            /*
-            if (this.domain != null) {
-                f.add(new SearchCriteria("domain", this.domain, SearchOperation.EQUAL));
-            }
-            if (this.subDomain != null) {
-                f.add(new SearchCriteria("subDomain", this.subDomain, SearchOperation.EQUAL));
-            }
-            if (this.type != null) {
-                f.add(new SearchCriteria("typeIdCode", this.typeIdCode, SearchOperation.EQUAL));
-            }
-            if (this.concept != null) {
-                f.add(new SearchCriteria("concept", this.concept, SearchOperation.EQUAL));
-            }
-            if (this.reference != null) {
-                f.add(new SearchCriteria("reference", this.reference, SearchOperation.EQUAL));
-            }
-            if (this.entityName != null) {
-                f.add(new SearchCriteria("entityName", this.entityName, SearchOperation.EQUAL));
-            }
-            if (this.propertyName != null) {
-                f.add(new SearchCriteria("propertyName", this.propertyName, SearchOperation.EQUAL));
-            }
-             */
         }
 
         return f;
@@ -397,25 +370,43 @@ public class CanonicalURI implements Serializable {
     }
 
     public void generateFullURL(){
-        generateFullURL(this.schema);
+        generateFullURL(CanonicalURI.schema);
     }
 
-    public void generateFullURL(String uriSchema) {
+    public String generateDomainURL(String uriSchema) {
         if (Utils.isValidString(this.domain)) {
-            uriSchema = uriSchema.replaceFirst("\\$domain\\$",this.domain);
+            uriSchema = uriSchema.replaceFirst("\\$domain\\$", this.domain);
         } else {
             throw new IllegalArgumentException("Domain field in CanonicalURI can´t be empty");
         }
+        return uriSchema;
+    }
+
+    public String generateSubdomainURL(String uriSchema) {
         if (Utils.isValidString(this.subDomain)) {
             uriSchema = uriSchema.replaceFirst("\\$sub-domain\\$",this.subDomain);
         } else {
-            uriSchema = uriSchema.replaceFirst("\\$main\\$",this.subDomain);
+            uriSchema =  uriSchema.replaceFirst("/\\$sub-domain\\$","");
         }
+        return uriSchema;
+    }
+
+
+    public String generateTypeURL(String uriSchema) {
         if (Utils.isValidString(this.type.getCode())) {
             uriSchema = uriSchema.replaceFirst("\\$type\\$",this.type.getCode());
         } else {
             throw new IllegalArgumentException("Type field in CanonicalURI can´t be empty");
         }
+        return uriSchema;
+    }
+
+    public void generateFullURL(String uriSchema) {
+        setSchema(schema);
+        uriSchema = generateDomainURL(uriSchema);
+        uriSchema = generateSubdomainURL(uriSchema);
+        uriSchema = generateTypeURL(uriSchema);
+
         if (isEntity || isInstance) {
             if (Utils.isValidString(this.concept))
                 uriSchema = uriSchema.replaceFirst("\\$concept\\$",this.concept);
@@ -436,9 +427,9 @@ public class CanonicalURI implements Serializable {
             else
                 throw new IllegalArgumentException("Reference field in CanonicalURI can´t be empty if is a class or instance");
         } else {
-            uriSchema = uriSchema.replaceFirst("\\$reference\\$","");
+            uriSchema = uriSchema.replaceFirst("/\\$reference\\$","").replaceFirst("\\$reference\\$","");
         }
-
+        uriSchema = uriSchema.replaceFirst("///","//");
         this.fullURI = uriSchema;
     }
 

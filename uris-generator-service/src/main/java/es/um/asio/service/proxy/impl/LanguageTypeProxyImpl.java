@@ -1,15 +1,13 @@
 package es.um.asio.service.proxy.impl;
 
 import com.izertis.abstractions.exception.NoSuchEntityException;
-import es.um.asio.service.filter.LanguageFilter;
 import es.um.asio.service.filter.LanguageTypeFilter;
-import es.um.asio.service.model.Language;
 import es.um.asio.service.model.LanguageType;
 import es.um.asio.service.model.User;
-import es.um.asio.service.proxy.LanguageProxy;
 import es.um.asio.service.proxy.LanguageTypeProxy;
-import es.um.asio.service.service.LanguageService;
 import es.um.asio.service.service.LanguageTypeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +23,7 @@ import java.util.Optional;
 public class LanguageTypeProxyImpl implements LanguageTypeProxy {
 
 
-
+    private final Logger logger = LoggerFactory.getLogger(LanguageTypeProxyImpl.class);
     /**
      * Service layer.
      */
@@ -61,8 +59,8 @@ public class LanguageTypeProxyImpl implements LanguageTypeProxy {
      */
     @Override
     public LanguageType save(final LanguageType entity) {
-        List<LanguageType> filtered = this.service.getByLanguageAndType(entity.getLanguage().getISO(),entity.getType().getCode());
-        if (filtered.size() == 0) {
+        List<LanguageType> filtered = this.service.getByLanguageAndType(entity.getLanguage().getIso(),entity.getType().getCode());
+        if (filtered.isEmpty()) {
             return this.service.save(entity);
         } else {
             for (LanguageType e :filtered) {
@@ -70,7 +68,7 @@ public class LanguageTypeProxyImpl implements LanguageTypeProxy {
                 try {
                     return this.service.update(e);
                 } catch (NoSuchEntityException ex) {
-                    ex.printStackTrace();
+                    logger.error("NoSuchEntityException: {}",ex);
                 }
             }
             return null;

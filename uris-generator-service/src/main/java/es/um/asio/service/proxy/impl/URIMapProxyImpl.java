@@ -6,6 +6,8 @@ import es.um.asio.service.model.URIMap;
 import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.URIMapProxy;
 import es.um.asio.service.service.URIMapService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,8 @@ import java.util.Optional;
  */
 @Service
 public class URIMapProxyImpl implements URIMapProxy {
+
+    private final Logger logger = LoggerFactory.getLogger(URIMapProxyImpl.class);
 
     /**
      * Service layer.
@@ -60,9 +64,9 @@ public class URIMapProxyImpl implements URIMapProxy {
         try {
             entity.completeEntity(filtered);
         } catch (InvalidPropertiesFormatException e) {
-            e.printStackTrace();
+            logger.error("InvalidPropertiesFormatException: {}",e);
         }
-        if (filtered.size() == 0) {
+        if (filtered.isEmpty()) {
             return this.service.save(entity);
         } else {
             for (URIMap uriMap :filtered) {
@@ -70,7 +74,7 @@ public class URIMapProxyImpl implements URIMapProxy {
                 try {
                     return this.service.update(uriMap);
                 } catch (NoSuchEntityException e) {
-                    e.printStackTrace();
+                    logger.error("NoSuchEntityException: {}",e);
                 }
             }
             return null;

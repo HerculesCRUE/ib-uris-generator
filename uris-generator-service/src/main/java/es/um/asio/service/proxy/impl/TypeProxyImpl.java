@@ -1,15 +1,14 @@
 package es.um.asio.service.proxy.impl;
 
 import com.izertis.abstractions.exception.NoSuchEntityException;
-import es.um.asio.service.filter.LanguageFilter;
 import es.um.asio.service.filter.TypeFilter;
 import es.um.asio.service.model.Language;
 import es.um.asio.service.model.Type;
 import es.um.asio.service.model.User;
-import es.um.asio.service.proxy.LanguageProxy;
 import es.um.asio.service.proxy.TypeProxy;
-import es.um.asio.service.service.LanguageService;
 import es.um.asio.service.service.TypeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +23,7 @@ import java.util.Optional;
 @Service
 public class TypeProxyImpl implements TypeProxy {
 
-
+    private final Logger logger = LoggerFactory.getLogger(TypeProxyImpl.class);
 
     /**
      * Service layer.
@@ -62,7 +61,7 @@ public class TypeProxyImpl implements TypeProxy {
     @Override
     public Type save(final Type entity) {
         List<Type> filtered = this.service.getAllByType(entity);
-        if (filtered.size() == 0) {
+        if (filtered.isEmpty()) {
             return this.service.save(entity);
         } else {
             for (Type e :filtered) {
@@ -70,7 +69,7 @@ public class TypeProxyImpl implements TypeProxy {
                 try {
                     return this.service.update(e);
                 } catch (NoSuchEntityException ex) {
-                    ex.printStackTrace();
+                    logger.error("NoSuchEntityException: {}",ex);
                 }
             }
             return null;

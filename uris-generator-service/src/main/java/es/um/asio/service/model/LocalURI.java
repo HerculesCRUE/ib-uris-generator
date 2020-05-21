@@ -1,7 +1,6 @@
 package es.um.asio.service.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.filter.LocalURIFilter;
 import es.um.asio.service.filter.SearchCriteria;
 import es.um.asio.service.filter.SearchOperation;
@@ -9,10 +8,10 @@ import es.um.asio.service.util.Utils;
 import es.um.asio.service.util.ValidationConstants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Entity
 @Table(name = LocalURI.TABLE)
@@ -44,7 +43,6 @@ public class LocalURI {
      * canonicalURILanguageStr.
      */
     @ApiModelProperty(hidden = true)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.CANONICAL_URI_LANGUAGE_ID, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String canonicalURILanguageStr;
 
@@ -53,7 +51,7 @@ public class LocalURI {
      */
     @JsonIgnore
     @EqualsAndHashCode.Include
-    @ApiModelProperty(	example="ES",allowEmptyValue = false, position=2, readOnly=false, value = "Required: Storage Type", required = true)
+    @ApiModelProperty(	example="ES",allowEmptyValue = false, position=2, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Required: Storage Type", required = true)
     @ManyToOne(fetch = FetchType.LAZY)
     private StorageType storageType;
 
@@ -61,25 +59,23 @@ public class LocalURI {
      * canonicalURILanguageStr.
      */
     @ApiModelProperty(hidden = true)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.STORAGETYPE_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String storageTypeStr;
 
     /**
      * localURI.
      */
-    @ApiModelProperty(	example="12345", allowEmptyValue = true, position =3, readOnly=true, value = "Full URI Result", required = true)
+    @ApiModelProperty(	example="12345", allowEmptyValue = true, position =3, accessMode = ApiModelProperty.AccessMode.READ_ONLY, value = "Full URI Result", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.LOCAL_URI, unique = false, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
-    private String localURI;
+    private String localUri;
 
 
     public LocalURI() {
     }
 
-    public LocalURI(String localURI, CanonicalURILanguage cul, StorageType st) {
-        this.localURI = localURI;
+    public LocalURI(String localUri, CanonicalURILanguage cul, StorageType st) {
+        this.localUri = localUri;
         this.canonicalURILanguage = cul;
         if (this.canonicalURILanguage!=null) {
             this.canonicalURILanguageStr = this.canonicalURILanguage.getFullURI();
@@ -110,8 +106,8 @@ public class LocalURI {
         this.storageTypeStr = storageTypeStr;
     }
 
-    public void setLocalURI(String localURI) {
-        this.localURI = localURI;
+    public void setLocalUri(String localUri) {
+        this.localUri = localUri;
     }
 
     /**
@@ -159,8 +155,8 @@ public class LocalURI {
         if (this.id != 0) {
             f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
-            if (Utils.isValidString(this.localURI)) {
-                f.add(new SearchCriteria("localURI", this.localURI, SearchOperation.EQUAL));
+            if (Utils.isValidString(this.localUri)) {
+                f.add(new SearchCriteria("localURI", this.localUri, SearchOperation.EQUAL));
             }
             if (Utils.isValidString(this.canonicalURILanguageStr)) {
                 f.add(new SearchCriteria("canonicalURILanguageStr", this.canonicalURILanguageStr, SearchOperation.EQUAL));
@@ -178,13 +174,13 @@ public class LocalURI {
         if (this.id != 0) {
             f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
-            if (Utils.isValidString(this.localURI)) {
-                f.add(new SearchCriteria("localURI", this.localURI, SearchOperation.EQUAL));
+            if (Utils.isValidString(this.localUri)) {
+                f.add(new SearchCriteria("localURI", this.localUri, SearchOperation.EQUAL));
             }
-            if (Utils.isValidString(this.localURI)) {
+            if (Utils.isValidString(this.localUri)) {
                 f.add(new SearchCriteria("canonicalURILanguageStr", this.canonicalURILanguageStr, SearchOperation.EQUAL));
             }
-            if (Utils.isValidString(this.localURI)) {
+            if (Utils.isValidString(this.localUri)) {
                 f.add(new SearchCriteria("storageTypeStr", this.storageTypeStr, SearchOperation.EQUAL));
             }
         }
@@ -193,7 +189,7 @@ public class LocalURI {
     }
 
     public void merge(LocalURI other){
-        this.localURI = other.localURI;
+        this.localUri = other.localUri;
     }
 
 }

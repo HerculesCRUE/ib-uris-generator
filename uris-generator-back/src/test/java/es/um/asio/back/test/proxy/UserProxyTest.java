@@ -1,11 +1,13 @@
 package es.um.asio.back.test.proxy;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.izertis.abstractions.search.PageImplHelper;
+import es.um.asio.back.test.TestApplication;
+import es.um.asio.service.dto.UserDto;
+import es.um.asio.service.filter.UserFilter;
+import es.um.asio.service.model.User;
+import es.um.asio.service.proxy.UserProxy;
+import es.um.asio.service.proxy.impl.UserProxyImpl;
+import es.um.asio.service.service.UserService;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +23,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.izertis.abstractions.search.PageImplHelper;
-import es.um.asio.back.test.TestApplication;
-import es.um.asio.service.dto.UserDto;
-import es.um.asio.service.filter.UserFilter;
-import es.um.asio.service.model.User;
-import es.um.asio.service.proxy.UserProxy;
-import es.um.asio.service.proxy.impl.UserProxyImpl;
-import es.um.asio.service.service.UserService;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
 public class UserProxyTest {

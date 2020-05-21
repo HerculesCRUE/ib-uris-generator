@@ -110,43 +110,21 @@ public class CanonicalURILanguageController {
     )  {
         Type t = typeProxy.findOrCreate(typeCode);
         Language l = languageProxy.findOrCreate(language);
-        /*TODO: Get or Create*/
-        List<LanguageType> lts = languageTypeProxy.getByLanguageAndType(l.getISO().trim(),t.getCode().trim());
+
+        List<LanguageType> lts = languageTypeProxy.getByLanguageAndType(l.getIso().trim(),t.getCode().trim());
         LanguageType lt = null;
-        if (lts.size()>0) {
+        if (!lts.isEmpty()) {
             lt = lts.get(lts.size()-1);
         }
         String schema = schemaService.getCanonicalLanguageSchema();
         CanonicalURILanguage entity = new CanonicalURILanguage(domain,subDomain,lt,concept,reference,property,schema);
         entity.setParentPropertyName(parentProperty);
-        List<CanonicalURI> canonicalURIs = new ArrayList<>();
-        if (entity.getIsEntity()) {
-            List<CanonicalURI> cus = canonicalProxy.getAllByEntityNameAndPropertyName(parentEntity, null);
-            for (CanonicalURI cu:cus) {
-                if (cu.getIsEntity() && cu.getReference()==null) {
-                    canonicalURIs.add(cu);
-                }
-            }
-        } else if (entity.getIsInstance()) {
-            List<CanonicalURI> cus = canonicalProxy.getAllByEntityNameAndReference(parentEntity,reference);
-            for (CanonicalURI cu:cus) {
-                if (cu.getIsInstance() && cu.getReference().trim().equals(reference)) {
-                    canonicalURIs.add(cu);
-                }
-            }
-        } else  {
-            List<CanonicalURI> cus = canonicalProxy.getAllByEntityNameAndPropertyName(parentEntity,parentProperty);
-            for (CanonicalURI cu:cus) {
-                if (cu.getIsProperty() && cu.getReference().trim().equals(entity.getParentPropertyName().trim())) {
-                    canonicalURIs.add(cu);
-                }
-            }
-        }
+        List<CanonicalURI> canonicalURIs = getCanonicalURIS(entity,parentEntity,parentProperty,reference);
         try {
             if (canonicalURIs.size()>1) {
                 throw new CustomNotFoundException();
             } else {
-                if (canonicalURIs.size()==0) {
+                if (canonicalURIs.isEmpty()) {
                     if (createCanonicalIfNotExist) {
                         String canonicalSchema = schemaService.getCanonicalLanguageSchema();
                         CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity,reference, parentProperty,canonicalSchema);
@@ -162,6 +140,7 @@ public class CanonicalURILanguageController {
                     else
                         throw new CustomNotFoundException();
                 }
+                canonicalURIs.get(0).generateFullURL(schemaService.getCanonicalSchema());
                 entity.setCanonicalURI(canonicalURIs.get(0));
                 entity.setParentEntityName(parentEntity);
                 entity.setParentPropertyName(parentProperty);
@@ -169,10 +148,51 @@ public class CanonicalURILanguageController {
                 return this.proxy.save(entity);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             throw new CustomNotFoundException();
         }
 
+    }
+
+    private List<CanonicalURI> getCanonicalURIS(CanonicalURILanguage entity, String parentEntity, String parentProperty, String reference){
+        List<CanonicalURI> canonicalURIs = new ArrayList<>();
+        if (entity.getIsEntity()) {
+            canonicalURIs.addAll(getCanonicalURIEntities(parentEntity));
+        } else if (entity.getIsInstance()) {
+            canonicalURIs.addAll(getCanonicalURIInstances(parentEntity, reference));
+        } else  {
+            canonicalURIs.addAll(getCanonicalURIProperties(entity, parentEntity, parentProperty));
+        }
+        return canonicalURIs;
+    }
+
+    private List<CanonicalURI> getCanonicalURIEntities(String parentEntity) {
+        List<CanonicalURI> canonicalURIs = new ArrayList<>();
+        for (CanonicalURI cu : canonicalProxy.getAllByEntityNameAndPropertyName(parentEntity, null)) {
+            if (cu.getIsEntity() && cu.getReference()==null) {
+                canonicalURIs.add(cu);
+            }
+        }
+        return canonicalURIs;
+    }
+
+    private List<CanonicalURI> getCanonicalURIInstances(String parentEntity, String reference) {
+        List<CanonicalURI> canonicalURIs = new ArrayList<>();
+        for (CanonicalURI cu : canonicalProxy.getAllByEntityNameAndReference(parentEntity,reference)) {
+            if (cu.getIsInstance() && cu.getReference().trim().equals(reference)) {
+                canonicalURIs.add(cu);
+            }
+        }
+        return canonicalURIs;
+    }
+
+    private List<CanonicalURI> getCanonicalURIProperties(CanonicalURILanguage entity, String parentEntity, String parentProperty) {
+        List<CanonicalURI> canonicalURIs = new ArrayList<>();
+        for (CanonicalURI cu : canonicalProxy.getAllByEntityNameAndPropertyName(parentEntity,parentProperty)) {
+            if (cu.getIsProperty() && cu.getReference().trim().equals(entity.getParentPropertyName().trim())) {
+                canonicalURIs.add(cu);
+            }
+        }
+        return canonicalURIs;
     }
 
     @GetMapping("all")

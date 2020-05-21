@@ -15,8 +15,8 @@ app:
       properties:
         hibernate.temp.use_jdbc_metadata_defaults: false
   uri:
-    canonicalURISchema: http://$domain$/$sub-domain$/$type$/$concept$/$reference$
-    canonicalURILanguageSchema: http://$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$
+    canonicalURISchema: http://$domain$/$sub-domain$/$type$/$reference$/$concept$
+    canonicalURILanguageSchema: http://$domain$/$sub-domain$/$language$/$type$/$reference$/$concept$
 
   # CORS
   cors:
@@ -60,4 +60,4 @@ management:
 logging:
   level:
     org.hibernate.SQL: DEBUG
-    org.hibernate.type: TRACE
+    #org.hibernate.type: TRACE

@@ -6,7 +6,6 @@ import com.izertis.abstractions.service.SaveService;
 import es.um.asio.service.filter.LanguageTypeFilter;
 import es.um.asio.service.model.LanguageType;
 
-
 import java.util.List;
 
 public interface LanguageTypeService

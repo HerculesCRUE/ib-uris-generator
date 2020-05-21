@@ -1,14 +1,11 @@
 package es.um.asio.service.service.impl;
 
-import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.filter.CanonicalURILanguageFilter;
 import es.um.asio.service.model.CanonicalURI;
 import es.um.asio.service.model.CanonicalURILanguage;
 import es.um.asio.service.model.User;
 import es.um.asio.service.repository.CanonicalURILanguageRepository;
-import es.um.asio.service.repository.CanonicalURIRepository;
 import es.um.asio.service.service.CanonicalURILanguageService;
-import es.um.asio.service.service.CanonicalURIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -117,13 +114,12 @@ public class CanonicalURILanguageServiceImpl implements CanonicalURILanguageServ
 
     @Override
     public List<CanonicalURILanguage> getAllByCanonicalURILanguage(CanonicalURILanguage entity) {
-        CanonicalURILanguageFilter f = entity.buildFilterByEntityUniqueProperties();
-
-        if (f.getList().size()>0) {
-            List<CanonicalURILanguage> filteredList = this.repository.findAll(f);
-            return filteredList;
+        if (entity.getIsEntity()) {
+            return this.repository.findByEntityNameAndIsEntity(entity.getEntityName(),true).orElse(new ArrayList<>());
+        } else if (entity.getIsProperty()) {
+            return this.repository.findByPropertyNameAndIsProperty(entity.getPropertyName(),true).orElse(new ArrayList<>());
         } else {
-            return new ArrayList<CanonicalURILanguage>();
+            return this.repository.findByEntityNameAndReference(entity.getEntityName(),entity.getReference()).orElse(new ArrayList<>());
         }
     }
 
@@ -160,7 +156,7 @@ public class CanonicalURILanguageServiceImpl implements CanonicalURILanguageServ
                     ( domain == null || (cul!=null && cul.getDomain()!=null && cul.getDomain().trim().equals(domain.trim())))
                             && ( subDomain == null || (cul!=null && cul.getSubDomain()!=null && cul.getSubDomain().trim().equals(subDomain.trim())))
                             && ( type == null || (cul!=null  && cul.getTypeLangCode()!=null && cul.getTypeLangCode().trim().equals(type.trim())))
-                            && ( language == null || (cul!=null && cul.getLanguage()!=null && cul.getLanguage().getISO()!=null && cul.getLanguage().getISO().trim().equals(language.trim())))
+                            && ( language == null || (cul!=null && cul.getLanguage()!=null && cul.getLanguage().getIso()!=null && cul.getLanguage().getIso().trim().equals(language.trim())))
                             && ( concept == null || (cul!=null && cul.getConcept()!=null && cul.getConcept().trim().equals(concept.trim())))
                             && ( (reference == null && cul.getReference() == null) || (reference != null && cul!=null && cul.getReference()!=null && cul.getReference().trim().equals(reference.trim())))
             ) {

@@ -132,30 +132,19 @@ public class LocalURIController {
             @RequestParam(required = true) @Validated(Create.class) final String canonicalReference
     ) {
 
-        Type t = tProxy.findOrCreate(typeCode);
-        Language l = lProxy.findOrCreate(language);
-        /*TODO: Get or Create*/
-        List<LanguageType> lts = ltProxy.getByLanguageAndType(l.getISO().trim(),t.getCode().trim());
-        LanguageType lt = null;
 
         boolean isEntity = false;
-        boolean isProperty = false;
         boolean isInstance = false;
 
         if (canonicalProperty!=null && canonicalReference != null)
             throw new CustomNotFoundException();
 
-        if (Utils.isValidString(canonicalProperty)) {
-            isProperty = true;
-        } else  if (Utils.isValidString(canonicalReference)) {
+        if (Utils.isValidString(canonicalReference)) {
             isInstance = true;
         } else {
             isEntity = true;
         }
 
-        if (lts.size()>0) {
-            lt = lts.get(lts.size()-1);
-        }
         List<CanonicalURI> canonicalURIs = new ArrayList<>();
         if (isEntity) {
             List<CanonicalURI> cus = cuProxy.getAllByEntityNameAndPropertyName(canonicalEntity, null);
@@ -183,12 +172,14 @@ public class LocalURIController {
         CanonicalURILanguage canonicalURILanguage = null;
         if (canonicalURIs.size()!=1)
             throw new CustomNotFoundException();
+
         for (CanonicalURILanguage cul: canonicalURIs.get(0).getCanonicalURILanguages()) {
-            if (cul.getLanguage().getISO().trim().equals(language)) {
+            if (cul.getLanguage().getIso().trim().equals(language)) {
                 canonicalURILanguage = cul;
                 break;
             }
         }
+
 
         StorageType st = stProxy.findByName(storageType);
         if (canonicalURILanguage == null || st == null) {

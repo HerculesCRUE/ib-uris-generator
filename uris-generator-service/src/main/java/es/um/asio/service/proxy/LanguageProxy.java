@@ -7,7 +7,6 @@ import es.um.asio.service.filter.LanguageFilter;
 import es.um.asio.service.model.Language;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Proxy service for {@link Language}. Performs DTO conversion and permission checks.
@@ -15,7 +14,7 @@ import java.util.Optional;
 public interface LanguageProxy
         extends QueryService<Language, String, LanguageFilter>, SaveService<Language>, DeleteService<Language, String> {
 
-    Language findOrCreate(String ISO);
+    Language findOrCreate(String iso);
 
     List<Language> getDefaultLanguages();
 }

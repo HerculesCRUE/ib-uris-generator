@@ -1,16 +1,13 @@
 package es.um.asio.back;
 
-import org.checkerframework.checker.regex.qual.Regex;
-
-import java.util.Locale;
-import java.util.UUID;
-import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main {
     public static void main(String[] args) {
-
-        String uri = ("http://$domain$/$sub-domain$/$type$/$concept$/$reference$");
-        uri = uri.replaceFirst("\\$domain","dominio");
-        System.out.println(uri);
+        Logger logger = LoggerFactory.getLogger(Main.class);
+        String uri = ("http:///ConceptoGrupo/es-ES/rec/um/hercules.org");
+        uri = uri.replaceFirst("///","//");
+        logger.info(uri);
     }
 }

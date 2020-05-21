@@ -6,8 +6,6 @@ import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Arrays;
-
 /**
  * Cors related configuration properties.
  */

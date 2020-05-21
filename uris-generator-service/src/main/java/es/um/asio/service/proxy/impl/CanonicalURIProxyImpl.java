@@ -1,17 +1,19 @@
 package es.um.asio.service.proxy.impl;
 
 import com.izertis.abstractions.exception.NoSuchEntityException;
-import es.um.asio.service.config.properties.URISChemaProperties;
 import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.model.CanonicalURI;
 import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.CanonicalURIProxy;
 import es.um.asio.service.service.CanonicalURIService;
 import es.um.asio.service.service.SchemaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +23,8 @@ import java.util.Optional;
 @Service
 public class CanonicalURIProxyImpl implements CanonicalURIProxy {
 
-
+    /** The logger. */
+    private final Logger logger = LoggerFactory.getLogger(CanonicalURIProxyImpl.class);
 
     /**
      * Service layer.
@@ -66,7 +69,7 @@ public class CanonicalURIProxyImpl implements CanonicalURIProxy {
     public CanonicalURI save(final CanonicalURI entity) {
         entity.generateFullURL(schemaService.getCanonicalSchema());
         List<CanonicalURI> filtered = this.service.getAllByCanonicalURI(entity);
-        if (filtered.size() == 0) {
+        if (filtered.isEmpty()) {
             return this.service.save(entity);
         } else {
             for (CanonicalURI e :filtered) {
@@ -74,7 +77,7 @@ public class CanonicalURIProxyImpl implements CanonicalURIProxy {
                 try {
                     return this.service.update(e);
                 } catch (NoSuchEntityException ex) {
-                    ex.printStackTrace();
+                    logger.error("NoSuchEntityException");
                 }
             }
             return null;

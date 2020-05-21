@@ -4,9 +4,7 @@ import com.izertis.abstractions.service.DeleteService;
 import com.izertis.abstractions.service.QueryService;
 import com.izertis.abstractions.service.SaveService;
 import es.um.asio.service.filter.CanonicalURIFilter;
-import es.um.asio.service.filter.URIMapFilter;
 import es.um.asio.service.model.CanonicalURI;
-import es.um.asio.service.model.URIMap;
 import es.um.asio.service.model.User;
 
 import java.util.List;

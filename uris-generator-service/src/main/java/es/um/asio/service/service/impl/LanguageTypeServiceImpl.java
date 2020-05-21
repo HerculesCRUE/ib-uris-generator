@@ -1,14 +1,10 @@
 package es.um.asio.service.service.impl;
 
-import es.um.asio.service.filter.LanguageFilter;
 import es.um.asio.service.filter.LanguageTypeFilter;
 import es.um.asio.service.model.CanonicalURI;
-import es.um.asio.service.model.Language;
 import es.um.asio.service.model.LanguageType;
 import es.um.asio.service.model.User;
-import es.um.asio.service.repository.LanguageRepository;
 import es.um.asio.service.repository.LanguageTypeRepository;
-import es.um.asio.service.service.LanguageService;
 import es.um.asio.service.service.LanguageTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -114,11 +110,10 @@ public class LanguageTypeServiceImpl implements LanguageTypeService {
     public List<LanguageType> getAllByLanguageType(LanguageType entity) {
         LanguageTypeFilter f = entity.buildFilterByEntityUniqueProperties();
 
-        if (f.getList().size()>0) {
-            List<LanguageType> filteredList = this.repository.findAll(f);
-            return filteredList;
+        if (!f.getList().isEmpty()) {
+            return this.repository.findAll(f);
         } else {
-            return new ArrayList<LanguageType>();
+            return new ArrayList<>();
         }
     }
 
@@ -127,7 +122,7 @@ public class LanguageTypeServiceImpl implements LanguageTypeService {
         List<LanguageType> languageTypes = new ArrayList<>();
         for (LanguageType lt : this.repository.findAll()) {
             if (
-                    ( l == null || (lt.getLanguage()!=null && lt.getLanguage()!=null && lt.getLanguage().getISO().trim().equals(l.trim()))) &&
+                    ( l == null || (lt.getLanguage()!=null && lt.getLanguage().getIso()!=null && lt.getLanguage().getIso().trim().equals(l.trim()))) &&
                     ( t == null || (lt.getType()!=null && lt.getType().getCode()!=null &&lt.getType().getCode().trim().equals(t.trim())))
             ) {
                 languageTypes.add(lt);

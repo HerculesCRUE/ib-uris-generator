@@ -8,6 +8,8 @@ import es.um.asio.service.proxy.CanonicalURILanguageProxy;
 import es.um.asio.service.service.CanonicalURILanguageService;
 import es.um.asio.service.service.CanonicalURIService;
 import es.um.asio.service.service.SchemaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,8 @@ import java.util.Optional;
 @Service
 public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy {
 
+    /** The logger. */
+    private final Logger logger = LoggerFactory.getLogger(CanonicalURILanguageProxyImpl.class);
 
     /**
      * Service layer.
@@ -72,7 +76,7 @@ public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy 
     public CanonicalURILanguage save(final CanonicalURILanguage entity) {
         entity.generateFullURL(schemaService.getCanonicalLanguageSchema());
         List<CanonicalURILanguage> filtered = this.service.getAllByCanonicalURILanguage(entity);
-        if (filtered.size() == 0) {
+        if (filtered.isEmpty()) {
             return this.service.save(entity);
         } else {
             for (CanonicalURILanguage e :filtered) {
@@ -80,7 +84,7 @@ public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy 
                 try {
                     return this.service.update(e);
                 } catch (NoSuchEntityException ex) {
-                    ex.printStackTrace();
+                    logger.error("NoSuchEntityException");
                 }
             }
             return null;
