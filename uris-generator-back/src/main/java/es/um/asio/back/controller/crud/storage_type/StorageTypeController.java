@@ -1,4 +1,4 @@
-package es.um.asio.back.controller.uri;
+package es.um.asio.back.controller.crud.storage_type;
 
 import es.um.asio.service.model.StorageType;
 import es.um.asio.service.model.User;

@@ -13,7 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableAutoConfiguration
 @Import(MapperConfig.class)
 public class TestApplication {
-    /**
+    /**@SpringBootApplication
+     @EnableAutoConfiguration
+     @Import({ ServiceConfig.class })
+     @ComponentScan
      * Main method for embedded deployment.
      *
      * @param args
@@ -22,7 +25,7 @@ public class TestApplication {
     public static void main(final String[] args) {
         SpringApplication.run(TestApplication.class, args);
     }
-    
+
     /**
      * Creates the password encoder BCrypt.
      *

@@ -1,6 +1,7 @@
 package es.um.asio.service.repository;
 
 import es.um.asio.service.model.CanonicalURI;
+import es.um.asio.service.model.CanonicalURILanguage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -52,6 +53,17 @@ public interface CanonicalURIRepository extends JpaRepository<CanonicalURI, Stri
     Optional<List<CanonicalURI>> findByEntityName(String entityName);
 
     /**
+     * Finds a CanonicalURI using  EntityName field.
+     *
+     * @param entityName
+     *            The entityName to search for
+     * @param isEntity
+     *            True if is Entity
+     * @return an {@link CanonicalURI} entity stored in the database or {@literal Optional#empty()} if none found
+     */
+    Optional<List<CanonicalURI>> findByEntityNameAndIsEntity(String entityName,boolean isEntity);
+
+    /**
      * Finds a CanonicalURI using  propertyName field.
      *
      * @param propertyName
@@ -59,5 +71,16 @@ public interface CanonicalURIRepository extends JpaRepository<CanonicalURI, Stri
      * @return an {@link CanonicalURI} entity stored in the database or {@literal Optional#empty()} if none found
      */
     Optional<List<CanonicalURI>> findByPropertyName(String propertyName);
+
+    /**
+     * Finds a CanonicalURI using  EntityName field.
+     *
+     * @param entityName
+     *            The entityName to search for
+     * @param isProperty
+     *            True if is Entity
+     * @return an {@link CanonicalURI} entity stored in the database or {@literal Optional#empty()} if none found
+     */
+    Optional<List<CanonicalURI>> findByPropertyNameAndIsProperty(String entityName,boolean isProperty);
 
 }

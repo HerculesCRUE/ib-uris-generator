@@ -1,10 +1,10 @@
 package es.um.asio.back.controller;
 
 import es.um.asio.abstractions.constants.Constants;
+import es.um.asio.back.controller.crud.canonical_language.CanonicalURILanguageController;
+import es.um.asio.back.controller.crud.local.LocalURIController;
+import es.um.asio.back.controller.crud.storage_type.StorageTypeController;
 import es.um.asio.back.controller.error.CustomNotFoundException;
-import es.um.asio.back.controller.uri.CanonicalURILanguageController;
-import es.um.asio.back.controller.uri.LocalURIController;
-import es.um.asio.back.controller.uri.StorageTypeController;
 import es.um.asio.service.model.*;
 import es.um.asio.service.proxy.LanguageProxy;
 import es.um.asio.service.proxy.LanguageTypeProxy;

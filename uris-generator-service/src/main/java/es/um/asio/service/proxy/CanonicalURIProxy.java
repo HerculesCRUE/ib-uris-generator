@@ -23,7 +23,11 @@ public interface CanonicalURIProxy
 
     List<CanonicalURI> getAllByEntityName(String entityName);
 
+    List<CanonicalURI> getAllByEntityNameFromEntities(String entityName);
+
     List<CanonicalURI> getAllByPropertyName(String propertyName);
+
+    List<CanonicalURI> getAllByPropertyFromProperties(String propertyName);
 
     List<CanonicalURI> getAllByElements(String domain, String subDomain, String type, String concept, String reference);
 

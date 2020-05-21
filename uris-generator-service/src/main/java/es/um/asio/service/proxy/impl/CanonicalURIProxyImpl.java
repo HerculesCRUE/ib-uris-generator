@@ -137,8 +137,18 @@ public class CanonicalURIProxyImpl implements CanonicalURIProxy {
     }
 
     @Override
+    public List<CanonicalURI> getAllByEntityNameFromEntities(String entityName) {
+        return this.service.getAllByEntityNameAndIsEntity(entityName);
+    }
+
+    @Override
     public List<CanonicalURI> getAllByPropertyName(String propertyName) {
         return this.service.getAllByPropertyName(propertyName);
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByPropertyFromProperties(String propertyName) {
+        return this.service.getAllByPropertyNameAndIsProperty(propertyName);
     }
 
     @Override

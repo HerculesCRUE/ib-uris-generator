@@ -21,7 +21,11 @@ public interface CanonicalURIService
 
     List<CanonicalURI> getAllByEntityName(final String entityName);
 
+    List<CanonicalURI> getAllByEntityNameAndIsEntity(final String entityName);
+
     List<CanonicalURI> getAllByPropertyName(final String propertyName);
+
+    List<CanonicalURI> getAllByPropertyNameAndIsProperty(final String propertyName);
 
     List<CanonicalURI> getAllByElements(final String domain, final String subDomain, final String type, final String concept, final String reference);
 }

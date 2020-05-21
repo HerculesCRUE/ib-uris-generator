@@ -1,20 +1,15 @@
-package es.um.asio.back.test.testSuit;
+package es.um.asio.back.test.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.um.asio.back.controller.security.UserController;
-import es.um.asio.back.controller.uri.CanonicalURIController;
+import es.um.asio.back.controller.crud.canonical.CanonicalURIController;
 import es.um.asio.service.model.CanonicalURI;
 import es.um.asio.service.model.Type;
 import es.um.asio.service.proxy.CanonicalURIProxy;
 import es.um.asio.service.proxy.TypeProxy;
-import es.um.asio.service.proxy.UserProxy;
 import es.um.asio.service.service.SchemaService;
-import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Order;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,15 +17,8 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.MimeTypeUtils;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +26,6 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -81,9 +68,6 @@ public class CanonicalURIControllerTest {
 
     final List<CanonicalURI> canonicalURISSchema1 = new ArrayList<>();
 
-    final CanonicalURI entity1 = null;
-    final CanonicalURI property1 = null;
-    final CanonicalURI reference1 = null;
 
     // Schema Canonical 1
     //final String SCHEMA_CANONICAL_1 = "http://$domain$/$sub-domain$/$type$/$concept$/$reference$";
@@ -148,6 +132,22 @@ public class CanonicalURIControllerTest {
         Mockito.when(this.canonicalURIProxy.save(any(CanonicalURI.class))).thenAnswer(invocation -> {
             return invocation.getArgument(0);
         });
+        // Mock canonicalURIProxy getAllByEntityName
+        Mockito.when(this.canonicalURIProxy.getAllByEntityNameFromEntities(anyString())).thenAnswer(invocation -> {
+            for (CanonicalURI cu : canonicalURISSchema1) {
+                if (cu.getIsEntity() && cu.getConcept().equals(invocation.getArgument(0))) {
+                    return cu;
+                }
+            }
+            return null;
+        });
+
+        /*
+                    for (CanonicalURI cu : canonicalURISSchema1) {
+                if (cu.getIsInstance() && cu.getConcept().equals(invocation.getArgument(0)))
+                    return cu;
+            }
+         */
 
         // Mock post Entity, Property, Reference
         Mockito.when(this.schemaService.getCanonicalSchema()).thenAnswer(invocation -> {
@@ -291,7 +291,7 @@ public class CanonicalURIControllerTest {
     public void test_7_postInstance() throws Exception {
 
         for (CanonicalURI cu : canonicalURISSchema1) {
-            if (cu.getIsProperty()) {
+            if (cu.getIsInstance()) {
                 this.mvc.perform(post("/canonical-uri")
                         .param("domain", cu.getDomain())
                         .param("subDomain", cu.getSubDomain())
@@ -307,6 +307,26 @@ public class CanonicalURIControllerTest {
                         .andExpect(jsonPath("$.concept", is(cu.getConcept())))
                         .andExpect(jsonPath("$.reference", is(cu.getReference())))
                         .andExpect(jsonPath("$.isInstance", is(cu.getIsInstance())))
+                        .andExpect(jsonPath("$.fullURI", is(cu.getFullURI())))
+                        .andExpect(jsonPath("$.fullURI", is(generateURLFromSchema(cu,SCHEMA_CANONICAL_1))  ));
+            }
+        }
+    }
+
+    @Test
+    public void test_8_getEntity() throws Exception {
+
+        for (CanonicalURI cu : canonicalURISSchema1) {
+            if (cu.getIsEntity()) {
+                this.mvc.perform(get(String.format("/canonical-uri/entity/%s",cu.getConcept()))
+                        .accept(MediaType.APPLICATION_JSON))
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$[].domain", is(cu.getDomain())))
+                        .andExpect(jsonPath("$.subDomain", is(cu.getSubDomain())))
+                        .andExpect(jsonPath("$.typeIdCode", is(cu.getTypeIdCode())))
+                        .andExpect(jsonPath("$.concept", is(cu.getConcept())))
+                        .andExpect(jsonPath("$.isEntity", is(cu.getIsInstance())))
                         .andExpect(jsonPath("$.fullURI", is(cu.getFullURI())))
                         .andExpect(jsonPath("$.fullURI", is(generateURLFromSchema(cu,SCHEMA_CANONICAL_1))  ));
             }

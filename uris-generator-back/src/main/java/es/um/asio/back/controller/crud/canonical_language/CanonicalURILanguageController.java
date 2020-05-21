@@ -1,10 +1,11 @@
-package es.um.asio.back.controller.uri;
+package es.um.asio.back.controller.crud.canonical_language;
 
 import es.um.asio.back.controller.error.CustomNotFoundException;
 import es.um.asio.service.model.*;
 import es.um.asio.service.proxy.*;
 import es.um.asio.service.service.SchemaService;
 import es.um.asio.service.validation.group.Create;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(CanonicalURILanguageController.Mappings.BASE)
+@Api(value = "CRUD Operations for Canonical Language URIs", tags = "CRUD Operations (GET, POST, DELETE) for Canonical Language URIs")
 public class CanonicalURILanguageController {
 
     /**
@@ -96,13 +98,13 @@ public class CanonicalURILanguageController {
             @ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res")
             @RequestParam(required = true) @Validated(Create.class) final String typeCode,
             @ApiParam(name = "concept", value = "Concept (Entity) Element", defaultValue = "")
-            @RequestParam(required = true) @Validated(Create.class) final String concept,
+            @RequestParam(required = false) @Validated(Create.class) final String concept,
             @ApiParam(name = "reference", value = "Reference (Instance) Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String reference,
             @ApiParam(name = "property", value = "Property Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String property,
             @ApiParam(name = "parentEntity", value = "Property Element", defaultValue = "")
-            @RequestParam(required = true) @Validated(Create.class) final String parentEntity,
+            @RequestParam(required = false) @Validated(Create.class) final String parentEntity,
             @ApiParam(name = "parentProperty", value = "Property Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String parentProperty,
             @ApiParam(name = "createCanonicalIfNotExist", value = "Create canonical URI if not exist", allowableValues = "true, false", defaultValue = "false")
@@ -140,7 +142,9 @@ public class CanonicalURILanguageController {
                     else
                         throw new CustomNotFoundException();
                 }
-                canonicalURIs.get(0).generateFullURL(schemaService.getCanonicalSchema());
+                String schemaCanonical = schemaService.getCanonicalSchema();
+                CanonicalURI canonicalURI = canonicalURIs.get(0);
+                canonicalURIs.get(0).generateFullURL(schemaCanonical);
                 entity.setCanonicalURI(canonicalURIs.get(0));
                 entity.setParentEntityName(parentEntity);
                 entity.setParentPropertyName(parentProperty);

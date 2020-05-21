@@ -188,7 +188,7 @@ public class CanonicalURILanguage {
      * Relation Bidirectional OneToMany
      */
 
-    @OneToMany(mappedBy = "canonicalURILanguage", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "canonicalURILanguage", cascade = CascadeType.ALL)
     private Set<LocalURI> localURIs;
 
     /**

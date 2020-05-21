@@ -1,4 +1,4 @@
-package es.um.asio.back.controller.uri;
+package es.um.asio.back.controller.crud.local;
 
 import es.um.asio.back.controller.error.CustomNotFoundException;
 import es.um.asio.service.model.*;

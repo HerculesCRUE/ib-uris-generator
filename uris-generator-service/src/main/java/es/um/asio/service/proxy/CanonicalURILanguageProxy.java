@@ -23,7 +23,11 @@ public interface CanonicalURILanguageProxy
 
     List<CanonicalURILanguage> getAllByEntityName(String entityName);
 
+    List<CanonicalURILanguage> getAllByEntityNameFromEntities(String entityName);
+
     List<CanonicalURILanguage> getAllByPropertyName(String propertyName);
+
+    List<CanonicalURILanguage> getAllByPropertyNameFromProperties(String propertyName);
 
     List<CanonicalURILanguage> getAllByElements(String domain, String subDomain, String language,String type, String concept, String reference);
 }

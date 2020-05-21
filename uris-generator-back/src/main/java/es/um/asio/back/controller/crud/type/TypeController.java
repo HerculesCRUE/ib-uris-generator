@@ -1,4 +1,4 @@
-package es.um.asio.back.controller.uri;
+package es.um.asio.back.controller.crud.type;
 
 import es.um.asio.service.model.Type;
 import es.um.asio.service.model.User;

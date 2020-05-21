@@ -149,8 +149,18 @@ public class CanonicalURIServiceImpl implements CanonicalURIService {
     }
 
     @Override
+    public List<CanonicalURI> getAllByEntityNameAndIsEntity(String entityName) {
+        return this.repository.findByEntityNameAndIsEntity(entityName,true).orElse(new ArrayList<>());
+    }
+
+    @Override
     public List<CanonicalURI> getAllByPropertyName(String propertyName) {
         return this.repository.findByPropertyName(propertyName).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<CanonicalURI> getAllByPropertyNameAndIsProperty(String propertyName) {
+        return this.repository.findByPropertyNameAndIsProperty(propertyName,true).orElse(new ArrayList<>());
     }
 
     @Override
