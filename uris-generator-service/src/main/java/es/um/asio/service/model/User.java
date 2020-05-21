@@ -32,10 +32,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
+
+import es.um.asio.audit.model.Auditable;
 import es.um.asio.service.util.JpaConstants;
 import es.um.asio.service.util.ValidationConstants;
-import com.izertis.libraries.audit.model.Auditable;
-
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

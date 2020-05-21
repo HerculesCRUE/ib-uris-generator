@@ -11,12 +11,11 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 
+import es.um.asio.audit.dto.AuditableDto;
 import es.um.asio.service.model.Role;
 import es.um.asio.service.util.ValidationConstants;
 import es.um.asio.service.validation.group.Create;
 import es.um.asio.service.validation.group.Update;
-import com.izertis.libraries.audit.dto.AuditableDto;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

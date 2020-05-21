@@ -21,6 +21,7 @@
 	</properties>
 
 	<dependencies>
+		<!-- UM ASIO - dependencies -->
 		<dependency>
 			<groupId>es.um.asio</groupId>
 			<artifactId>uris-generator-service</artifactId>
@@ -29,13 +30,14 @@
 		
 		<dependency>
 			<groupId>es.um.asio</groupId>
+			<artifactId>uris-generator-swagger</artifactId>
+			<version>${uris-generator-service.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.um.asio</groupId>
 			<artifactId>asio-abstractions</artifactId>
 			<version>${asio-abstractions.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.izertis.libraries</groupId>
-			<artifactId>izertis-swagger-starter</artifactId>
 		</dependency>
 
 		<dependency>
