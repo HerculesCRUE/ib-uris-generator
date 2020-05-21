@@ -1,4 +1,4 @@
-package es.um.asio.back.controller.uri;
+package es.um.asio.back.controller.crud.language_type;
 
 import es.um.asio.service.model.Language;
 import es.um.asio.service.model.LanguageType;

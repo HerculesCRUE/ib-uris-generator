@@ -1,13 +1,11 @@
 package es.um.asio.service.model;
 
-import java.io.Serializable;
-
-import org.springframework.security.core.GrantedAuthority;
-
 import com.google.common.base.Objects;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.io.Serializable;
 
 @Getter
 @AllArgsConstructor

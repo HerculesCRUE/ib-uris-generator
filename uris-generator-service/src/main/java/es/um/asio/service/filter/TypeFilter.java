@@ -1,10 +1,14 @@
 package es.um.asio.service.filter;
 
+
 import es.um.asio.abstractions.filter.AbstractJpaSpecification;
 import es.um.asio.audit.abstractions.filter.EntityFilter;
 import es.um.asio.service.model.CanonicalURI;
+
+// import com.izertis.abstractions.filter.AbstractJpaSpecification;
+// import com.izertis.abstractions.filter.EntityFilter;
+
 import es.um.asio.service.model.Type;
-import es.um.asio.service.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +29,7 @@ import java.util.List;
 public class TypeFilter extends AbstractJpaSpecification<Type> implements EntityFilter {
 
 
-    private List<SearchCriteria> list = new ArrayList<>();
+    private transient List<SearchCriteria> list = new ArrayList<>();
 
     public void add(SearchCriteria criteria) {
         list.add(criteria);
@@ -40,10 +44,6 @@ public class TypeFilter extends AbstractJpaSpecification<Type> implements Entity
         for (SearchCriteria criteria : list) {
             if (criteria.getOperation().equals(SearchOperation.GREATER_THAN)) {
                 predicates.add(builder.greaterThan(
-                        root.get(criteria.getKey()), criteria.getValue().toString()
-                ));
-            } else if (criteria.getOperation().equals(SearchOperation.LESS_THAN)) {
-                predicates.add(builder.lessThan(
                         root.get(criteria.getKey()), criteria.getValue().toString()
                 ));
             } else if (criteria.getOperation().equals(SearchOperation.LESS_THAN)) {
@@ -85,6 +85,8 @@ public class TypeFilter extends AbstractJpaSpecification<Type> implements Entity
                 predicates.add(builder.in(root.get(criteria.getKey())).value(criteria.getValue()));
             } else if (criteria.getOperation().equals(SearchOperation.NOT_IN)) {
                 predicates.add(builder.not(root.get(criteria.getKey())).in(criteria.getValue()));
+            } else if (criteria.getOperation().equals(SearchOperation.IS_NULL)) {
+                predicates.add(builder.isTrue(root.get(criteria.getKey()).isNull()));
             }
 
         }

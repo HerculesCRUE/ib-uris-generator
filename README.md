@@ -41,7 +41,11 @@ Para iniciar el entorno de desarrollo se necesita cumplir los siguientes requisi
 
 La metodología de desarrollo es Git Flow.
 
+
 ## Entorno de desarrollo Docker
+
+* MariaDB 10.3
+
 
 La inicialización de los elementos adicionales al entorno de desarrollo se realiza con docker. 
 
@@ -83,6 +87,7 @@ java -jar {jar-name}.jar
 Sustituyendo `{jar-name}` por el nombre del fichero JAR generado.
 
 No es necesario especificar la clase de inicio de la aplicación, ya que el fichero MANIFEST.MF generado ya contiene la información necesaria. Solamente se especificarán los parametros necesarios.
+
 
 ## Swagger
 

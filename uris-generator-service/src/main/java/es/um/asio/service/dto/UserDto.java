@@ -1,5 +1,6 @@
 package es.um.asio.service.dto;
 
+
 import java.util.Set;
 
 import javax.validation.constraints.Email;
@@ -12,6 +13,9 @@ import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 
 import es.um.asio.audit.dto.AuditableDto;
+
+// import com.izertis.libraries.audit.dto.AuditableDto;
+
 import es.um.asio.service.model.Role;
 import es.um.asio.service.util.ValidationConstants;
 import es.um.asio.service.validation.group.Create;
@@ -19,6 +23,11 @@ import es.um.asio.service.validation.group.Update;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
+
+import javax.validation.constraints.*;
+import java.util.Set;
 
 /**
  * Application user DTO.
@@ -39,7 +48,6 @@ public class UserDto extends AuditableDto {
      * User real name.
      */
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = WhiteListType.NONE)
     private String name;
 
     /**
@@ -48,7 +56,6 @@ public class UserDto extends AuditableDto {
     @NotEmpty
     @Email
     @Size(max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = WhiteListType.NONE)
     private String email;
 
     /**
@@ -80,7 +87,6 @@ public class UserDto extends AuditableDto {
      */
     @NotEmpty
     @Size(max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = WhiteListType.NONE)
     private String password;
 
     /**
@@ -88,7 +94,6 @@ public class UserDto extends AuditableDto {
      */
     @NotEmpty
     @Size(max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = WhiteListType.NONE)
     private String username;
 
     /**
@@ -96,7 +101,6 @@ public class UserDto extends AuditableDto {
      */
     @NotEmpty
     @Size(max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = WhiteListType.NONE)
     private String country;
 
     /**
@@ -104,7 +108,6 @@ public class UserDto extends AuditableDto {
      */
     @NotEmpty
     @Size(max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = WhiteListType.NONE)
     private String city;
 
     /**
@@ -112,7 +115,6 @@ public class UserDto extends AuditableDto {
      */
     @NotEmpty
     @Size(max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = WhiteListType.NONE)
     private String language;
 
     /**
@@ -120,7 +122,6 @@ public class UserDto extends AuditableDto {
      */
     @NotEmpty
     @Size(max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = WhiteListType.NONE)
     private String address;
 
     /**

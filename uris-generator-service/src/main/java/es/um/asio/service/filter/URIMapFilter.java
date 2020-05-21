@@ -3,13 +3,10 @@ package es.um.asio.service.filter;
 import es.um.asio.abstractions.filter.AbstractJpaSpecification;
 import es.um.asio.audit.abstractions.filter.EntityFilter;
 import es.um.asio.service.model.URIMap;
-import es.um.asio.service.model.URIMap_;
 import es.um.asio.service.model.User;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,11 +14,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 /**
  * Filter for {@link User}.
@@ -32,7 +24,7 @@ import javax.persistence.criteria.Root;
 public class URIMapFilter extends AbstractJpaSpecification<URIMap> implements EntityFilter {
 
 
-    private List<SearchCriteria> list = new ArrayList<>();
+    private transient List<SearchCriteria> list = new ArrayList<>();
 
     public void add(SearchCriteria criteria) {
         list.add(criteria);
@@ -47,10 +39,6 @@ public class URIMapFilter extends AbstractJpaSpecification<URIMap> implements En
         for (SearchCriteria criteria : list) {
             if (criteria.getOperation().equals(SearchOperation.GREATER_THAN)) {
                 predicates.add(builder.greaterThan(
-                        root.get(criteria.getKey()), criteria.getValue().toString()
-                ));
-            } else if (criteria.getOperation().equals(SearchOperation.LESS_THAN)) {
-                predicates.add(builder.lessThan(
                         root.get(criteria.getKey()), criteria.getValue().toString()
                 ));
             } else if (criteria.getOperation().equals(SearchOperation.LESS_THAN)) {
@@ -92,6 +80,8 @@ public class URIMapFilter extends AbstractJpaSpecification<URIMap> implements En
                 predicates.add(builder.in(root.get(criteria.getKey())).value(criteria.getValue()));
             } else if (criteria.getOperation().equals(SearchOperation.NOT_IN)) {
                 predicates.add(builder.not(root.get(criteria.getKey())).in(criteria.getValue()));
+            } else if (criteria.getOperation().equals(SearchOperation.IS_NULL)) {
+                predicates.add(builder.isTrue(root.get(criteria.getKey()).isNull()));
             }
 
         }

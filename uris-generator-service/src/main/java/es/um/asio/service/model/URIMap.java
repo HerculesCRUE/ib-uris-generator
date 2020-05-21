@@ -3,15 +3,11 @@ package es.um.asio.service.model;
 import es.um.asio.service.filter.SearchCriteria;
 import es.um.asio.service.filter.SearchOperation;
 import es.um.asio.service.filter.URIMapFilter;
-import es.um.asio.service.service.URIMapService;
-import es.um.asio.service.util.JpaConstants;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.util.ValidationConstants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.SafeHtml;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -44,27 +40,24 @@ public class URIMap {
     /**
      * Base URL.
      */
-    @ApiModelProperty(	example="/parent1/parent2/parent3", position =1, readOnly=false, value = "Optional: Parent Base URL, if not present, path / will by inferred", required = false)
+    @ApiModelProperty(	example="/parent1/parent2/parent3", position =1, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional: Parent Base URL, if not present, path / will by inferred", required = false)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = URIMap.Columns.BASE_URI, nullable = true, length = ValidationConstants.MAX_LENGTH_DEFAULT)
     private String baseURI;
 
     /**
      * Qualified URL.
      */
-    @ApiModelProperty(hidden = true, position =5, readOnly=true, value = "Only Read: generated final URI", required = false)
+    @ApiModelProperty(hidden = true, position =5, accessMode = ApiModelProperty.AccessMode.READ_ONLY, value = "Only Read: generated final URI", required = false)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.QUALIFIED_URI, nullable = true, length = ValidationConstants.MAX_LENGTH_DEFAULT)
     private String qualifiedURI;
 
     /**
      * ENTITY name.
      */
-    @ApiModelProperty(	example="entitiyName", position =2, readOnly=false, value = "Required: Name of Entity: the class name", required = true)
+    @ApiModelProperty(	example="entitiyName", position =2, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Required: Name of Entity: the class name", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.ENTITY, nullable = false, length = ValidationConstants.MAX_LENGTH_DEFAULT)
     private String entity;
 
@@ -73,7 +66,6 @@ public class URIMap {
      */
     @ApiModelProperty(	example="propertyName", position =3, readOnly=false, value = "Optional: Property name, only required for properties", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.PROPERTY, nullable = true, length = ValidationConstants.MAX_LENGTH_DEFAULT)
     private String property;
 
@@ -81,7 +73,6 @@ public class URIMap {
      * URI.
      */
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.ONTOLOGY_URI, nullable = true, length = ValidationConstants.MAX_LENGTH_DEFAULT)
     private String ontologyURI;
 
@@ -89,7 +80,6 @@ public class URIMap {
      * Identifier.
      */
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.IDENTIFIER, nullable = true, length = ValidationConstants.MAX_LENGTH_DEFAULT)
     private String identifier;
 
@@ -262,9 +252,8 @@ public class URIMap {
         if (identifier == null) {
             identifier = calculateIdentifier(urisMap,isOpaque);
         } else {
-            if (isOpaque) {
-                if (!Utils.isValidUUID(identifier))
-                    identifier = Utils.getUUIDFromString(identifier);
+            if (isOpaque && !Utils.isValidUUID(identifier)) {
+                identifier = Utils.getUUIDFromString(identifier);
             }
         }
         if  (baseURI == null || baseURI == "") {
@@ -272,10 +261,10 @@ public class URIMap {
         } else if (!Utils.isValidURL(baseURI)){
             throw new InvalidPropertiesFormatException("Invalid baseURI: " +baseURI);
         }
-        qualifiedURI = (baseURI.substring(baseURI.length()-1) == "/")?baseURI:(baseURI+"/") +
+        qualifiedURI = (baseURI.substring(baseURI.length() - 1) == "/") ? baseURI : ((baseURI + "/") +
                 entity + "/" +
-                ((property != null && property == "") ? (property + "/"): "") +
-                ((!isInstance)?identifier:"");
+                (((property != null) && (property == "")) ? property + "/" : "") +
+                ((!isInstance) ? identifier : ""));
     }
 
     public String calculateIdentifier(List<URIMap> urisMap, boolean isOpaque) {

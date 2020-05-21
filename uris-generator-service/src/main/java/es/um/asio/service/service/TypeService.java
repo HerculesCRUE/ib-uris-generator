@@ -6,7 +6,6 @@ import es.um.asio.audit.abstractions.service.SaveService;
 import es.um.asio.service.filter.TypeFilter;
 import es.um.asio.service.model.Type;
 
-
 import java.util.List;
 
 public interface TypeService

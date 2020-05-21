@@ -1,9 +1,11 @@
-package es.um.asio.back.controller.uri;
+package es.um.asio.back.controller.crud.canonical_language;
 
 import es.um.asio.back.controller.error.CustomNotFoundException;
 import es.um.asio.service.model.*;
 import es.um.asio.service.proxy.*;
+import es.um.asio.service.service.SchemaService;
 import es.um.asio.service.validation.group.Create;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(CanonicalURILanguageController.Mappings.BASE)
+@Api(value = "CRUD Operations for Canonical Language URIs", tags = "CRUD Operations (GET, POST, DELETE) for Canonical Language URIs")
 public class CanonicalURILanguageController {
 
     /**
@@ -47,6 +50,12 @@ public class CanonicalURILanguageController {
      */
     @Autowired
     private LanguageTypeProxy languageTypeProxy;
+
+    /**
+     * Schema service
+     */
+    @Autowired
+    private SchemaService schemaService;
 
 
     /**
@@ -89,13 +98,13 @@ public class CanonicalURILanguageController {
             @ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res")
             @RequestParam(required = true) @Validated(Create.class) final String typeCode,
             @ApiParam(name = "concept", value = "Concept (Entity) Element", defaultValue = "")
-            @RequestParam(required = true) @Validated(Create.class) final String concept,
+            @RequestParam(required = false) @Validated(Create.class) final String concept,
             @ApiParam(name = "reference", value = "Reference (Instance) Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String reference,
             @ApiParam(name = "property", value = "Property Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String property,
             @ApiParam(name = "parentEntity", value = "Property Element", defaultValue = "")
-            @RequestParam(required = true) @Validated(Create.class) final String parentEntity,
+            @RequestParam(required = false) @Validated(Create.class) final String parentEntity,
             @ApiParam(name = "parentProperty", value = "Property Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String parentProperty,
             @ApiParam(name = "createCanonicalIfNotExist", value = "Create canonical URI if not exist", allowableValues = "true, false", defaultValue = "false")
@@ -103,44 +112,24 @@ public class CanonicalURILanguageController {
     )  {
         Type t = typeProxy.findOrCreate(typeCode);
         Language l = languageProxy.findOrCreate(language);
-        /*TODO: Get or Create*/
-        List<LanguageType> lts = languageTypeProxy.getByLanguageAndType(l.getISO().trim(),t.getCode().trim());
+
+        List<LanguageType> lts = languageTypeProxy.getByLanguageAndType(l.getIso().trim(),t.getCode().trim());
         LanguageType lt = null;
-        if (lts.size()>0) {
+        if (!lts.isEmpty()) {
             lt = lts.get(lts.size()-1);
         }
-        CanonicalURILanguage entity = new CanonicalURILanguage(domain,subDomain,lt,concept,reference,property);
+        String schema = schemaService.getCanonicalLanguageSchema();
+        CanonicalURILanguage entity = new CanonicalURILanguage(domain,subDomain,lt,concept,reference,property,schema);
         entity.setParentPropertyName(parentProperty);
-        List<CanonicalURI> canonicalURIs = new ArrayList<>();
-        if (entity.getIsEntity()) {
-            List<CanonicalURI> cus = canonicalProxy.getAllByEntityNameAndPropertyName(parentEntity, null);
-            for (CanonicalURI cu:cus) {
-                if (cu.getIsEntity() && cu.getReference()==null) {
-                    canonicalURIs.add(cu);
-                }
-            }
-        } else if (entity.getIsInstance()) {
-            List<CanonicalURI> cus = canonicalProxy.getAllByEntityNameAndReference(parentEntity,reference);
-            for (CanonicalURI cu:cus) {
-                if (cu.getIsInstance() && cu.getReference().trim().equals(reference)) {
-                    canonicalURIs.add(cu);
-                }
-            }
-        } else  {
-            List<CanonicalURI> cus = canonicalProxy.getAllByEntityNameAndPropertyName(parentEntity,parentProperty);
-            for (CanonicalURI cu:cus) {
-                if (cu.getIsProperty() && cu.getReference().trim().equals(entity.getParentPropertyName().trim())) {
-                    canonicalURIs.add(cu);
-                }
-            }
-        }
+        List<CanonicalURI> canonicalURIs = getCanonicalURIS(entity,parentEntity,parentProperty,reference);
         try {
             if (canonicalURIs.size()>1) {
                 throw new CustomNotFoundException();
             } else {
-                if (canonicalURIs.size()==0) {
+                if (canonicalURIs.isEmpty()) {
                     if (createCanonicalIfNotExist) {
-                        CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity,reference);
+                        String canonicalSchema = schemaService.getCanonicalLanguageSchema();
+                        CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity,reference, parentProperty,canonicalSchema);
                         cu.setEntityName(cu.getConcept());
                         cu.updateState();
                         if (property!=null) {
@@ -153,6 +142,9 @@ public class CanonicalURILanguageController {
                     else
                         throw new CustomNotFoundException();
                 }
+                String schemaCanonical = schemaService.getCanonicalSchema();
+                CanonicalURI canonicalURI = canonicalURIs.get(0);
+                canonicalURIs.get(0).generateFullURL(schemaCanonical);
                 entity.setCanonicalURI(canonicalURIs.get(0));
                 entity.setParentEntityName(parentEntity);
                 entity.setParentPropertyName(parentProperty);
@@ -160,10 +152,51 @@ public class CanonicalURILanguageController {
                 return this.proxy.save(entity);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             throw new CustomNotFoundException();
         }
 
+    }
+
+    private List<CanonicalURI> getCanonicalURIS(CanonicalURILanguage entity, String parentEntity, String parentProperty, String reference){
+        List<CanonicalURI> canonicalURIs = new ArrayList<>();
+        if (entity.getIsEntity()) {
+            canonicalURIs.addAll(getCanonicalURIEntities(parentEntity));
+        } else if (entity.getIsInstance()) {
+            canonicalURIs.addAll(getCanonicalURIInstances(parentEntity, reference));
+        } else  {
+            canonicalURIs.addAll(getCanonicalURIProperties(entity, parentEntity, parentProperty));
+        }
+        return canonicalURIs;
+    }
+
+    private List<CanonicalURI> getCanonicalURIEntities(String parentEntity) {
+        List<CanonicalURI> canonicalURIs = new ArrayList<>();
+        for (CanonicalURI cu : canonicalProxy.getAllByEntityNameAndPropertyName(parentEntity, null)) {
+            if (cu.getIsEntity() && cu.getReference()==null) {
+                canonicalURIs.add(cu);
+            }
+        }
+        return canonicalURIs;
+    }
+
+    private List<CanonicalURI> getCanonicalURIInstances(String parentEntity, String reference) {
+        List<CanonicalURI> canonicalURIs = new ArrayList<>();
+        for (CanonicalURI cu : canonicalProxy.getAllByEntityNameAndReference(parentEntity,reference)) {
+            if (cu.getIsInstance() && cu.getReference().trim().equals(reference)) {
+                canonicalURIs.add(cu);
+            }
+        }
+        return canonicalURIs;
+    }
+
+    private List<CanonicalURI> getCanonicalURIProperties(CanonicalURILanguage entity, String parentEntity, String parentProperty) {
+        List<CanonicalURI> canonicalURIs = new ArrayList<>();
+        for (CanonicalURI cu : canonicalProxy.getAllByEntityNameAndPropertyName(parentEntity,parentProperty)) {
+            if (cu.getIsProperty() && cu.getReference().trim().equals(entity.getParentPropertyName().trim())) {
+                canonicalURIs.add(cu);
+            }
+        }
+        return canonicalURIs;
     }
 
     @GetMapping("all")

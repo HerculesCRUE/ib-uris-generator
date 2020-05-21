@@ -1,5 +1,9 @@
 package es.um.asio.service.mapper.decorator;
 
+// import com.izertis.abstractions.search.PageImplHelper;
+import es.um.asio.service.dto.UserDto;
+import es.um.asio.service.mapper.UserMapper;
+import es.um.asio.service.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -10,6 +14,7 @@ import es.um.asio.audit.abstractions.search.PageImplHelper;
 import es.um.asio.service.dto.UserDto;
 import es.um.asio.service.mapper.UserMapper;
 import es.um.asio.service.model.User;
+
 
 /**
  * MapStruct Mapper decorator for {@link User}.

@@ -4,9 +4,7 @@ import es.um.asio.audit.abstractions.service.DeleteService;
 import es.um.asio.audit.abstractions.service.QueryService;
 import es.um.asio.audit.abstractions.service.SaveService;
 import es.um.asio.service.filter.CanonicalURIFilter;
-import es.um.asio.service.filter.URIMapFilter;
 import es.um.asio.service.model.CanonicalURI;
-import es.um.asio.service.model.URIMap;
 import es.um.asio.service.model.User;
 
 import java.util.List;
@@ -25,7 +23,11 @@ public interface CanonicalURIProxy
 
     List<CanonicalURI> getAllByEntityName(String entityName);
 
+    List<CanonicalURI> getAllByEntityNameFromEntities(String entityName);
+
     List<CanonicalURI> getAllByPropertyName(String propertyName);
+
+    List<CanonicalURI> getAllByPropertyFromProperties(String propertyName);
 
     List<CanonicalURI> getAllByElements(String domain, String subDomain, String type, String concept, String reference);
 

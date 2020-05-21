@@ -5,7 +5,6 @@ import es.um.asio.audit.abstractions.service.QueryService;
 import es.um.asio.audit.abstractions.service.SaveService;
 import es.um.asio.service.filter.LanguageTypeFilter;
 import es.um.asio.service.model.LanguageType;
-import es.um.asio.service.model.User;
 
 import java.util.List;
 

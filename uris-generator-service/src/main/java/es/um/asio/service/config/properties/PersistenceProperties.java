@@ -1,13 +1,12 @@
 package es.um.asio.service.config.properties;
 
-import javax.validation.constraints.NotNull;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.validation.annotation.Validated;
 
-import lombok.Getter;
-import lombok.Setter;
+import javax.validation.constraints.NotNull;
 
 /**
  * Persistence related properties.

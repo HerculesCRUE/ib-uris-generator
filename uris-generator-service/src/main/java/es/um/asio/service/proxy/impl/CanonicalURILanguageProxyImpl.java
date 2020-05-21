@@ -7,6 +7,9 @@ import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.CanonicalURILanguageProxy;
 import es.um.asio.service.service.CanonicalURILanguageService;
 import es.um.asio.service.service.CanonicalURIService;
+import es.um.asio.service.service.SchemaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +24,8 @@ import java.util.Optional;
 @Service
 public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy {
 
+    /** The logger. */
+    private final Logger logger = LoggerFactory.getLogger(CanonicalURILanguageProxyImpl.class);
 
     /**
      * Service layer.
@@ -33,6 +38,12 @@ public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy 
      */
     @Autowired
     private CanonicalURIService canonicalService;
+
+    /**
+     * Service layer.
+     */
+    @Autowired
+    private SchemaService schemaService;
 
     /**
      * {@inheritDoc}
@@ -63,9 +74,9 @@ public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy 
      */
     @Override
     public CanonicalURILanguage save(final CanonicalURILanguage entity) {
-        entity.generateFullURL("http://$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$");
+        entity.generateFullURL(schemaService.getCanonicalLanguageSchema());
         List<CanonicalURILanguage> filtered = this.service.getAllByCanonicalURILanguage(entity);
-        if (filtered.size() == 0) {
+        if (filtered.isEmpty()) {
             return this.service.save(entity);
         } else {
             for (CanonicalURILanguage e :filtered) {
@@ -73,7 +84,7 @@ public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy 
                 try {
                     return this.service.update(e);
                 } catch (NoSuchEntityException ex) {
-                    ex.printStackTrace();
+                    logger.error("NoSuchEntityException");
                 }
             }
             return null;
@@ -133,8 +144,18 @@ public class CanonicalURILanguageProxyImpl implements CanonicalURILanguageProxy 
     }
 
     @Override
+    public List<CanonicalURILanguage> getAllByEntityNameFromEntities(String entityName) {
+        return this.service.getAllByEntityNameAndIsEntity(entityName);
+    }
+
+    @Override
     public List<CanonicalURILanguage> getAllByPropertyName(String propertyName) {
         return this.service.getAllByPropertyName(propertyName);
+    }
+
+    @Override
+    public List<CanonicalURILanguage> getAllByPropertyNameFromProperties(String propertyName) {
+        return this.service.getAllByPropertyNameAndIsProperty(propertyName);
     }
 
     @Override

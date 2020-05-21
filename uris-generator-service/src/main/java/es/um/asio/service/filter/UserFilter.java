@@ -1,5 +1,6 @@
 package es.um.asio.service.filter;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +13,23 @@ import org.apache.commons.lang3.StringUtils;
 
 import es.um.asio.abstractions.filter.AbstractJpaSpecification;
 import es.um.asio.audit.abstractions.filter.EntityFilter;
+
+// import com.izertis.abstractions.filter.AbstractJpaSpecification;
+// import com.izertis.abstractions.filter.EntityFilter;
+
 import es.um.asio.service.model.User;
 import es.um.asio.service.model.User_;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Filter for {@link User}.

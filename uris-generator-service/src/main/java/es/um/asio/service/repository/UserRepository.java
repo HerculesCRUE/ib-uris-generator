@@ -1,14 +1,12 @@
 package es.um.asio.service.repository;
 
-import java.util.Optional;
-
-import es.um.asio.service.model.URIMap;
+import es.um.asio.service.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import es.um.asio.service.model.User;
+import java.util.Optional;
 
 /**
  * Spring Data repository for {@link User}

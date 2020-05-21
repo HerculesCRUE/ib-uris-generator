@@ -4,7 +4,6 @@ import es.um.asio.audit.abstractions.service.DeleteService;
 import es.um.asio.audit.abstractions.service.QueryService;
 import es.um.asio.audit.abstractions.service.SaveService;
 import es.um.asio.service.filter.CanonicalURILanguageFilter;
-import es.um.asio.service.model.CanonicalURI;
 import es.um.asio.service.model.CanonicalURILanguage;
 
 import java.util.List;
@@ -24,7 +23,11 @@ public interface CanonicalURILanguageProxy
 
     List<CanonicalURILanguage> getAllByEntityName(String entityName);
 
+    List<CanonicalURILanguage> getAllByEntityNameFromEntities(String entityName);
+
     List<CanonicalURILanguage> getAllByPropertyName(String propertyName);
+
+    List<CanonicalURILanguage> getAllByPropertyNameFromProperties(String propertyName);
 
     List<CanonicalURILanguage> getAllByElements(String domain, String subDomain, String language,String type, String concept, String reference);
 }

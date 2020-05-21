@@ -1,5 +1,6 @@
 package es.um.asio.back.controller.security;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import es.um.asio.audit.abstractions.exception.NoSuchEntityException;
+
+// import com.izertis.abstractions.exception.NoSuchEntityException;
+
 import es.um.asio.service.dto.UserDto;
 import es.um.asio.service.filter.UserFilter;
 import es.um.asio.service.mapper.UserMapper;
@@ -27,9 +31,19 @@ import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.UserProxy;
 import es.um.asio.service.validation.group.Create;
 import es.um.asio.service.validation.group.Update;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 /**
  * User controller.

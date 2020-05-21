@@ -1,5 +1,6 @@
 package es.um.asio.service.mapper;
 
+
 import java.util.List;
 
 import org.mapstruct.DecoratedWith;
@@ -10,9 +11,15 @@ import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
 
 import es.um.asio.audit.abstractions.search.PageImplHelper;
+
+// import com.izertis.abstractions.search.PageImplHelper;
 import es.um.asio.service.dto.UserDto;
 import es.um.asio.service.mapper.decorator.UserMapperDecorator;
 import es.um.asio.service.model.User;
+import org.mapstruct.*;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * MapStruct Mapper for {@link User}.

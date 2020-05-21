@@ -1,14 +1,10 @@
 package es.um.asio.service.service.impl;
 
-import es.um.asio.service.filter.LocalURIFilter;
 import es.um.asio.service.filter.StorageTypeFilter;
 import es.um.asio.service.model.CanonicalURI;
-import es.um.asio.service.model.LocalURI;
 import es.um.asio.service.model.StorageType;
 import es.um.asio.service.model.User;
-import es.um.asio.service.repository.LocalURIRepository;
 import es.um.asio.service.repository.StorageTypeRepository;
-import es.um.asio.service.service.LocalURIService;
 import es.um.asio.service.service.StorageTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -114,11 +110,10 @@ public class StorageTypeServiceImpl implements StorageTypeService {
     public List<StorageType> getAllByStorageType(StorageType entity) {
         StorageTypeFilter f = entity.buildFilterByEntityUniqueProperties();
 
-        if (f.getList().size()>0) {
-            List<StorageType> filteredList = this.repository.findAll(f);
-            return filteredList;
+        if (!f.getList().isEmpty()) {
+            return this.repository.findAll(f);
         } else {
-            return new ArrayList<StorageType>();
+            return new ArrayList<>();
         }
     }
 

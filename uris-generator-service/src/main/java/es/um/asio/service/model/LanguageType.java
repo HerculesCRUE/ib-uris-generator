@@ -2,24 +2,24 @@ package es.um.asio.service.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import es.um.asio.service.filter.*;
+import es.um.asio.service.filter.LanguageTypeFilter;
+import es.um.asio.service.filter.SearchCriteria;
+import es.um.asio.service.filter.SearchOperation;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.util.ValidationConstants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Entity(name="language_type")
 @Table(name = LanguageType.TABLE)
 @Getter
 @ToString(includeFieldNames = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class LanguageType implements Serializable {
+public class LanguageType {
 
     /**
      * Version ID.
@@ -40,7 +40,7 @@ public class LanguageType implements Serializable {
      * Relation Bidirectional Language ManyToOne
      */
     @JsonIgnore
-    @ApiModelProperty(	example="ES",allowEmptyValue = false, position=1, readOnly=false, value = "Required: ISO Code of Country", required = true)
+    @ApiModelProperty(	example="ES",allowEmptyValue = false, position=1, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Required: ISO Code of Country", required = true)
     @ManyToOne(fetch = FetchType.LAZY)
     private Language language;
 
@@ -52,7 +52,7 @@ public class LanguageType implements Serializable {
      * Relation Bidirectional Type ManyToOne
      */
     @JsonIgnore
-    @ApiModelProperty(	example="ES",allowEmptyValue = false, position=2, readOnly=false, value = "Required: Type", required = true)
+    @ApiModelProperty(	example="ES",allowEmptyValue = false, position=2, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Required: Type", required = true)
     @ManyToOne(fetch = FetchType.LAZY)
     private Type type;
 
@@ -63,26 +63,19 @@ public class LanguageType implements Serializable {
     /**
      * Code in Language.
      */
-    @ApiModelProperty(	example="def",allowEmptyValue = false, position =3, readOnly=false, value = "Required: name of Type in language.", required = true)
+    @ApiModelProperty(	example="def",allowEmptyValue = false, position =3, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Required: name of Type in language.", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.TYPE_LANG_CODE, nullable = false,columnDefinition = "VARCHAR(3)",length = 3)
     private String typeLangCode;
 
     /**
      * DESCRIPTION in language.
      */
-    @ApiModelProperty(	example="definición",allowEmptyValue = false, position =4, readOnly=false, value = "Required: name of Type in language.", required = true)
+    @ApiModelProperty(	example="definición",allowEmptyValue = false, position =4, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Required: name of Type in language.", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.TYPE_LANG_DESCRIPTION, nullable = false,columnDefinition = "VARCHAR(100)",length = 100)
     private String description;
 
-    /*
-    @OneToMany(mappedBy = "languageType", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
-    private Set<CanonicalURILanguage> canonicalURILanguages;
-    */
 
     /**
      * Table name.
@@ -102,7 +95,7 @@ public class LanguageType implements Serializable {
     public void setLanguage(Language language) {
         this.language = language;
         if (this.language!=null) {
-            this.languageId = language.getISO();
+            this.languageId = language.getIso();
         }
     }
 
@@ -163,8 +156,8 @@ public class LanguageType implements Serializable {
 
     public LanguageTypeFilter buildFilterByEntity() {
         LanguageTypeFilter f = new LanguageTypeFilter();
-        if (this.language != null && this.language.getISO() != null) {
-            f.add(new SearchCriteria("language_iso", this.language.getISO(), SearchOperation.EQUAL));
+        if (this.language != null && this.language.getIso() != null) {
+            f.add(new SearchCriteria("language_iso", this.language.getIso(), SearchOperation.EQUAL));
         }
         if (this.type != null && this.type.getCode() != null && this.type.getCode() != "") {
             f.add(new SearchCriteria("type_code", this.type.getCode() , SearchOperation.EQUAL));
@@ -183,8 +176,8 @@ public class LanguageType implements Serializable {
         if (this.id >0 ) {
             f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
-            if (this.language != null && this.language.getISO() != null) {
-                f.add(new SearchCriteria("language_iso", this.language.getISO(), SearchOperation.EQUAL));
+            if (this.language != null && this.language.getIso() != null) {
+                f.add(new SearchCriteria("language_iso", this.language.getIso(), SearchOperation.EQUAL));
             }
             if (this.type != null && this.type.getCode() != null) {
                 f.add(new SearchCriteria("type_code", this.type.getCode(), SearchOperation.EQUAL));
@@ -198,34 +191,6 @@ public class LanguageType implements Serializable {
         this.description = other.getDescription();
     }
 
-    /*
-    public static class LanguageTypeId implements Serializable {
-        private String languageId;
-        private String typeId;
-
-        public LanguageTypeId() {
-        }
-
-        public LanguageTypeId(Language language, Type type) {
-            this.languageId = (language!=null)?language.getISO():null;
-            this.typeId = (type!=null)?type.getCode():null;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            LanguageTypeId that = (LanguageTypeId) o;
-            return languageId.equals(that.languageId) &&
-                    typeId.equals(that.typeId);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(languageId, typeId);
-        }
-    }
-     */
 
     @Override
     public String toString() {
