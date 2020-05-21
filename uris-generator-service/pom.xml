@@ -29,21 +29,25 @@
 		<dependency>
 			<groupId>com.izertis.libraries</groupId>
 			<artifactId>izertis-audit-starter</artifactId>
+			<version>${izertis.libraries.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.izertis.libraries</groupId>
 			<artifactId>izertis-cache-starter</artifactId>
+			<version>${izertis.libraries.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.izertis.libraries</groupId>
 			<artifactId>izertis-jpa-abstractions</artifactId>
+			<version>${izertis.libraries.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.izertis.libraries</groupId>
 			<artifactId>izertis-service-abstractions</artifactId>
+			<version>${izertis.libraries.version}</version>
 		</dependency>
 
 		<!-- Additional dependencies -->
