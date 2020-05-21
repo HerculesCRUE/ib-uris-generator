@@ -19,6 +19,6 @@ management:
     redis:
       enabled: false
   server:
-    port: 8089
+    port: 9326
 server:
-    port: 8089
+    port: 9326
