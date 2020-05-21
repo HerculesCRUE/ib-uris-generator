@@ -1,15 +1,13 @@
 package es.um.asio.service.proxy.impl;
 
 import com.izertis.abstractions.exception.NoSuchEntityException;
-import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.filter.LanguageFilter;
-import es.um.asio.service.model.CanonicalURI;
 import es.um.asio.service.model.Language;
 import es.um.asio.service.model.User;
-import es.um.asio.service.proxy.CanonicalURIProxy;
 import es.um.asio.service.proxy.LanguageProxy;
-import es.um.asio.service.service.CanonicalURIService;
 import es.um.asio.service.service.LanguageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +22,8 @@ import java.util.Optional;
 @Service
 public class LanguageProxyImpl implements LanguageProxy {
 
-
+    /** The logger. */
+    private final Logger logger = LoggerFactory.getLogger(LanguageProxyImpl.class);
 
     /**
      * Service layer.
@@ -64,12 +63,12 @@ public class LanguageProxyImpl implements LanguageProxy {
         if (entity.getIsDefault()) {
             this.service.setNotIsDefaultAllLanguages();
         } else {
-            if (this.service.getDefaultLanguages().size()==0) {
+            if (this.service.getDefaultLanguages().isEmpty()) {
                 entity.isDefault = true;
             }
         }
         List<Language> filtered = this.service.getAllByLanguage(entity);
-        if (filtered.size() == 0) {
+        if (filtered.isEmpty()) {
             return this.service.save(entity);
         } else {
             for (Language e :filtered) {
@@ -77,7 +76,7 @@ public class LanguageProxyImpl implements LanguageProxy {
                 try {
                     return this.service.update(e);
                 } catch (NoSuchEntityException ex) {
-                    ex.printStackTrace();
+                    logger.error("NoSuchEntityException {}",ex);
                 }
             }
             return null;
@@ -117,13 +116,18 @@ public class LanguageProxyImpl implements LanguageProxy {
     }
 
     @Override
-    public Language findOrCreate(String ISO) {
-        Language l = find(ISO).orElse(null);
+    public Language findOrCreate(String iso) {
+        Language l = find(iso).orElse(null);
         if (l == null) {
             l = new Language();
-            l.setISO(ISO);
+            l.setIso(iso);
             save(l);
         }
         return l;
+    }
+
+    @Override
+    public List<Language> getDefaultLanguages() {
+        return this.service.getDefaultLanguages();
     }
 }

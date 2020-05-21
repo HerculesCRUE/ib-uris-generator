@@ -1,14 +1,10 @@
 package es.um.asio.service.service.impl;
 
-import es.um.asio.service.filter.StorageTypeFilter;
 import es.um.asio.service.filter.TypeFilter;
 import es.um.asio.service.model.CanonicalURI;
-import es.um.asio.service.model.StorageType;
 import es.um.asio.service.model.Type;
 import es.um.asio.service.model.User;
-import es.um.asio.service.repository.StorageTypeRepository;
 import es.um.asio.service.repository.TypeRepository;
-import es.um.asio.service.service.StorageTypeService;
 import es.um.asio.service.service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -114,11 +110,10 @@ public class TypeServiceImpl implements TypeService {
     public List<Type> getAllByType(Type entity) {
         TypeFilter f = entity.buildFilterByEntityUniqueProperties();
 
-        if (f.getList().size()>0) {
-            List<Type> filteredList = this.repository.findAll(f);
-            return filteredList;
+        if (!f.getList().isEmpty()) {
+            return this.repository.findAll(f);
         } else {
-            return new ArrayList<Type>();
+            return new ArrayList<>();
         }
     }
 

@@ -4,12 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.um.asio.service.filter.SearchCriteria;
 import es.um.asio.service.filter.SearchOperation;
 import es.um.asio.service.filter.StorageTypeFilter;
-import es.um.asio.service.filter.TypeFilter;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.util.ValidationConstants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -39,42 +37,39 @@ public class StorageType {
     /**
      * NAME.
      */
-    @ApiModelProperty(	example="WIKIBASE",allowEmptyValue = true, position =2, readOnly=false, value = "Required: Name of Storage.", required = true)
+    @ApiModelProperty(	example="WIKIBASE",allowEmptyValue = true, position =2, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Required: Name of Storage.", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.NAME, nullable = false,columnDefinition = "VARCHAR(100)",length = 100)
     private String name;
 
     /**
      * API_URL.
      */
-    @ApiModelProperty(	example="",allowEmptyValue = true, position =3, readOnly=false, value = "Optional: API URL.", required = false)
+    @ApiModelProperty(	example="",allowEmptyValue = true, position =3, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional: API URL.", required = false)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.API_URL, unique = true, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String apiURL;
 
     /**
      * ENDPOINT_URL.
      */
-    @ApiModelProperty(	example="",allowEmptyValue = true, position =4, readOnly=false, value = "Optional: SPARQL ENDPOINT URL.", required = false)
+    @ApiModelProperty(	example="",allowEmptyValue = true, position =4, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional: SPARQL ENDPOINT URL.", required = false)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.ENDPOINT_URL, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String endPointURL;
 
     /**
      * URL SCHEMA.
      */
-    @ApiModelProperty(	example="",allowEmptyValue = true, position =5, readOnly=false, value = "Optional: URI Schema in local storage.", required = false)
+    @ApiModelProperty(	example="",allowEmptyValue = true, position =5, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional: URI Schema in local storage.", required = false)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
-    @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE)
     @Column(name = Columns.URI_SCHEMA, nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String schemaURI;
 
     /**
      * Relation Bidirectional LocalURI OneToMany
      */
+
     @JsonIgnore
     @OneToMany(mappedBy = "storageType", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
@@ -83,14 +78,54 @@ public class StorageType {
     public StorageType() {
     }
 
-    public StorageType(@Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE) String name) {
+    public StorageType(@Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)  String name) {
         this.name = name;
     }
 
-    public StorageType(@Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE) String name, @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE) String apiURL, @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE) String endPointURL, @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) @SafeHtml(whitelistType = SafeHtml.WhiteListType.NONE) String schemaURI) {
+    public StorageType(@Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)  String name, @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) String apiURL, @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)  String endPointURL, @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT) String schemaURI) {
         this.name = (name!=null)?name.toLowerCase().trim():null;
         this.apiURL = apiURL;
         this.endPointURL = endPointURL;
+        this.schemaURI = schemaURI;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getApiURL() {
+        return apiURL;
+    }
+
+    public void setApiURL(String apiURL) {
+        this.apiURL = apiURL;
+    }
+
+    public String getEndPointURL() {
+        return endPointURL;
+    }
+
+    public void setEndPointURL(String endPointURL) {
+        this.endPointURL = endPointURL;
+    }
+
+    public String getSchemaURI() {
+        return schemaURI;
+    }
+
+    public void setSchemaURI(String schemaURI) {
         this.schemaURI = schemaURI;
     }
 

@@ -6,7 +6,6 @@ import com.izertis.abstractions.service.SaveService;
 import es.um.asio.service.filter.StorageTypeFilter;
 import es.um.asio.service.model.StorageType;
 
-
 import java.util.List;
 
 public interface StorageTypeService

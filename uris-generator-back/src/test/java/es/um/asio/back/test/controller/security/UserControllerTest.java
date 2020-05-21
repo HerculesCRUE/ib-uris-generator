@@ -1,17 +1,12 @@
 package es.um.asio.back.test.controller.security;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Optional;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.izertis.abstractions.exception.NoSuchEntityException;
+import com.izertis.abstractions.search.PageImplHelper;
+import es.um.asio.back.controller.security.UserController;
+import es.um.asio.service.dto.UserDto;
+import es.um.asio.service.filter.UserFilter;
+import es.um.asio.service.proxy.UserProxy;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,13 +22,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.izertis.abstractions.exception.NoSuchEntityException;
-import com.izertis.abstractions.search.PageImplHelper;
-import es.um.asio.back.controller.security.UserController;
-import es.um.asio.service.dto.UserDto;
-import es.um.asio.service.filter.UserFilter;
-import es.um.asio.service.proxy.UserProxy;
+import java.util.Optional;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)

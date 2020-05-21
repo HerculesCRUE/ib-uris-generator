@@ -1,10 +1,8 @@
-package es.um.asio.back.controller.uri;
+package es.um.asio.back.controller.crud.storage_type;
 
 import es.um.asio.service.model.StorageType;
-import es.um.asio.service.model.Type;
 import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.StorageTypeProxy;
-import es.um.asio.service.proxy.TypeProxy;
 import es.um.asio.service.validation.group.Create;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

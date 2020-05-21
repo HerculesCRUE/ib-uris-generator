@@ -1,20 +1,29 @@
 package es.um.asio.service.util;
 
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import static java.util.regex.Pattern.matches;
-
 public class Utils {
+
+    private Utils(){}
+
     public static String getUUIDFromString(String s) {
         return  UUID.nameUUIDFromBytes(s.getBytes()).toString();
     }
 
     public static boolean isValidURL(String url) {
-        String pattern = "^(\\/[a-z0-9_.~%-]*)*$";
-        return Pattern.matches(pattern, url);
+        try
+        {
+            URL iUri = new URL(url);
+            iUri.toURI();
+            return true;
+        } catch (Exception exception)
+        {
+            return false;
+        }
     }
 
     public static boolean isValidUUID(String uuid) {
@@ -23,14 +32,11 @@ public class Utils {
     }
 
     public static boolean isValidString(String s) {
-        if (s==null || s.equals(""))
-            return false;
-        else
-            return true;
+        return  !(s==null || s.equals(""));
     }
 
     public static String generateUUIDFromOject(Object o) throws NoSuchAlgorithmException {
-        String hash = Integer.valueOf(o.hashCode()).toString();
+        String hash = Integer.toString(o.hashCode());
         MessageDigest sha = null;
         sha = MessageDigest.getInstance("SHA-1");
         byte[] result =  sha.digest(hash.getBytes());

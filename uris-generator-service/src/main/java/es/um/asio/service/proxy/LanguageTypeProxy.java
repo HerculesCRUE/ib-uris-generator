@@ -5,7 +5,6 @@ import com.izertis.abstractions.service.QueryService;
 import com.izertis.abstractions.service.SaveService;
 import es.um.asio.service.filter.LanguageTypeFilter;
 import es.um.asio.service.model.LanguageType;
-import es.um.asio.service.model.User;
 
 import java.util.List;
 

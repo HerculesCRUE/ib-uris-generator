@@ -1,10 +1,8 @@
-package es.um.asio.back.controller.uri;
+package es.um.asio.back.controller.crud.language;
 
 import es.um.asio.service.model.Language;
-import es.um.asio.service.model.Type;
 import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.LanguageProxy;
-import es.um.asio.service.proxy.TypeProxy;
 import es.um.asio.service.validation.group.Create;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -15,14 +13,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(TypeController.Mappings.BASE)
-public class TypeController {
+@RequestMapping(LanguageController.Mappings.BASE)
+public class LanguageController {
 
     /**
      * Proxy service implementation for {@link User}.
      */
     @Autowired
-    private TypeProxy proxy;
+    private LanguageProxy proxy;
 
     /**
      * Save.
@@ -33,7 +31,7 @@ public class TypeController {
      */
 
     @PostMapping("/json")
-    public Type save(@RequestBody @Validated(Create.class) final Type entity) {
+    public Language save(@RequestBody @Validated(Create.class) final Language entity) {
         return this.proxy.save(entity);
     }
 
@@ -45,21 +43,27 @@ public class TypeController {
      * @return the saved Language
      */
     @PostMapping
-    public Type save(
-            @RequestParam(required = true) @Validated(Create.class) final String code,
-            @RequestParam(required = false) @Validated(Create.class) final String name
+    public Language save(
+            @RequestParam(required = true) @Validated(Create.class) final String ISO,
+            @RequestParam(required = false) @Validated(Create.class) final String name,
+            @RequestParam(required = false) @Validated(Create.class) final String domain,
+            @RequestParam(required = false) @Validated(Create.class) final String subDomain,
+            @RequestParam(required = false) @Validated(Create.class) final String type,
+            @RequestParam(required = false) @Validated(Create.class) final String concept,
+            @RequestParam(required = false) @Validated(Create.class) final String reference,
+            @RequestParam(required = false) @Validated(Create.class) final boolean isDefault
             ) {
-        Type entity = new Type(code, name);
+        Language entity = new Language(ISO,name,domain,subDomain,type,concept,reference,isDefault);
         return this.proxy.save(entity);
     }
 
     @GetMapping("all")
-    public List<Type> getAll() {
+    public List<Language> getLenguages() {
         return this.proxy.findAll();
     }
 
     @GetMapping()
-    public Type get(@RequestParam(required = true) @Validated(Create.class) final String ISO) {
+    public Language getLenguage(@RequestParam(required = true) @Validated(Create.class) final String ISO) {
         return this.proxy.find(ISO).orElse(null);
     }
 
@@ -76,6 +80,6 @@ public class TypeController {
         /**
          * Controller request mapping.
          */
-        protected static final String BASE = "/type";
+        protected static final String BASE = "/language";
     }
 }

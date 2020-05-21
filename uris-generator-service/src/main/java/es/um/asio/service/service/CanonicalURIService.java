@@ -5,8 +5,6 @@ import com.izertis.abstractions.service.QueryService;
 import com.izertis.abstractions.service.SaveService;
 import es.um.asio.service.filter.CanonicalURIFilter;
 import es.um.asio.service.model.CanonicalURI;
-import es.um.asio.service.model.Type;
-
 
 import java.util.List;
 
@@ -23,7 +21,11 @@ public interface CanonicalURIService
 
     List<CanonicalURI> getAllByEntityName(final String entityName);
 
+    List<CanonicalURI> getAllByEntityNameAndIsEntity(final String entityName);
+
     List<CanonicalURI> getAllByPropertyName(final String propertyName);
+
+    List<CanonicalURI> getAllByPropertyNameAndIsProperty(final String propertyName);
 
     List<CanonicalURI> getAllByElements(final String domain, final String subDomain, final String type, final String concept, final String reference);
 }

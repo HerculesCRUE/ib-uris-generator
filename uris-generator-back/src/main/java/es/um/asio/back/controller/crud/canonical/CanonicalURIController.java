@@ -1,10 +1,12 @@
-package es.um.asio.back.controller.uri;
+package es.um.asio.back.controller.crud.canonical;
 
-import es.um.asio.service.model.*;
+import es.um.asio.service.model.CanonicalURI;
+import es.um.asio.service.model.Type;
 import es.um.asio.service.proxy.CanonicalURIProxy;
 import es.um.asio.service.proxy.TypeProxy;
-import es.um.asio.service.proxy.URIMapProxy;
+import es.um.asio.service.service.SchemaService;
 import es.um.asio.service.validation.group.Create;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(CanonicalURIController.Mappings.BASE)
+@Api(value = "CRUD Operations for Canonical URIs", tags = "CRUD Operations (GET, POST, DELETE) for Canonical URIs")
 public class CanonicalURIController {
 
     /**
@@ -31,16 +34,11 @@ public class CanonicalURIController {
     private TypeProxy typeProxy;
 
     /**
-     * Save.
-     *
-     * @param entity
-     *            the CanonicalURI in JSON format
-     * @return the saved CanonicalURI
+     * Schema service
      */
-    @PostMapping("/json")
-    public CanonicalURI save(@RequestBody @Validated(Create.class) final CanonicalURI entity) {
-        return this.proxy.save(entity);
-    }
+    @Autowired
+    private SchemaService schemaService;
+
 
     /**
      * Save.
@@ -66,14 +64,14 @@ public class CanonicalURIController {
             @ApiParam(name = "typeCode", value = "Type Code", defaultValue = "res")
             @RequestParam(required = true) @Validated(Create.class) final String typeCode,
             @ApiParam(name = "concept", value = "Concept (Entity) Element", defaultValue = "")
-            @RequestParam(required = true) @Validated(Create.class) final String concept,
+            @RequestParam(required = false) @Validated(Create.class) final String concept,
             @ApiParam(name = "reference", value = "Reference (Instance) Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String reference,
             @ApiParam(name = "property", value = "Property Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String property
     ) {
         Type t = typeProxy.findOrCreate(typeCode);
-        CanonicalURI entity = new CanonicalURI(domain,subDomain,t,concept,reference);
+        CanonicalURI entity = new CanonicalURI(domain,subDomain,t,concept,reference,property,schemaService.getCanonicalSchema());
         if (property!=null) {
             entity.setPropertyName(property);
             entity.setIsProperty(true);
@@ -91,12 +89,11 @@ public class CanonicalURIController {
         return this.proxy.findAll();
     }
 
-    @GetMapping("entity/{entityName}/property/{propertyName}")
-    public List<CanonicalURI> get(
-            @PathVariable(required = true,name = "entityName") @Validated(Create.class) final String entityName,
+    @GetMapping("property/{propertyName}")
+    public List<CanonicalURI> getByProperty(
             @PathVariable(required = true,name = "propertyName") @Validated(Create.class) final String propertyName
     ) {
-        return this.proxy.getAllByEntityNameAndPropertyName(entityName,propertyName);
+        return this.proxy.getAllByPropertyFromProperties(propertyName);
     }
 
     @GetMapping("entity/{entityName}/reference/{referenceId}")
@@ -108,10 +105,10 @@ public class CanonicalURIController {
     }
 
     @GetMapping("entity/{entityName}")
-    public List<CanonicalURI> get(
+    public List<CanonicalURI> getByEntity(
             @PathVariable(required = true,name = "entityName")  @Validated(Create.class) final String entityName
     ) {
-        return this.proxy.getAllByEntityName(entityName);
+        return this.proxy.getAllByEntityNameFromEntities(entityName);
     }
 
     @GetMapping("uri")
@@ -137,12 +134,11 @@ public class CanonicalURIController {
         return this.proxy.getAllByElements(domain, subDomain, typeCode, concept, reference);
     }
 
-    @DeleteMapping("entity/{entityName}/property/{propertyName}")
-    public void delete(
-            @PathVariable(required = true,name = "entityName") @Validated(Create.class) final String entityName,
+    @DeleteMapping("property/{propertyName}")
+    public void deleteByProperty(
             @PathVariable(required = true,name = "propertyName") @Validated(Create.class) final String propertyName
     ) {
-        List<CanonicalURI> cus = this.proxy.getAllByEntityNameAndPropertyName(entityName,propertyName);
+        List<CanonicalURI> cus = this.proxy.getAllByPropertyName(propertyName);
         for (CanonicalURI cu:cus) {
             if (cu != null)
                 this.proxy.delete(cu);
@@ -165,7 +161,7 @@ public class CanonicalURIController {
     public void delete(
             @PathVariable(required = true,name = "entityName") @Validated(Create.class) final String entityName
     ) {
-        List<CanonicalURI> cus = this.proxy.getAllByEntityName(entityName);
+        List<CanonicalURI> cus = this.proxy.getAllByEntityNameFromEntities(entityName);
         for (CanonicalURI cu:cus) {
             if (cu != null)
                 this.proxy.delete(cu);

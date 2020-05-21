@@ -1,9 +1,8 @@
 package es.um.asio.service.test.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Optional;
-
+import es.um.asio.service.model.User;
+import es.um.asio.service.repository.UserRepository;
+import es.um.asio.service.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +10,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import es.um.asio.service.model.User;
-import es.um.asio.service.repository.UserRepository;
-import es.um.asio.service.service.UserService;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test for {@link UserService}

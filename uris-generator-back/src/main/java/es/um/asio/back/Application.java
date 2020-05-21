@@ -1,5 +1,6 @@
 package es.um.asio.back;
 
+import es.um.asio.service.ServiceConfig;
 import es.um.asio.service.model.Language;
 import es.um.asio.service.model.LanguageType;
 import es.um.asio.service.model.StorageType;
@@ -8,12 +9,6 @@ import es.um.asio.service.proxy.LanguageProxy;
 import es.um.asio.service.proxy.LanguageTypeProxy;
 import es.um.asio.service.proxy.StorageTypeProxy;
 import es.um.asio.service.proxy.TypeProxy;
-import es.um.asio.service.repository.LanguageRepository;
-import es.um.asio.service.repository.LanguageTypeRepository;
-import es.um.asio.service.repository.TypeRepository;
-import es.um.asio.service.service.LanguageService;
-import es.um.asio.service.service.LanguageTypeService;
-import es.um.asio.service.service.TypeService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -22,8 +17,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-
-import es.um.asio.service.ServiceConfig;
 
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -95,8 +88,10 @@ public class Application {
 
             StorageType st1 = new StorageType("trellis");
             StorageType st2 = new StorageType("wikibase");
+            StorageType st3 = new StorageType("weso-wikibase");
             storageTypeProxy.save(st1);
             storageTypeProxy.save(st2);
+            storageTypeProxy.save(st3);
         };
     }
 }

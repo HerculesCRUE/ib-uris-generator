@@ -2,9 +2,7 @@ package es.um.asio.service.filter;
 
 import com.izertis.abstractions.filter.AbstractJpaSpecification;
 import com.izertis.abstractions.filter.EntityFilter;
-import es.um.asio.service.model.CanonicalURILanguage;
 import es.um.asio.service.model.LocalURI;
-import es.um.asio.service.model.Type;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +23,7 @@ import java.util.List;
 public class LocalURIFilter extends AbstractJpaSpecification<LocalURI> implements EntityFilter {
 
 
-    private List<SearchCriteria> list = new ArrayList<>();
+    private transient List<SearchCriteria> list = new ArrayList<>();
 
     public void add(SearchCriteria criteria) {
         list.add(criteria);
@@ -40,10 +38,6 @@ public class LocalURIFilter extends AbstractJpaSpecification<LocalURI> implement
         for (SearchCriteria criteria : list) {
             if (criteria.getOperation().equals(SearchOperation.GREATER_THAN)) {
                 predicates.add(builder.greaterThan(
-                        root.get(criteria.getKey()), criteria.getValue().toString()
-                ));
-            } else if (criteria.getOperation().equals(SearchOperation.LESS_THAN)) {
-                predicates.add(builder.lessThan(
                         root.get(criteria.getKey()), criteria.getValue().toString()
                 ));
             } else if (criteria.getOperation().equals(SearchOperation.LESS_THAN)) {
@@ -85,6 +79,8 @@ public class LocalURIFilter extends AbstractJpaSpecification<LocalURI> implement
                 predicates.add(builder.in(root.get(criteria.getKey())).value(criteria.getValue()));
             } else if (criteria.getOperation().equals(SearchOperation.NOT_IN)) {
                 predicates.add(builder.not(root.get(criteria.getKey())).in(criteria.getValue()));
+            } else if (criteria.getOperation().equals(SearchOperation.IS_NULL)) {
+                predicates.add(builder.isTrue(root.get(criteria.getKey()).isNull()));
             }
 
         }

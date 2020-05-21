@@ -108,8 +108,6 @@ public class URIMapServiceImpl implements URIMapService {
     public List<URIMap> getAllByURIMap(URIMap uriMap) {
         URIMapFilter f = uriMap.buildFilterByEntityUniqueProperties();
 
-        List<URIMap> filteredList = this.uriMapRepository.findAll(f);
-
-        return filteredList;
+        return this.uriMapRepository.findAll(f);
     }
 }

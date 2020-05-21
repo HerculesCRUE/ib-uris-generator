@@ -1,12 +1,13 @@
 package es.um.asio.service.config;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.sql.DataSource;
-
+import com.google.common.collect.Sets;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import es.um.asio.service.config.properties.DatasourceProperties;
+import es.um.asio.service.config.properties.JpaProperties;
+import es.um.asio.service.config.properties.PersistenceProperties;
+import es.um.asio.service.model.User;
+import es.um.asio.service.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,11 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.google.common.collect.Sets;
-import es.um.asio.service.config.properties.DatasourceProperties;
-import es.um.asio.service.config.properties.JpaProperties;
-import es.um.asio.service.config.properties.PersistenceProperties;
-import es.um.asio.service.model.User;
-import es.um.asio.service.repository.UserRepository;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * Persistence configuration.
