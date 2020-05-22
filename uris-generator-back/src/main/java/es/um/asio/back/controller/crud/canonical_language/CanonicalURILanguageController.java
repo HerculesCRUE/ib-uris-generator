@@ -191,7 +191,7 @@ public class CanonicalURILanguageController {
 
     private List<CanonicalURI> getCanonicalURIProperties(CanonicalURILanguage entity, String parentEntity, String parentProperty) {
         List<CanonicalURI> canonicalURIs = new ArrayList<>();
-        for (CanonicalURI cu : canonicalProxy.getAllByEntityNameAndPropertyName(parentEntity,parentProperty)) {
+        for (CanonicalURI cu : canonicalProxy.getAllByPropertyFromProperties(parentProperty)) {
             if (cu.getIsProperty() && cu.getReference().trim().equals(entity.getParentPropertyName().trim())) {
                 canonicalURIs.add(cu);
             }
@@ -204,12 +204,11 @@ public class CanonicalURILanguageController {
         return this.proxy.findAll();
     }
 
-    @GetMapping("entity/{entityName}/property/{propertyName}")
-    public List<CanonicalURILanguage> get(
-            @PathVariable(required = true,name = "entityName") @Validated(Create.class) final String entityName,
+    @GetMapping("property/{propertyName}")
+    public List<CanonicalURILanguage> getByProperty(
             @PathVariable(required = true,name = "propertyName") @Validated(Create.class) final String propertyName
     ) {
-        return this.proxy.getAllByEntityNameAndPropertyName(entityName,propertyName);
+        return this.proxy.getAllByPropertyNameFromProperties(propertyName);
     }
 
     @GetMapping("entity/{entityName}/reference/{referenceId}")
@@ -252,12 +251,11 @@ public class CanonicalURILanguageController {
         return this.proxy.getAllByElements(domain, subDomain, language, typeCode, concept, reference);
     }
 
-    @DeleteMapping("entity/{entityName}/property/{propertyName}")
-    public void delete(
-            @PathVariable(required = true,name = "entityName") @Validated(Create.class) final String entityName,
+    @DeleteMapping("property/{propertyName}")
+    public void deleteProperty(
             @PathVariable(required = true,name = "propertyName") @Validated(Create.class) final String propertyName
     ) {
-        List<CanonicalURILanguage> culs = this.proxy.getAllByEntityNameAndPropertyName(entityName,propertyName);
+        List<CanonicalURILanguage> culs = this.proxy.getAllByPropertyNameFromProperties(propertyName);
         for (CanonicalURILanguage cul:culs) {
             if (cul != null)
                 this.proxy.delete(cul);

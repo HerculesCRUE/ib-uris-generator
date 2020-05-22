@@ -192,12 +192,41 @@ public class CanonicalURILanguageControllerTest {
             }
             return response;
         });
+        // Mock canonicalURILanguageProxy getAllByEntityNameAndPropertyName
+        Mockito.when(this.canonicalURIProxy.getAllByPropertyFromProperties(anyString())).thenAnswer(invocation -> {
+            List<CanonicalURI> response = new ArrayList<>();
+            for (CanonicalURILanguage cu : canonicalURISSchema1) {
+                if (cu.getIsProperty() && cu.getPropertyName().equals(invocation.getArgument(0))) {
+                    CanonicalURI canonicalURI = new CanonicalURI(
+                            cu.getDomain(),
+                            cu.getSubDomain(),
+                            cu.getType(),
+                            cu.getConcept(),
+                            cu.getReference(),
+                            cu.getPropertyName(),
+                            canonicalSchema);
+                    response.add(canonicalURI);
+                }
+            }
+            return response;
+        });
 
         // Mock canonicalURILanguageProxy getAllByFullURI
         Mockito.when(this.canonicalURILanguageProxy.getAllByFullURI(anyString())).thenAnswer(invocation -> {
-            List<CanonicalURILanguage> response = new ArrayList<>();
+            CanonicalURILanguage response = null;
             for (CanonicalURILanguage cu : canonicalURISSchema1) {
                 if (cu.getFullURI().equals(invocation.getArgument(0))) {
+                    response= cu;
+                }
+            }
+            return response;
+        });
+
+        // Mock canonicalURILanguageProxy getAllByEntityName
+        Mockito.when(this.canonicalURILanguageProxy.getAllByEntityName(anyString())).thenAnswer(invocation -> {
+            List<CanonicalURILanguage> response = new ArrayList<>();
+            for (CanonicalURILanguage cu : canonicalURISSchema1) {
+                if (cu.getIsEntity() && cu.getConcept().equals(invocation.getArgument(0))) {
                     response.add(cu);
                 }
             }
@@ -370,14 +399,17 @@ public class CanonicalURILanguageControllerTest {
                 this.mvc.perform(post("/canonical-uri-language")
                         .param("domain", cu.getDomain())
                         .param("subDomain", cu.getSubDomain())
+                        .param("language", cu.getLanguageID())
                         .param("typeCode", cu.getTypeCode())
                         .param("property", cu.getPropertyName())
+                        .param("parentProperty", cu.getPropertyName())
+                        .param("createCanonicalIfNotExist", "true")
                         .accept(MediaType.APPLICATION_JSON))
                         .andDo(print())
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.domain", is(cu.getDomain())))
                         .andExpect(jsonPath("$.subDomain", is(cu.getSubDomain())))
-                        .andExpect(jsonPath("$.typeIdCode", is(cu.getTypeCode())))
+                        .andExpect(jsonPath("$.typeCode", is(cu.getTypeCode())))
                         .andExpect(jsonPath("$.propertyName", is(cu.getPropertyName())))
                         .andExpect(jsonPath("$.isProperty", is(cu.getIsProperty())))
                         .andExpect(jsonPath("$.fullURI", is(cu.getFullURI())))
@@ -394,15 +426,18 @@ public class CanonicalURILanguageControllerTest {
                 this.mvc.perform(post("/canonical-uri-language")
                         .param("domain", cu.getDomain())
                         .param("subDomain", cu.getSubDomain())
+                        .param("language", cu.getLanguageID())
                         .param("typeCode", cu.getTypeCode())
                         .param("concept", cu.getConcept())
+                        .param("parentEntity", cu.getConcept())
                         .param("reference", cu.getReference())
+                        .param("createCanonicalIfNotExist", "true")
                         .accept(MediaType.APPLICATION_JSON))
                         .andDo(print())
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.domain", is(cu.getDomain())))
                         .andExpect(jsonPath("$.subDomain", is(cu.getSubDomain())))
-                        .andExpect(jsonPath("$.typeIdCode", is(cu.getTypeCode())))
+                        .andExpect(jsonPath("$.typeCode", is(cu.getTypeCode())))
                         .andExpect(jsonPath("$.concept", is(cu.getConcept())))
                         .andExpect(jsonPath("$.reference", is(cu.getReference())))
                         .andExpect(jsonPath("$.isInstance", is(cu.getIsInstance())))
@@ -425,7 +460,7 @@ public class CanonicalURILanguageControllerTest {
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$[0].domain", is(cu.getDomain())))
                         .andExpect(jsonPath("$[0].subDomain", is(cu.getSubDomain())))
-                        .andExpect(jsonPath("$[0]typeIdCode", is(cu.getTypeCode())))
+                        .andExpect(jsonPath("$[0].typeCode", is(cu.getTypeCode())))
                         .andExpect(jsonPath("$[0].concept", is(cu.getConcept())))
                         .andExpect(jsonPath("$[0].isEntity", is(cu.getIsEntity())))
                         .andExpect(jsonPath("$[0].fullURI", is(cu.getFullURI())))
@@ -448,7 +483,7 @@ public class CanonicalURILanguageControllerTest {
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$[0].domain", is(cu.getDomain())))
                         .andExpect(jsonPath("$[0].subDomain", is(cu.getSubDomain())))
-                        .andExpect(jsonPath("$[0]typeIdCode", is(cu.getTypeCode())))
+                        .andExpect(jsonPath("$[0].typeCode", is(cu.getTypeCode())))
                         .andExpect(jsonPath("$[0].propertyName", is(cu.getPropertyName())))
                         .andExpect(jsonPath("$[0].isProperty", is(cu.getIsProperty())))
                         .andExpect(jsonPath("$[0].fullURI", is(cu.getFullURI())))
@@ -467,7 +502,7 @@ public class CanonicalURILanguageControllerTest {
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$[0].domain", is(cu.getDomain())))
                         .andExpect(jsonPath("$[0].subDomain", is(cu.getSubDomain())))
-                        .andExpect(jsonPath("$[0]typeIdCode", is(cu.getTypeCode())))
+                        .andExpect(jsonPath("$[0].typeCode", is(cu.getTypeCode())))
                         .andExpect(jsonPath("$[0].concept", is(cu.getConcept())))
                         .andExpect(jsonPath("$[0].reference", is(cu.getReference())))
                         .andExpect(jsonPath("$[0].isInstance", is(cu.getIsInstance())))
@@ -486,17 +521,17 @@ public class CanonicalURILanguageControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                         .andDo(print())
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$[0].domain", is(cu.getDomain())))
-                        .andExpect(jsonPath("$[0].subDomain", is(cu.getSubDomain())))
-                        .andExpect(jsonPath("$[0]typeIdCode", is(cu.getTypeCode())))
-                        .andExpect(jsonPath("$[0].concept", is(cu.getConcept())))
-                        .andExpect(jsonPath("$[0].reference", is(cu.getReference())))
-                        .andExpect(jsonPath("$[0].propertyName", is(cu.getPropertyName())))
-                        .andExpect(jsonPath("$[0].isEntity", is(cu.getIsEntity())))
-                        .andExpect(jsonPath("$[0].isProperty", is(cu.getIsProperty())))
-                        .andExpect(jsonPath("$[0].isInstance", is(cu.getIsInstance())))
-                        .andExpect(jsonPath("$[0].fullURI", is(cu.getFullURI())))
-                        .andExpect(jsonPath("$[0].fullURI", is(generateURLFromSchema(cu, canonicalLanguageSchema))));
+                        .andExpect(jsonPath("$.domain", is(cu.getDomain())))
+                        .andExpect(jsonPath("$.subDomain", is(cu.getSubDomain())))
+                        .andExpect(jsonPath("$.typeCode", is(cu.getTypeCode())))
+                        .andExpect(jsonPath("$.concept", is(cu.getConcept())))
+                        .andExpect(jsonPath("$.reference", is(cu.getReference())))
+                        .andExpect(jsonPath("$.propertyName", is(cu.getPropertyName())))
+                        .andExpect(jsonPath("$.isEntity", is(cu.getIsEntity())))
+                        .andExpect(jsonPath("$.isProperty", is(cu.getIsProperty())))
+                        .andExpect(jsonPath("$.isInstance", is(cu.getIsInstance())))
+                        .andExpect(jsonPath("$.fullURI", is(cu.getFullURI())))
+                        .andExpect(jsonPath("$.fullURI", is(generateURLFromSchema(cu, canonicalLanguageSchema))));
             }
         }
     }
