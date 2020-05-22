@@ -4,6 +4,7 @@ import es.um.asio.service.model.Language;
 import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.LanguageProxy;
 import es.um.asio.service.validation.group.Create;
+import io.swagger.annotations.Api;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(LanguageController.Mappings.BASE)
+@Api(value = "CRUD Operations for Language", tags = "CRUD Operations (GET, POST, DELETE) for Language")
 public class LanguageController {
 
     /**
