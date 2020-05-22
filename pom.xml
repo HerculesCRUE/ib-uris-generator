@@ -152,6 +152,7 @@
 		<module>uris-generator-service-abstractions</module>
 		<module>uris-generator-audit</module>
 		<module>uris-generator-swagger</module>
+		<module>uris-generator-test</module>
 	</modules>
 	
 	<build>
