@@ -41,7 +41,7 @@ public class CanonicalURI  {
     /**
      * DOMAIN.
      */
-    @ApiModelProperty(	example="hercules",allowEmptyValue = false, position =1, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Required: Domain represents the highest level of the namespace for URI resolution, and for providing relevant information about the owner of the information. ", required = true)
+    @ApiModelProperty(	example="hercules.org",allowEmptyValue = false, position =1, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Required: Domain represents the highest level of the namespace for URI resolution, and for providing relevant information about the owner of the information. ", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @Column(name = Columns.DOMAIN, nullable = false,columnDefinition = "VARCHAR(100)",length = 100)
     private String domain;
@@ -60,7 +60,7 @@ public class CanonicalURI  {
      * Relation Bidirectional ManyToOne
      */
     @JsonIgnore
-    @ApiModelProperty(	example="ref", allowEmptyValue = false, allowableValues = "cat, def, kos, ref",position =3, readOnly=false, value = "Required: " +
+    @ApiModelProperty(	example="res", allowEmptyValue = false, allowableValues = "cat, def, kos, ref",position =3, readOnly=false, value = "Required: " +
             "Sets the type of information the resource contains. One of this: cat | def | kos | res", required = true)
     @ManyToOne(fetch = FetchType.LAZY)
     private Type type;
@@ -77,7 +77,7 @@ public class CanonicalURI  {
     /**
      * CONCEPT.
      */
-    @ApiModelProperty(	example="university", allowEmptyValue = true, position =4, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional:"+
+    @ApiModelProperty(	example="University", allowEmptyValue = true, position =4, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional:"+
             "Concepts are abstract representations that correspond to the classes or properties of the vocabularies or ontologies used to semantically represent resources. In addition to the concept, an unambiguous reference to specific instances may be represented. Required only if is a ref type", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @Column(name = Columns.CONCEPT, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
@@ -151,10 +151,10 @@ public class CanonicalURI  {
     }
 
     public CanonicalURI(String domain, String subDomain, Type t, String concept, String reference) {
-        this.domain = domain;
-        this.subDomain = subDomain;
+        this.domain = Utils.toASIONormalization(domain);
+        this.subDomain = Utils.toASIONormalization(subDomain);
         setType(t);
-        this.concept = concept;
+        setConcept(concept);
         this.reference = reference;
         updateState();
         generateFullURL();
@@ -170,10 +170,10 @@ public class CanonicalURI  {
 
     public CanonicalURI(String domain, String subDomain, Type t, String concept, String reference, String propertyName, String shemaParam) {
         setSchema(shemaParam);
-        this.domain = domain;
-        this.subDomain = subDomain;
+        this.domain = Utils.toASIONormalization(domain);
+        this.subDomain = Utils.toASIONormalization(subDomain);
         setType(t);
-        this.concept = concept;
+        setConcept(concept);
         this.reference = reference;
         setPropertyName(propertyName);
         updateState();
@@ -182,13 +182,13 @@ public class CanonicalURI  {
 
 
     public void setDomain(String domain) {
-        this.domain = domain;
+        this.domain = Utils.toASIONormalization(domain);
         generateFullURL();
         updateState();
     }
 
     public void setSubDomain(String subDomain) {
-        this.subDomain = subDomain;
+        this.subDomain = Utils.toASIONormalization(subDomain);
     }
 
     public void setType(Type type) {
@@ -198,8 +198,8 @@ public class CanonicalURI  {
     }
 
     public void setConcept(String concept) {
-        this.concept = concept;
-        this.entityName = concept;
+        this.concept = Utils.toConceptFormat(concept);
+        this.entityName = this.concept;
     }
 
     public void setReference(String reference) {
@@ -208,8 +208,8 @@ public class CanonicalURI  {
 
     public void setPropertyName(String propertyName) {
         if (propertyName!=null) {
-            this.propertyName = propertyName;
-            this.reference = propertyName;
+            this.propertyName = Utils.toASIONormalization(propertyName);
+            this.reference = this.propertyName;
         }
     }
 
@@ -232,6 +232,9 @@ public class CanonicalURI  {
         this.isProperty = false;
     }
 
+    public void setCanonicalURILanguages(Set<CanonicalURILanguage> canonicalURILanguages) {
+        this.canonicalURILanguages = canonicalURILanguages;
+    }
 
     public void setEntityName(String entityName) {
         this.entityName = entityName;

@@ -211,8 +211,8 @@ public class CanonicalURILanguage {
 
     public CanonicalURILanguage(String domain, String subDomain,LanguageType lt, String concept, String reference, String property, String schema) {
         setSchema(schema);
-        this.domain = domain;
-        this.subDomain = subDomain;
+        this.domain = Utils.toASIONormalization(domain);
+        this.subDomain = Utils.toASIONormalization(subDomain);
         setLanguageType(lt);
         setConcept(concept);
         setPropertyName(property);
@@ -237,10 +237,18 @@ public class CanonicalURILanguage {
         }
     }
 
+    public void setDomain(String domain) {
+        this.domain = Utils.toASIONormalization(domain);
+    }
+
+    public void setSubDomain(String subDomain) {
+        this.subDomain = Utils.toASIONormalization(subDomain);
+    }
+
     public void setConcept(String concept) {
         if (concept!=null) {
-            this.concept = concept;
-            this.entityName = concept;
+            this.concept = Utils.toConceptFormat(concept);
+            this.entityName = this.concept;
         }
     }
 
@@ -251,19 +259,19 @@ public class CanonicalURILanguage {
 
     public void setPropertyName(String propertyName) {
         if (propertyName!=null)
-            this.propertyName = propertyName;
+            this.propertyName = Utils.toASIONormalization(propertyName);
     }
 
     public void setEntityName(String entityName) {
-        this.entityName = entityName;
+        this.entityName = Utils.toASIONormalization(entityName);
     }
 
     public void setParentEntityName(String parentEntityName) {
-        this.parentEntityName = parentEntityName;
+        this.parentEntityName = Utils.toASIONormalization(parentEntityName);
     }
 
     public void setParentPropertyName(String parentPropertyName) {
-        this.parentPropertyName = parentPropertyName;
+        this.parentPropertyName = Utils.toASIONormalization(parentPropertyName);
     }
 
     public void setIsEntity(Boolean isEntity) {
@@ -539,7 +547,7 @@ public class CanonicalURILanguage {
 
         if (isInstance) {
             if (Utils.isValidString(this.reference))
-                uriSchema = uriSchema.replaceFirst("/\\$reference\\$",this.reference);
+                uriSchema = uriSchema.replaceFirst("\\$reference\\$",this.reference);
             else
                 throw new IllegalArgumentException("Reference field in CanonicalLanguageURI can´t be empty if is a class or instance");
         } else {

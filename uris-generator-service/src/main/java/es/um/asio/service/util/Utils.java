@@ -1,5 +1,8 @@
 package es.um.asio.service.util;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.internal.StringUtil;
+
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -52,6 +55,30 @@ public class Utils {
             return pathParts[pathParts.length-1];
         } else
             return path;
+    }
+
+    public static String toConceptFormat(String concept) {
+        if (!isValidString(concept) || StringUtils.isAllLowerCase(concept)) {
+            return concept;
+        } else {
+            return StringUtils.capitalize(toASIONormalization(concept).toLowerCase());
+        }
+    }
+
+    public static String toASIONormalization(String token) {
+        StringBuffer formatWord = new StringBuffer();
+        if (isValidString(token)) {
+            token = StringUtils.stripAccents(StringUtils.deleteWhitespace(token));
+            formatWord.append(token.charAt(0));
+            for (int i = 1; i < token.length(); i++) {
+                if (Character.isUpperCase(token.charAt(i)) && Character.isLowerCase(token.charAt(i-1))) {
+                    formatWord.append('-');
+                }
+                formatWord.append(token.charAt(i));
+            }
+            return formatWord.toString();
+        } else
+            return token;
     }
 
 

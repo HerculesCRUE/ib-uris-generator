@@ -156,7 +156,7 @@ public class LocalURI {
             f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
             if (Utils.isValidString(this.localUri)) {
-                f.add(new SearchCriteria("localURI", this.localUri, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("localUri", this.localUri, SearchOperation.EQUAL));
             }
             if (Utils.isValidString(this.canonicalURILanguageStr)) {
                 f.add(new SearchCriteria("canonicalURILanguageStr", this.canonicalURILanguageStr, SearchOperation.EQUAL));
@@ -175,7 +175,7 @@ public class LocalURI {
             f.add(new SearchCriteria("id", this.id, SearchOperation.EQUAL));
         } else {
             if (Utils.isValidString(this.localUri)) {
-                f.add(new SearchCriteria("localURI", this.localUri, SearchOperation.EQUAL));
+                f.add(new SearchCriteria("localUri", this.localUri, SearchOperation.EQUAL));
             }
             if (Utils.isValidString(this.localUri)) {
                 f.add(new SearchCriteria("canonicalURILanguageStr", this.canonicalURILanguageStr, SearchOperation.EQUAL));
