@@ -8,6 +8,7 @@ import es.um.asio.service.proxy.LanguageProxy;
 import es.um.asio.service.proxy.LanguageTypeProxy;
 import es.um.asio.service.proxy.TypeProxy;
 import es.um.asio.service.validation.group.Create;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(LanguageTypeController.Mappings.BASE)
+@Api(value = "CRUD Operations for Language Type", tags = "CRUD Operations (GET, POST, DELETE) for association between Language and Type")
 public class LanguageTypeController {
 
     /**

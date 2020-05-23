@@ -3,6 +3,7 @@ package es.um.asio.back.controller.security;
 
 import java.util.List;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +43,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -50,6 +52,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(UserController.Mappings.BASE)
+@ApiIgnore
+@Api(hidden = true)
 public class UserController {
 
     /**

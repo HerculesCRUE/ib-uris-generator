@@ -107,6 +107,13 @@ El mapeo de URIS sigue el siguiente esquema, donde cada URI canónica se mapea a
 
  ![mapper_url](./images/multi_languege_map_language.png)
 
+## Testing y cobertura
+
+Se incluyen los resultados del testing y cobertura en los siguientes enlaces:
+
+* [Testing](http://herc-iz-front-desa.atica.um.es:8070/uris-generator/surefire/surefire-report.html)
+* [Cobertura](http://herc-iz-front-desa.atica.um.es:8070/uris-generator/jacoco/)
+
 ##  Documentación adicional
 
 * [Compilación](docs/build.md)

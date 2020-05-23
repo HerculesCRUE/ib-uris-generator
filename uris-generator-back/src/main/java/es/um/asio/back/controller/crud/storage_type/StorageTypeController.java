@@ -4,6 +4,7 @@ import es.um.asio.service.model.StorageType;
 import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.StorageTypeProxy;
 import es.um.asio.service.validation.group.Create;
+import io.swagger.annotations.Api;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(StorageTypeController.Mappings.BASE)
+@Api(value = "CRUD Operations for Storage Type", tags = "CRUD Operations (GET, POST, DELETE) for Storage Type")
 public class StorageTypeController {
 
     /**

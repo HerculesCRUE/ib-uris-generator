@@ -1,5 +1,6 @@
 package es.um.asio.service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.um.asio.service.filter.LanguageFilter;
 import es.um.asio.service.filter.SearchCriteria;
 import es.um.asio.service.filter.SearchOperation;
@@ -24,6 +25,7 @@ import java.util.Locale;
 public class Language {
 
     @Transient
+    @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Language.class);
     /**
      * Version ID.

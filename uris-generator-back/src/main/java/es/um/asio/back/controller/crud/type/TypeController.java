@@ -4,6 +4,7 @@ import es.um.asio.service.model.Type;
 import es.um.asio.service.model.User;
 import es.um.asio.service.proxy.TypeProxy;
 import es.um.asio.service.validation.group.Create;
+import io.swagger.annotations.Api;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(TypeController.Mappings.BASE)
+@Api(value = "CRUD Operations for Type", tags = "CRUD Operations (GET, POST, DELETE) for Type")
 public class TypeController {
 
     /**
@@ -57,13 +59,13 @@ public class TypeController {
     }
 
     @GetMapping()
-    public Type get(@RequestParam(required = true) @Validated(Create.class) final String ISO) {
-        return this.proxy.find(ISO).orElse(null);
+    public Type get(@RequestParam(required = true) @Validated(Create.class) final String code) {
+        return this.proxy.find(code).orElse(null);
     }
 
     @DeleteMapping
-    public void delete(@RequestParam(required = true) @Validated(Create.class) final String ISO) {
-        this.proxy.delete(ISO);
+    public void delete(@RequestParam(required = true) @Validated(Create.class) final String code) {
+        this.proxy.delete(code);
     }
 
     /**

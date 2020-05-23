@@ -11,6 +11,8 @@ import es.um.asio.service.proxy.LanguageTypeProxy;
 import es.um.asio.service.proxy.LocalURIProxy;
 import es.um.asio.service.proxy.TypeProxy;
 import es.um.asio.service.service.CanonicalURILanguageService;
+import es.um.asio.service.service.CanonicalURIService;
+import es.um.asio.service.service.LocalURIService;
 import es.um.asio.service.service.SchemaService;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.validation.group.Create;
@@ -58,6 +60,13 @@ public class URISController {
 	 */
 	@Autowired
 	private CanonicalURILanguageService canonicalURILanguageControllerService;
+
+	/**
+	 * Service implementation for {@link CanonicalURILanguage}.
+	 */
+	@Autowired
+	private CanonicalURIService canonicalURIService;
+
 	/**
 	 * Controller implementation for {@link StorageType}.
 	 */
@@ -128,6 +137,7 @@ public class URISController {
 	 * @param input
 	 * @return
 	 */
+
 
 	@ApiOperation(value = "Create or Get Canonical URI for Resource or Instance", notes = "Allow create canonical URI and canonical URI in language if not exist, if exist then return URIs")
 	@ApiImplicitParams({
@@ -412,16 +422,14 @@ public class URISController {
 		}
 
 		LanguageType lt = null;
-		if (typeCode == null) {
-			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
-			if (defLang!=null && type!=null) {
-				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
-				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null) {
-					lt = tls.get(0);
-				}
-
+		Type type = typeProxy.find((typeCode==null)?Constants.TYPE_REST:typeCode).orElse(null);
+		if (defLang!=null && type!=null) {
+			List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
+			if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null) {
+				lt = tls.get(0);
 			}
 		}
+
 
 		String schema = schemaService.getCanonicalLanguageSchema();
 		CanonicalURILanguage aux = new CanonicalURILanguage(defDomain,defSubdomain,lt,entity , null, null, schema);
@@ -436,7 +444,7 @@ public class URISController {
 	}
 
 	/**
-	 * Associate a Entity with a canonical uri in a language, for a storage system by CanonicalURIInLanguage
+	 * Associate a Resource with a canonical uri in a language, for a storage system by CanonicalURIInLanguage
 	 *
 	 * @param String canonicalLanguageURI Canonical URI In Language.
 	 * @param String localURI in URI in storage system.
@@ -475,13 +483,11 @@ public class URISController {
 		}
 
 		LanguageType lt = null;
-		if (typeCode != null) {
-			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
-			if (defLang!=null && type!=null) {
-				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
-				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null) {
-					lt = tls.get(0);
-				}
+		Type type = typeProxy.find((typeCode==null)?Constants.TYPE_REST:typeCode).orElse(null);
+		if (defLang!=null && type!=null) {
+			List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
+			if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null) {
+				lt = tls.get(0);
 			}
 		}
 
@@ -528,7 +534,7 @@ public class URISController {
 		if (!Utils.isValidURL(localURI))
 			throw new CustomNotFoundException(NOT_VALID_URI_LOCAL_FORMAT + localURI);
 
-		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByEntityNameAndPropertyName(null,property);
+		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByPropertyNameAndIsProperty(property);
 
 
 		CanonicalURILanguage cu = null;
@@ -577,7 +583,7 @@ public class URISController {
 			throw new CustomNotFoundException(String.format(STORAGE_NOT_FOUND,storageName));
 
 		for (LocalURI luAux : localURIProxy.getAllByLocalURI(new LocalURI(localURI, cu, storageType)))
-			localURIController.deleteURI(luAux);
+			localURIController.deleteURI(luAux.getLocalUri());
 		logger.info("UNLinking complete");
 	}
 
@@ -619,14 +625,11 @@ public class URISController {
 		}
 
 		LanguageType lt = null;
-		if (typeCode == null) {
-			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
-			if (type!=null) {
-				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
-				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null) {
-					lt = tls.get(0);
-				}
-
+		Type type = typeProxy.find((typeCode==null)?Constants.TYPE_REST:typeCode).orElse(null);
+		if (defLang!=null && type!=null) {
+			List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
+			if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null) {
+				lt = tls.get(0);
 			}
 		}
 
@@ -684,13 +687,11 @@ public class URISController {
 		}
 
 		LanguageType lt = null;
-		if (typeCode == null) {
-			Type type = typeProxy.find(Constants.TYPE_REST).orElse(null);
-			if (type!=null) {
-				List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
-				if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null) {
-					lt = tls.get(0);
-				}
+		Type type = typeProxy.find((typeCode==null)?Constants.TYPE_REST:typeCode).orElse(null);
+		if (defLang!=null && type!=null) {
+			List<LanguageType> tls = languageTypeProxy.getByLanguageAndType(defLang,type.getCode());
+			if (tls.size() == 1 && tls.get(0).getTypeLangCode()!=null) {
+				lt = tls.get(0);
 			}
 		}
 
@@ -740,7 +741,7 @@ public class URISController {
 			throw new CustomNotFoundException(NOT_VALID_URI_LOCAL_FORMAT + localURI);
 
 
-		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByEntityNameAndPropertyName(null,property);
+		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByPropertyNameAndIsProperty(property);
 
 		CanonicalURILanguage cu = null;
 
@@ -758,6 +759,86 @@ public class URISController {
 			logger.info("Deleting property {}",luAux);
 		}
 	}
+
+
+	/**
+	 * Get LocalURIS by canonicalUri, storageName and languageCode
+	 *
+	 * @param String canonicalUri Canonical URI.
+	 * @param String storageName name of storage.
+	 * @param String languageCode Language code in ISO 639-1.
+	 */
+	@GetMapping(Mappings.LOCAL_URI_CANONICAL)
+	public List<LocalURI> getLocalStorageFromCanonicalURI(
+			@ApiParam( name = "canonicalUri", value = "Canonical URI", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String canonicalUri,
+			@ApiParam(name = "storageName", value = "Storage Name", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String storageName,
+			@ApiParam(name = "languageCode", value = "Language Code", required = true)
+			@RequestParam(required = false) @Validated(Create.class) final String languageCode) {
+		logger.info("Deleting property in language");
+		List<CanonicalURI> cus =  this.canonicalURIService.getAllByFullURI(canonicalUri);
+		if (cus.isEmpty()) {
+			throw new CustomNotFoundException("Canonical Uri not fond");
+		} else if (cus.size() != 1) {
+			throw new CustomNotFoundException("Ambiguous Canonical URI, "+cus.size() + " Canonical URIs found");
+		}
+		List<LocalURI> localURIS = new ArrayList<>();
+		for (CanonicalURILanguage cul: cus.get(0).getCanonicalURILanguages()) {
+			if (cul.getLanguageID().equals(languageCode)) {
+				localURIS.addAll(this.localURIProxy.getAllByCanonicalURILanguageStrAndStorageTypeStr(cul.getFullURI(), storageName));
+			}
+		}
+		return localURIS;
+	}
+
+	/**
+	 * Get LocalURIS by canonicalUri, storageName and languageCode
+	 *
+	 * @param String canonicalUri Canonical URI.
+	 * @param String storageName name of storage.
+	 * @param String languageCode Language code in ISO 639-1.
+	 */
+	@GetMapping(Mappings.LOCAL_URI_CANONICAL_LANGUAGE)
+	public List<LocalURI> getLocalStorageFromCanonicalLanguageURI(
+			@ApiParam( name = "canonicalLanguageUri", value = "Canonical URI", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String canonicalLanguageUri,
+			@ApiParam(name = "storageName", value = "Storage Name", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String storageName,
+			@ApiParam(name = "languageCode", value = "Language Code", required = true)
+			@RequestParam(required = false) @Validated(Create.class) final String languageCode) {
+		logger.info("Deleting property in language");
+
+		List<LocalURI> localURIS = new ArrayList<>();
+		CanonicalURILanguage cul = this.canonicalURILanguageControllerService.getAllByFullURI(canonicalLanguageUri);
+
+		if (cul.getLanguageID().equals(languageCode)) {
+			localURIS.addAll(this.localURIProxy.getAllByCanonicalURILanguageStrAndStorageTypeStr(cul.getFullURI(), storageName));
+		}
+
+		return localURIS;
+	}
+
+	/**
+	 * Get Canonical Language URI from localURI
+	 *
+	 * @param String localURI Local URI.
+	 */
+	@GetMapping(Mappings.LOCAL_URI)
+	public List<CanonicalURILanguage> getCanonicalURILanguageFromLocalURI(
+			@ApiParam( name = "localURI", value = "Local URI", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String localURI)
+	{
+		logger.info("Deleting property in language");
+
+		List<LocalURI> lus = localURIProxy.getAllByLocalURIStr(localURI);
+		List<CanonicalURILanguage> canonicalURILanguages = new ArrayList<>();
+		for (LocalURI lu : lus) {
+			canonicalURILanguages.add(lu.getCanonicalURILanguage());
+		}
+		return  canonicalURILanguages;
+	}
+
 
 	/**
 	 * Mappings.
@@ -783,6 +864,13 @@ public class URISController {
 
 		/** The Constant LOCAL_RESOURCE. */
 		public static final String LOCAL_URI = "local";
+
+		/** The Constant LOCAL_URI_CANONICAL. */
+		public static final String LOCAL_URI_CANONICAL = "local/canonical";
+
+		/** The Constant LOCAL_URI_CANONICAL. */
+		public static final String LOCAL_URI_CANONICAL_LANGUAGE = "local/canonical/language";
+
 
 		/** The Constant LOCAL_RESOURCE. */
 		public static final String LOCAL_ENTITY_URI = "local/entity";
