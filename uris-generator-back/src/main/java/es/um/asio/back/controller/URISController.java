@@ -816,6 +816,7 @@ public class URISController {
 			localURIS.addAll(this.localURIProxy.getAllByCanonicalURILanguageStrAndStorageTypeStr(cul.getFullURI(), storageName));
 		}
 
+
 		return localURIS;
 	}
 
@@ -831,7 +832,7 @@ public class URISController {
 	{
 		logger.info("Deleting property in language");
 
-		List<LocalURI> lus = localURIProxy.getAllByLocalURIStr(localURI);
+		List<LocalURI> lus = this.localURIProxy.getAllByLocalURIStr(localURI);
 		List<CanonicalURILanguage> canonicalURILanguages = new ArrayList<>();
 		for (LocalURI lu : lus) {
 			canonicalURILanguages.add(lu.getCanonicalURILanguage());
@@ -839,6 +840,55 @@ public class URISController {
 		return  canonicalURILanguages;
 	}
 
+
+	/**
+	 * Get Canonical Language URI from localURI
+	 *
+	 * @param String localURI Local URI.
+	 */
+	@GetMapping(Mappings.CANONICAL_LANGUAGES)
+	public Map<String, List<Map<String,String>>>   getCanonicalURILanguagesFromCanonicalURI(
+			@ApiParam( name = "canonicalURI", value = "Canonical URI", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String canonicalURI,
+			@ApiParam( name = "language", value = "Language", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String language)
+	{
+		logger.info("Get Canonical URIs Language from Canonical URI, filtered by language");
+
+		final Map<String, List<Map<String,String>>> response = new HashMap<>();
+
+		List<CanonicalURI> cus = this.canonicalURIService.getAllByFullURI(canonicalURI);
+		for (CanonicalURI cu : cus) {
+			CanonicalURILanguage defaultLanguageCUL = null;
+			List<CanonicalURILanguage> filteredCULs = new ArrayList<>();
+			for (CanonicalURILanguage cul : cu.getCanonicalURILanguages()) {
+				if (Utils.isValidString(language)) {
+					if (cul.getLanguageID().equals(language))
+						filteredCULs.add(cul);
+				} else {
+					filteredCULs.add(cul);
+				}
+
+				if (cul.getLanguage().getIsDefault())
+					defaultLanguageCUL = cul;
+			}
+			if (filteredCULs.isEmpty() && defaultLanguageCUL !=null)
+				filteredCULs.add(defaultLanguageCUL);
+			if (!filteredCULs.isEmpty()) {
+				response.put(cu.getFullURI(),new ArrayList<>());
+				for (CanonicalURILanguage filerCul : filteredCULs) {
+					Map<String, String> culRes = new HashMap<>();
+					culRes.put("languageIso", filerCul.getLanguageID());
+					culRes.put("isDefaultLanguage", String.valueOf(filerCul.getLanguage().getIsDefault()));
+					culRes.put("canonicalURILanguage", filerCul.getFullURI());
+					response.get(cu.getFullURI()).add(culRes);
+				}
+
+			}
+		}
+
+		return response;
+	}
 
 	/**
 	 * Mappings.
@@ -861,6 +911,9 @@ public class URISController {
 
 		/** The Constant RESOURCE_TYPE_URI. */
 		public static final String RESOURCE_TYPE_URI = "canonical/entity";
+
+		/** The Constant RESOURCE_TYPE_URI. */
+		public static final String CANONICAL_LANGUAGES = "canonical/languages";
 
 		/** The Constant LOCAL_RESOURCE. */
 		public static final String LOCAL_URI = "local";

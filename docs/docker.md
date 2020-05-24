@@ -22,4 +22,4 @@ En caso que se desee distribuir la imagen a través de un Registry de Docker, se
 docker push {artifact-name}:{tag}
 ```
 
-Es posible que algunos Registries requieran de autenticación previa, debiendo para ello ejecutar previamente un `docker login`.
+Es posible que algunos Registros requieran de autenticación previa, debiendo para ello ejecutar previamente un `docker login`.
