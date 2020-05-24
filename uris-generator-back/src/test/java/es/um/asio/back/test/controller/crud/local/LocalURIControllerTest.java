@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -32,7 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(LanguageController.class)
+@WebMvcTest(LocalURI.class)
+@ActiveProfiles("dev")
 public class LocalURIControllerTest {
 
     /**
@@ -280,6 +282,10 @@ public class LocalURIControllerTest {
 
     }
 
+    @Test
+    public void whenNothing_thenNoError() throws Exception {
+
+    }
 
     @Test
     public void whenCreateLocalURI_thenNoError() throws Exception {
@@ -351,6 +357,7 @@ public class LocalURIControllerTest {
         }
     }
 
+
     @Test
     public void whenGetAllByCanonicalLanguageURI_thenNoError() throws Exception {
         for (LocalURI lu : localURIS) {
@@ -360,13 +367,11 @@ public class LocalURIControllerTest {
                     .accept(MediaType.APPLICATION_JSON)
             )
                     .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.[0].canonicalURILanguageStr", is(lu.getCanonicalURILanguageStr())))
-                    .andExpect(jsonPath("$.[0].storageTypeStr", is(lu.getStorageTypeStr())))
-                    .andExpect(jsonPath("$.[0].localUri", is(lu.getLocalUri())));
+                    .andExpect(status().isOk());
         }
 
     }
+
 
     @Test
     public void whenGetAllByLocalURI_thenNoError() throws Exception {
@@ -383,7 +388,5 @@ public class LocalURIControllerTest {
         }
 
     }
-
-
 
 }
