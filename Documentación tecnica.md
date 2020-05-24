@@ -955,11 +955,11 @@ La entidad **CANONICAL_URI** representa un URI canónica para un determinado rec
 
 ##### Implementación
 
-Es implementado por el controlador [StorageTypeController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\crud\canonical\CanonicalURIController.java)
+Es implementado por el controlador [CanonicalURIController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\crud\canonical\CanonicalURIController.java)
 
 ##### Test
 
-Test de integración disponibles en [StorageTypeControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\crud\canonical\CanonicalURIControllerTest.java)
+Test de integración disponibles en [CanonicalURIControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\crud\canonical\CanonicalURIControllerTest.java)
 
 ##### EndPoints
 
@@ -1117,7 +1117,7 @@ Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.htm
 
 **Semántica**
 
-Borrado de un sistema de almacenamiento determinado por su nombre.
+Borrado de una URI Canónica, según parámetros.
 
 **Petición**
 
@@ -1139,7 +1139,7 @@ Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.htm
 
 **Semántica**
 
-Obtención de todos las URIS Canonicas.
+Obtención de todos las URIS Canónicas.
 
 **Parámetros**
 
@@ -1148,7 +1148,7 @@ Ninguno
 **Petición**
 
 ```bash
-curl -X GET "http://localhost:9326/storage-type/all" -H "accept: */*"
+curl -X GET "http://localhost:9326/canonical-uri/all" -H "accept: */*"
 ```
 
 **Respuesta**
@@ -1156,66 +1156,1810 @@ curl -X GET "http://localhost:9326/storage-type/all" -H "accept: */*"
 ```bash
 [
   {
-    "id": 9,
-    "name": "trellis",
-    "apiURL": null,
-    "endPointURL": null,
-    "schemaURI": null
-  },
-  {
-    "id": 10,
-    "name": "wikibase",
-    "apiURL": null,
-    "endPointURL": null,
-    "schemaURI": null
-  },
-  {
-    "id": 11,
-    "name": "weso-wikibase",
-    "apiURL": null,
-    "endPointURL": null,
-    "schemaURI": null
-  },
-  {
-    "id": 22,
-    "name": "trellis-otro",
-    "apiURL": "http://trellis-otro/api",
-    "endPointURL": "http://trellis-otro/endPoint",
-    "schemaURI": null
+    "canonicalURILanguages": [
+      {
+        "localURIs": [
+          {
+            "localUri": 12345
+          }
+        ],
+        "domain": "hercules",
+        "subDomain": "um",
+        "typeCode": "um",
+        "typeLangCode": "um",
+        "concept": "um",
+        "reference": 12345,
+        "fullURI": 12345,
+        "isEntity": true,
+        "isProperty": true,
+        "isInstance": true,
+        "entityName": "entity",
+        "parentEntityName": "entity",
+        "parentPropertyName": "property",
+        "propertyName": "property"
+      }
+    ],
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "concept": "University",
+    "reference": 12345,
+    "fullURI": 12345,
+    "isEntity": true,
+    "isProperty": true,
+    "isInstance": true,
+    "entityName": "entity",
+    "propertyName": "property"
   }
 ]
 
 ```
 
-###### POST /type/json
+###### GET /canonical-uri/entity/{entityName}
 
 Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
 
 **Semántica**
 
-Inserción de un sistema de almacenamiento en formato json.
+Obtención de las URIS Canónicas donde el nombre de entidad sea el que aparece en la URL.
 
 **Parámetros**
 
-- (Requerido) JSON del tipo a insertar enviado el body de la petición
+Ninguno
+
+**Petición**
 
 ```bash
-curl -X POST "http://localhost:9326/storage-type/json" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"name\": \"WIKIBASE-NO\"}"
+curl -X GET "http://localhost:9326/canonical-uri-language/entity/CvnRootBean" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+[
+  {
+    "id": 12,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "isEntity": false,
+    "isProperty": false,
+    "isInstance": true,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": [
+      {
+        "id": 20,
+        "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+        "storageTypeStr": "wikibase",
+        "localUri": "http://wikibase/Q2"
+      }
+    ]
+  }
+]
+```
+
+###### DELETE /canonical-uri/entity/{entityName}
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+BORRADO de las URIS Canónicas donde el nombre de entidad sea el que aparece en la URL.
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X DELETE "http://localhost:9326/canonical-uri-language/entity/CvnRootBean" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+Status Code: 200 OK
+```
+
+###### GET /canonical-uri/entity/{entityName}/reference/{referenceId}
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Obtención de las URIS Canónicas donde el nombre de entidad y la referencia son el que aparecen en la URL .
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/canonical-uri-language/entity/CvnRootBean/reference/e09d18f4-7db1-4f8b-b985-a8196b566de1" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+[
+  {
+    "id": 12,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "isEntity": false,
+    "isProperty": false,
+    "isInstance": true,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": [
+      {
+        "id": 20,
+        "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+        "storageTypeStr": "wikibase",
+        "localUri": "http://wikibase/Q2"
+      }
+    ]
+  }
+
+```
+
+###### DELETE /canonical-uri/entity/{entityName}/reference/{referenceId}
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+BORRADO de las URIS Canónicas donde el nombre de entidad y la referencia son el que aparecen en la URL .
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X DELETE "http://localhost:9326/canonical-uri-language/entity/CvnRootBean/reference/e09d18f4-7db1-4f8b-b985-a8196b566de1" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+Status Code: 200 OK
+```
+
+###### GET /canonical-uri/property/{propertyName}
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Obtención de las URIS Canónicas donde el nombre de la propiedad sea el que aparecen en la URL .
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/canonical-uri-language/property/propiedad1" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+[
+  {
+    "id": 13,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": null,
+    "reference": "propiedad1",
+    "fullURI": "http://hercules.org/um/es-ES/rec/propiedad1",
+    "fullParentURI": "http://hercules.org/um/res/propiedad1",
+    "isEntity": false,
+    "isProperty": true,
+    "isInstance": false,
+    "entityName": null,
+    "propertyName": "propiedad1",
+    "parentEntityName": null,
+    "parentPropertyName": "propiedad1",
+    "localURIs": []
+  }
+]
+
+```
+
+###### DELETE /canonical-uri/property/{propertyName}
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+BORRADO de las URIS Canónicas donde el nombre de la propiedad sea el que aparecen en la URL .
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X DELETE "http://localhost:9326/canonical-uri-language/property/propiedad1" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+Status Code: 200 OK
+```
+
+###### GET /canonical-uri/uri
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Obtención de las URIS Canónicas por la URI canónica.
+
+**Parámetros**
+
+- **fullURI:** (Requerido) URI para realizar el filtro.
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/canonical-uri-language/uri?fullURI=http%3A%2F%2Fhercules.org%2Fum%2Fres%2FImportResult%2F9b875466-3a12-45b3-86f2-d4ced28b9c59" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+[
+  {
+    "id": 13,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": null,
+    "reference": "propiedad1",
+    "fullURI": "http://hercules.org/um/es-ES/rec/propiedad1",
+    "fullParentURI": "http://hercules.org/um/res/propiedad1",
+    "isEntity": false,
+    "isProperty": true,
+    "isInstance": false,
+    "entityName": null,
+    "propertyName": "propiedad1",
+    "parentEntityName": null,
+    "parentPropertyName": "propiedad1",
+    "localURIs": []
+  }
+]
+
+```
+
+###### DELETE /canonical-uri/uri
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+BORRADO de las URIS Canónicas por la URI canónica.
+
+**Parámetros**
+
+- **fullURI:** (Requerido) URI para realizar el filtro.
+
+**Petición**
+
+```bash
+curl -X DELETE "http://localhost:9326/canonical-uri-language/uri?fullURI=http%3A%2F%2Fhercules.org%2Fum%2Fres%2FImportResult%2F9b875466-3a12-45b3-86f2-d4ced28b9c59" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+Status Code: 200 OK
+```
+
+#### Operaciones sobre la entidad CANONICAL_URI_LANGUAGE
+
+La entidad **CANONICAL_URI** representa un URI canónica para un determinado recurso, ya sea una clase, una propiedad o una instancia. 
+
+![language](C:\Users\druiz\repositorios\UM\uris-generator\images\canonical_uri_language_entity.png)
+
+##### Implementación
+
+Es implementado por el controlador [CanonicalURILanguageController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\crud\canonical_language\CanonicalURILanguageController.java)
+
+##### Test
+
+Test de integración disponibles en [CanonicalURILanguageControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\crud\canonical_language\CanonicalURILanguageControllerTest.java)
+
+##### EndPoints
+
+![TypeController](C:\Users\druiz\repositorios\UM\uris-generator\images\CanonicalURILanguageController.png)
+
+###### GET /canonical-uri-language
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite recuperar una URI Canónica por sus componentes definidos en el esquema de URIs.
+
+**Parámetros**
+
+- **domain:** (Opcional) Nombre del dominio para crear .
+- **subDomain:** (Opcional) Nombre del sub-dominio para crear.
+- **typeCode:** (Opcional) Nombre del tipo canónico para crear .
+- **language:** (Opcional) Nombre del idioma en ISO 639-1 para crear.
+- **concept:** (Opcional) Nombre del concepto para filtrar (clase o propiedad).
+- **reference:** (Opcional) Nombre el identificador de la referencia para filtrar (instancia).
+
+```bash
+curl -X GET "http://localhost:9326/canonical-uri-language?concept=CvnRootBean&domain=hercules.org&language=es-ES&subDomain=um&typeCode=res" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+[
+  {
+    "id": 16,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": null,
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/",
+    "isEntity": true,
+    "isProperty": false,
+    "isInstance": false,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": [
+      {
+        "id": 16,
+        "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/",
+        "storageTypeStr": "wikibase",
+        "localUri": "http://wikibase/Q1"
+      }
+    ]
+  }
+]
+
+```
+
+
+
+###### POST /canonical-uri-language
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Parámetros**
+
+- **domain:** (Opcional) Nombre del dominio para crear .
+- **subDomain:** (Opcional) Nombre del sub-dominio para crear.
+- **typeCode:** (Opcional) Nombre del tipo canónico para crear .
+- **language:** (Opcional) Nombre del idioma en ISO 639-1 para crear.
+- **concept:** (Opcional) Nombre del concepto para filtrar (clase).
+- **parentEntity:** (Opcional) Nombre del concepto padre para enlazar con la URI Canónica, si es nulo, se usa el valor del atributo concept. 
+- **property:** (Opcional) Nombre del propiedad para crear (propiedad).
+- **parentProperty:** (Opcional) Nombre de la propiedad padre para enlazar con la URI Canónica, si es nulo, se usa el valor del atributo property. 
+- **reference:** (Opcional) Nombre el identificador de la referencia para crear (instancia).
+- **createCanonicalIfNotExist:** (Opcional) [true | false] Determina si se crea la URI Canónica a partir de la URI Canónica por idioma.
+
+**Semántica**
+
+Inserción de los datos relativos a una URI Canónica por idioma por sus componentes definidos en el esquema de URIs.
+
+**Petición**
+
+```bash
+curl -X POST "http://localhost:9326/canonical-uri-language?concept=concepto1&createCanonicalIfNotExist=true&domain=hercules.org&language=es-ES&parentEntity=concepto1&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
 **Respuesta**
 
 ```bash
 {
-  "id": 23,
-  "name": "WIKIBASE-NO",
-  "apiURL": null,
-  "endPointURL": null,
-  "schemaURI": null
+  "id": 25,
+  "languageID": "es-ES",
+  "domain": "hercules.org",
+  "subDomain": "um",
+  "typeCode": "res",
+  "typeLangCode": "rec",
+  "concept": "Concepto1",
+  "reference": null,
+  "fullURI": "http://hercules.org/um/es-ES/rec/Concepto1",
+  "fullParentURI": "http://hercules.org/um/res/Concepto1",
+  "isEntity": true,
+  "isProperty": false,
+  "isInstance": false,
+  "entityName": "Concepto1",
+  "propertyName": null,
+  "parentEntityName": "concepto1",
+  "parentPropertyName": null,
+  "localURIs": null
+}
+```
+
+###### DELETE /canonical-uri-language
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Parámetros**
+
+- **domain:** (Opcional) Nombre del dominio para crear .
+- **subDomain:** (Opcional) Nombre del sub-dominio para crear.
+- **typeCode:** (Opcional) Nombre del tipo canónico para crear .
+- **language:** (Opcional) Nombre del idioma en ISO 639-1 para crear.
+- **concept:** (Opcional) Nombre del concepto para filtrar (clase o propiedad).
+- **reference:** (Opcional) Nombre el identificador de la referencia para filtrar (instancia).
+
+**Semántica**
+
+Borrado de una URI Canónica por idioma, según parámetros.
+
+**Petición**
+
+```bash
+curl -X DELETE "http://localhost:9326/canonical-uri-language?concept=CvnRootBean&domain=hercules.org&language=es-ES&subDomain=um&typeCode=res" -H "accept: */*"
+```
+
+**Respuesta**: 
+
+```bash
+Status 200 OK
+```
+
+
+
+###### GET /canonical-uri-language/all
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Obtención de todos las URIS Canónicas por idioma.
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/canonical-uri-language/all" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+[
+  {
+    "id": 16,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": null,
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/",
+    "isEntity": true,
+    "isProperty": false,
+    "isInstance": false,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": [
+      {
+        "id": 16,
+        "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/",
+        "storageTypeStr": "wikibase",
+        "localUri": "http://wikibase/Q1"
+      }
+    ]
+  }
+]
+```
+
+###### GET /canonical-uri-language/entity/{entityName}
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Obtención de las URIS Canónicas por idioma donde el nombre de entidad sea el que aparece en la URL.
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/canonical-uri-language/entity/CvnRootBean" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+
+Request URL
+http://localhost:9326/canonical-uri-language/entity/CvnRootBean
+Server response
+Code	Details
+200	
+Response body
+Download
+[
+  {
+    "id": 12,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "isEntity": false,
+    "isProperty": false,
+    "isInstance": true,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": [
+      {
+        "id": 20,
+        "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+        "storageTypeStr": "wikibase",
+        "localUri": "http://wikibase/Q2"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "cvnItemBean",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/cvnItemBean",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/cvnItemBean",
+    "isEntity": false,
+    "isProperty": true,
+    "isInstance": false,
+    "entityName": "CvnRootBean",
+    "propertyName": "cvnItemBean",
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": "cvnItemBean",
+    "localURIs": []
+  },
+  {
+    "id": 16,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": null,
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/",
+    "isEntity": true,
+    "isProperty": false,
+    "isInstance": false,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": [
+      {
+        "id": 16,
+        "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/",
+        "storageTypeStr": "wikibase",
+        "localUri": "http://wikibase/Q1"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "9aa5de77-1646-48ed-bc1b-4783bada4aad",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/9aa5de77-1646-48ed-bc1b-4783bada4aad",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/9aa5de77-1646-48ed-bc1b-4783bada4aad",
+    "isEntity": false,
+    "isProperty": false,
+    "isInstance": true,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": []
+  },
+  {
+    "id": 225604,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "89a1eee9-cd71-445c-a959-febef5aa5090",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/89a1eee9-cd71-445c-a959-febef5aa5090",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/89a1eee9-cd71-445c-a959-febef5aa5090",
+    "isEntity": false,
+    "isProperty": false,
+    "isInstance": true,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": []
+  },
+  {
+    "id": 225680,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "4322c8fa-63a0-4a2a-a21b-08f011d466da",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/4322c8fa-63a0-4a2a-a21b-08f011d466da",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/4322c8fa-63a0-4a2a-a21b-08f011d466da",
+    "isEntity": false,
+    "isProperty": false,
+    "isInstance": true,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": []
+  },
+  {
+    "id": 225708,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "8a7dff59-75a4-48a1-920b-1e580f8b641c",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/8a7dff59-75a4-48a1-920b-1e580f8b641c",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/8a7dff59-75a4-48a1-920b-1e580f8b641c",
+    "isEntity": false,
+    "isProperty": false,
+    "isInstance": true,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": []
+  },
+  {
+    "id": 225710,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "446caf1a-3cb8-4e52-a0ab-61b428b8ed24",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/446caf1a-3cb8-4e52-a0ab-61b428b8ed24",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/446caf1a-3cb8-4e52-a0ab-61b428b8ed24",
+    "isEntity": false,
+    "isProperty": false,
+    "isInstance": true,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": []
+  },
+  {
+    "id": 225712,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "5bcc15ed-9c37-4241-8bab-90019df9b61e",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/5bcc15ed-9c37-4241-8bab-90019df9b61e",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/5bcc15ed-9c37-4241-8bab-90019df9b61e",
+    "isEntity": false,
+    "isProperty": false,
+    "isInstance": true,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": []
+  },
+  {
+    "id": 225714,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "de5d387c-494d-4289-8e4c-190297793adc",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/de5d387c-494d-4289-8e4c-190297793adc",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/de5d387c-494d-4289-8e4c-190297793adc",
+    "isEntity": false,
+    "isProperty": false,
+    "isInstance": true,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": []
+  }
+]
+```
+
+###### DELETE /canonical-uri-language/entity/{entityName}
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+BORRADO de las URIS Canónicas por idioma donde el nombre de entidad sea el que aparece en la URL.
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X DELETE "http://localhost:9326/canonical-uri-language/entity/CvnRootBean" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+Status Code: 200 OK
+```
+
+###### GET /canonical-uri-language/entity/{entityName}/reference/{referenceId}
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Obtención de las URIS Canónicas por idioma donde el nombre de entidad y la referencia son el que aparecen en la URL .
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/canonical-uri-language/entity/CvnRootBean/reference/e09d18f4-7db1-4f8b-b985-a8196b566de1" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+[
+  {
+    "id": 12,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": "CvnRootBean",
+    "reference": "e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "fullURI": "http://hercules.org/um/es-ES/rec/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "fullParentURI": "http://hercules.org/um/res/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "isEntity": false,
+    "isProperty": false,
+    "isInstance": true,
+    "entityName": "CvnRootBean",
+    "propertyName": null,
+    "parentEntityName": "CvnRootBean",
+    "parentPropertyName": null,
+    "localURIs": [
+      {
+        "id": 20,
+        "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+        "storageTypeStr": "wikibase",
+        "localUri": "http://wikibase/Q2"
+      }
+    ]
+  }
+]
+```
+
+###### DELETE /canonical-uri-language/entity/{entityName}/reference/{referenceId}
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+BORRADO de las URIS Canónicas donde el nombre de entidad y la referencia son el que aparecen en la URL .
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X DELETE "http://localhost:9326/canonical-uri-language/entity/CvnRootBean/reference/e09d18f4-7db1-4f8b-b985-a8196b566de1" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+Status Code: 200 OK
+```
+
+###### GET /canonical-uri-language/property/{propertyName}
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Obtención de las URIS Canónicas  por idioma donde el nombre de la propiedad sea el que aparecen en la URL .
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/canonical-uri-language/property/propiedad1" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+[
+  {
+    "id": 13,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": null,
+    "reference": "propiedad1",
+    "fullURI": "http://hercules.org/um/es-ES/rec/propiedad1",
+    "fullParentURI": "http://hercules.org/um/res/propiedad1",
+    "isEntity": false,
+    "isProperty": true,
+    "isInstance": false,
+    "entityName": null,
+    "propertyName": "propiedad1",
+    "parentEntityName": null,
+    "parentPropertyName": "propiedad1",
+    "localURIs": []
+  }
+]
+Response headers
+ access-control-allow-origin: * 
+ connection: keep-alive 
+ content-type: application/json 
+ date: Sun, 24 May 2020 20:51:10 GMT 
+ keep-alive: timeout=60 
+ transfer-encoding: chunked 
+Responses
+Code	Description
+200	
+OK
+Example Value
+Model
+[
+  {
+    "localURIs": [
+      {
+        "localUri": 12345
+      }
+    ],
+    "domain": "hercules",
+    "subDomain": "um",
+    "typeCode": "um",
+    "typeLangCode": "um",
+    "concept": "um",
+    "reference": 12345,
+    "fullURI": 12345,
+    "isEntity": true,
+    "isProperty": true,
+    "isInstance": true,
+    "entityName": "entity",
+    "parentEntityName": "entity",
+    "parentPropertyName": "property",
+    "propertyName": "property"
+  }
+]
+
+```
+
+###### DELETE /canonical-uri-language/property/{propertyName}
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+BORRADO de las URIS Canónicas  por idioma donde el nombre de la propiedad sea el que aparecen en la URL .
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X DELETE "http://localhost:9326/canonical-uri-language/property/propiedad1" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+Status Code: 200 OK
+```
+
+###### GET /canonical-uri-language/uri
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Obtención de las URIS Canónicas  por idioma por la URI canónica por idioma.
+
+**Parámetros**
+
+- **fullURI:** (Requerido) URI para realizar el filtro.
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/canonical-uri-language/uri?fullURI=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2Fpropiedad1" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+{
+  "id": 13,
+  "languageID": "es-ES",
+  "domain": "hercules.org",
+  "subDomain": "um",
+  "typeCode": "res",
+  "typeLangCode": "rec",
+  "concept": null,
+  "reference": "propiedad1",
+  "fullURI": "http://hercules.org/um/es-ES/rec/propiedad1",
+  "fullParentURI": "http://hercules.org/um/res/propiedad1",
+  "isEntity": false,
+  "isProperty": true,
+  "isInstance": false,
+  "entityName": null,
+  "propertyName": "propiedad1",
+  "parentEntityName": null,
+  "parentPropertyName": "propiedad1",
+  "localURIs": []
+}
+
+```
+
+###### DELETE /canonical-uri-language/uri
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+BORRADO de las URIS Canónicas  por idioma por la URI canónica por idioma .
+
+**Parámetros**
+
+- **fullURI:** (Requerido) URI para realizar el filtro.
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/canonical-uri-language/uri?fullURI=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2Fpropiedad1" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+Status Code: 200 OK
+```
+
+#### Operaciones sobre la entidad LOCAL_URI
+
+La entidad **LOCAL_URI** representa un URI local asociada con una URI Canónica por idioma y un tipo de almacenamiento. 
+
+![language](C:\Users\druiz\repositorios\UM\uris-generator\images\local_uri_language_entity.png)
+
+##### Implementación
+
+Es implementado por el controlador [LocalURIController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\crud\local\LocalURIController.java)
+
+##### Test
+
+Test de integración disponibles en [CanonicalURILanguageControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\crud\local\LocalURIControllerTest.java)
+
+##### EndPoints
+
+![TypeController](C:\Users\druiz\repositorios\UM\uris-generator\images\LocalURIController.png)
+
+###### POST /local-uri
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite guardar una URI Local a partir de la URI Canónica en un idioma y el tipo de almacenamiento.
+
+**Parámetros**
+
+- **canonicalURILanguage:** (Requerido)  URI Canónica en un idioma a asociar con la URI local en un almacenamiento.
+- **localURI:** (Requerido) URI Local en el almacenamiento seleccionado
+- **storageType:** (Requerido) Tipo de almacenamiento por nombre.
+
+```bash
+curl -X POST "http://localhost:9326/local-uri?canonicalURILanguage=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2Fpropiedad1&localURI=http%3A%2F%2Fwikibase%2FP10&storageType=wikibase" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+{
+  "id": 26,
+  "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/propiedad1",
+  "storageTypeStr": "wikibase",
+  "localUri": "http://wikibase/P10"
 }
 ```
 
 
 
+###### GET /local-uri/all
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Parámetros**
+
+No
+
+**Semántica**
+
+Obtención de todas las URIS Locales
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/local-uri/all" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+[
+  {
+    "id": 16,
+    "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/",
+    "storageTypeStr": "wikibase",
+    "localUri": "http://wikibase/Q1"
+  },
+  {
+    "id": 20,
+    "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "storageTypeStr": "wikibase",
+    "localUri": "http://wikibase/Q2"
+  },
+  {
+    "id": 21,
+    "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/cvnItemBeanNew",
+    "storageTypeStr": "wikibase",
+    "localUri": "http://wikibase/P3"
+  },
+  {
+    "id": 26,
+    "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/propiedad1",
+    "storageTypeStr": "wikibase",
+    "localUri": "http://wikibase/P10"
+  }
+]
+```
+
+###### POST /local-uri/canonical
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Parámetros**
+
+- **canonicalEntity:** (Opcional) Nombre del la entidad canónica a enlazar con la URI local.
+
+- **canonicalProperty:** (Opcional) Nombre del la propiedad canónica a enlazar con la URI local.
+
+- **canonicalReference:** (Opcional) Referencia canónica a enlazar con la URI local.
+
+- **language:** (Opcional) Nombre del idioma en ISO 639-1 para enlazar.
+
+- **typeCode:** (Opcional) Nombre el tipo a enlazar.
+
+- **localURI:** (Opcional) URI local a enlazar.
+
+- **storageType:** (Opcional) tipo de almacenamiento.
+
+  
+
+**Semántica**
+
+Permite guardar una URI Local a partir de la URI Canónica definida por sus atributos y el tipo de almacenamiento.
+
+**Petición**
+
+```bash
+curl -X POST "http://localhost:9326/local-uri/canonical?canonicalEntity=CvnRootBean&reference=e09d18f4-7db1-4f8b-b985-a8196b566de1&language=es-ES&localURI=http%3A%2F%2Ftrellis%2F1&storageType=trellis&typeCode=res" -H "accept: */*"
+```
+
+**Respuesta**: 
+
+```bash
+{
+    "id": 20,
+    "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
+    "storageTypeStr": "wikibase",
+    "localUri": "http://wikibase/Q2"
+}
+```
+
+
+
+###### DELETE /local-uri/uri
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Borrado de URI local a partir de su URL local.
+
+**Parámetros**
+
+Ninguno
+
+**Petición**
+
+```bash
+curl -X DELETE "http://localhost:9326/local-uri/uri?localURI=http%3A%2F%2Fwikibase%2FP10" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+StatusCode: 200 Ok
+```
+
+###### GET /local-uri/uri/canonical
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Obtención de URI local a partir de URI Canónica por idioma y tipo de almacenmamiento.
+
+**Parámetros**
+
+* **canonicalLanguageURI**: (Requerido) URI Canónica por idioma.
+* **storageType**: (Requerido) Tipo de almacenamiento.
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/local-uri/uri/canonical?canonicalLanguageURI=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2FcvnItemBeanNew&storageType=wikibase" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+[
+  {
+    "id": 21,
+    "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/cvnItemBeanNew",
+    "storageTypeStr": "wikibase",
+    "localUri": "http://wikibase/P3"
+  }
+]
+```
+
+###### GET /local-uri/uri/local
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Obtención de URI Canónica a partir de URI local.
+
+**Parámetros**
+
+- **uriLocal**: (Requerido) URI Canónica por idioma.
+
+**Petición**
+
+```bash
+curl -X GET "http://localhost:9326/local-uri/uri/local?uriLocal=http%3A%2F%2Fwikibase%2FP3" -H "accept: */*"
+```
+
+**Respuesta**
+
+```bash
+[
+  {
+    "id": 21,
+    "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/cvnItemBeanNew",
+    "storageTypeStr": "wikibase",
+    "localUri": "http://wikibase/P3"
+  }
+]
+```
+
+###### 
+
 ### API REST Factoría de URIs
+
+Es la implementación de la Factoría de URIs que implementa operaciones de alto nivel a partir de operaciones básicas de CRUD antes descritas.
+
+##### Implementación
+
+Es implementado por el controlador [CanonicalURISController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\URISController.java)
+
+##### Test
+
+Test de integración disponibles en [CanonicalURISControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\URISControllerTest.java)
+
+##### EndPoints
+
+![TypeController](C:\Users\druiz\repositorios\UM\uris-generator\images\URISController.png)
+
+###### POST /uri-factory/canonical/entity
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite guardar una clase a partir de los parámetros definidos y el cuerpo del mensaje.
+
+**Parámetros**
+
+- **domain:** (Requerido)  fragmento de dominio definido por el esquema de URIS.
+- **subDomain:** (Requerido)  fragmento de sub-dominio definido por el esquema de URIS.
+- **lang:** (Requerido)  fragmento de idioma definido por el esquema de URIS.
+
+**BODY:**
+
+```
+{
+	"@class": "ConceptoGrupo", #Clase 
+	"canonicalClassName": “ConceptoGrupo” #Clase canonica (si no existe se usara @class)
+}
+```
+
+**PETICIÓN:**
+
+```bash
+curl -X POST "http://localhost:9326/uri-factory/canonical/entity?domain=hercules.org&lang=es-ES&subDomain=um" -H "accept: */*" -H "Content-Type: application/json" -d "{\"@class\": \"ConceptoGrupo\" }"
+```
+
+**RESPUESTA**
+
+```bash
+{
+  "canonicalURI": "http://hercules.org/um/res/Concepto-grupo",
+  "canonicalLanguageURI": "http://hercules.org/um/es-ES/rec/Concepto-grupo",
+  "language": "es-ES"
+}
+```
+
+###### GET /uri-factory/canonical/languages
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite Obtener todas las URIS Canónicas por idioma (si se especifica el idioma), para una URI Canónica.
+
+**Parámetros**
+
+- **canonicalURI** :** (Requerido)  URI Canónica.
+- **language:** (Opcional)  determina el lenguaje preferido para el que se quiere recibir la URI Canónica por idioma. Si el atributo es nulo, o no existe coincidencia se retornara la URI Canónica por idioma en el idioma por defecto.
+
+**PETICIÓN:**
+
+```bash
+curl -X GET "http://localhost:9326/uri-factory/canonical/languages?canonicalURI=http%3A%2F%2Fhercules.org%2Fum%2Fres%2FConcepto1" -H "accept: */*"
+```
+
+**RESPUESTA**
+
+```bash
+{
+  "http://hercules.org/um/res/Concepto1": [
+    {
+      "languageIso": "es-ES",
+      "canonicalURILanguage": "http://hercules.org/um/es-ES/rec/Concepto1",
+      "isDefaultLanguage": "false"
+    }
+  ]
+}
+```
+
+###### POST /uri-factory/canonical/property
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite guardar una propiedad a partir de los parámetros definidos y el cuerpo del mensaje.
+
+**Parámetros**
+
+- **domain:** (Requerido)  fragmento de dominio definido por el esquema de URIS.
+- **subDomain:** (Requerido)  fragmento de sub-dominio definido por el esquema de URIS.
+- **lang:** (Requerido)  fragmento de idioma definido por el esquema de URIS.
+
+**BODY:**
+
+```
+{
+	"property": "idGrupoInvestigacion", # nombre de la propiedad
+	"canonicalProperty": "idGrupoInvestigacion"  # nombre canonico de la propiedad
+}
+```
+
+**PETICIÓN:**
+
+```bash
+curl -X POST "http://localhost:9326/uri-factory/canonical/property?domain=hercules.org&lang=es-ES&subDomain=um" -H "accept: */*" -H "Content-Type: application/json" -d "{\"property\": \"idGrupoInvestigacion\",\"canonicalProperty\": \"idGrupoInvestigacion\" }"
+```
+
+**RESPUESTA**
+
+```bash
+{
+  "canonicalURI": "http://hercules.org/um/res/id-Grupo-Investigacion",
+  "canonicalLanguageURI": "http://hercules.org/um/es-ES/rec/id-Grupo-Investigacion",
+  "language": "es-ES"
+}
+```
+
+###### POST /uri-factory/canonical/resource
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite guardar una instancia partir de los parámetros definidos y el cuerpo del mensaje.
+
+**Parámetros**
+
+- **domain:** (Requerido)  fragmento de dominio definido por el esquema de URIS.
+- **subDomain:** (Requerido)  fragmento de sub-dominio definido por el esquema de URIS.
+- **lang:** (Requerido)  fragmento de idioma definido por el esquema de URIS.
+
+**BODY:**
+
+```json
+{	
+	"@class": "es.um.asio.service.util.data.ConceptoGrupo", # Nombre de la clase a la que pertenece instancia
+    "entityId": null, # identificador a usar, en caso de ser nulo, se generara a partir de atributos
+    "version": 0,
+    "idGrupoInvestigacion": "E0A6-01",
+    "numero": 5,
+    "codTipoConcepto": "DESCRIPTORES"
+}
+```
+
+**PETICIÓN:**
+
+```bash
+curl -X POST "http://localhost:9326/uri-factory/canonical/resource?domain=hercules.org&lang=es-ES&subDomain=um" -H "accept: */*" -H "Content-Type: application/json" -d "{\t\t\"@class\": \"es.um.asio.service.util.data.ConceptoGrupo\", \"entityId\": null, \"version\": 0, \"idGrupoInvestigacion\": \"E0A6-01\", \"numero\": 5, \"codTipoConcepto\": \"DESCRIPTORES\"}"
+```
+
+**RESPUESTA**
+
+```bash
+{
+  "canonicalURI": "http://hercules.org/um/res/Concepto-grupo/7911d484-bfb8-3d11-9255-125e762bac32",
+  "canonicalLanguageURI": "http://hercules.org/um/es-ES/rec/Concepto-grupo/7911d484-bfb8-3d11-9255-125e762bac32",
+  "language": "es-ES"
+}
+```
+
+###### GET /uri-factory/local
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite recuperar una URI Canónica en un idioma, mediante la URI local.
+
+**Parámetros**
+
+- **domain:** (Requerido)  fragmento de dominio definido por el esquema de URIS.
+- **subDomain:** (Requerido)  fragmento de sub-dominio definido por el esquema de URIS.
+- **lang:** (Requerido)  fragmento de idioma definido por el esquema de URIS.
+
+**PETICIÓN:**
+
+```bash
+curl -X GET "http://localhost:9326/uri-factory/local?localURI=http%3A%2F%2Fwikibase%2FP3" -H "accept: */*"
+```
+
+**RESPUESTA**
+
+```bash
+[
+  {
+    "id": 15,
+    "languageID": "es-ES",
+    "domain": "hercules.org",
+    "subDomain": "um",
+    "typeCode": "res",
+    "typeLangCode": "rec",
+    "concept": null,
+    "reference": "cvnItemBeanNew",
+    "fullURI": "http://hercules.org/um/es-ES/rec/cvnItemBeanNew",
+    "fullParentURI": "http://hercules.org/um/res/cvnItemBean",
+    "isEntity": false,
+    "isProperty": true,
+    "isInstance": false,
+    "entityName": null,
+    "propertyName": "cvnItemBeanNew",
+    "parentEntityName": null,
+    "parentPropertyName": "cvnItemBean",
+    "localURIs": [
+      {
+        "id": 21,
+        "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/cvnItemBeanNew",
+        "storageTypeStr": "wikibase",
+        "localUri": "http://wikibase/P3"
+      }
+    ]
+  }
+]
+```
+
+###### POST /uri-factory/local
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite asociar una URI Canónica en un idioma con Una URI Local, para un tipo de almacenamiento.
+
+**Parámetros**
+
+- **canonicalLanguageURI:** (Requerido)  URI Canónica en un idioma  a asociar.
+- **localURI:** (Requerido)  URI Local a crear.
+- **storageName:** (Requerido)  Nombre del tipo de almacenamiento.
+
+**PETICIÓN:**
+
+```bash
+curl -X POST "http://localhost:9326/uri-factory/local?canonicalLanguageURI=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2FImportResult%2FstartTime&localURI=http%3A%2F%2Ftrellis%2Fclase%2F1&storageName=trellis" -H "accept: */*"
+```
+
+**RESPUESTA**
+
+```bash
+[
+  {
+    "id": 0,
+    "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/ImportResult/startTime",
+    "storageTypeStr": "trellis",
+    "localUri": "http://trellis/clase/1"
+  }
+]
+```
+
+###### DELETE /uri-factory/local
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite desasociar una URI Canónica en un idioma con Una URI Local, para un tipo de almacenamiento.
+
+**Parámetros**
+
+- **canonicalLanguageURI:** (Requerido)  URI Canónica en un idioma  a asociar.
+- **localURI:** (Requerido)  URI Local a crear.
+- **storageName:** (Requerido)  Nombre del tipo de almacenamiento.
+
+**PETICIÓN:**
+
+```bash
+curl -X DELETE "http://localhost:9326/uri-factory/local?canonicalLanguageURI=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2FImportResult%2FstartTime&localURI=http%3A%2F%2Ftrellis%2Fclase%2F1&storageName=trellis" -H "accept: */*"
+```
+
+**RESPUESTA**
+
+```bash
+StatusCode: 200 OK
+```
+
+###### GET /uri-factory/local/canonical
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite recuperar una URI Canónica en un idioma, mediante parámetros.
+
+**Parámetros**
+
+- **canonicalURI:** (Requerido)  URI Canónica en un idioma  a asociar.
+- **languageCode :** (Requerido)  Código de idioma ISO.
+- **storageName:** (Requerido)  Nombre del tipo de almacenamiento.
+
+**PETICIÓN:**
+
+```bash
+curl -X GET "http://localhost:9326/uri-factory/local/canonical?canonicalUri=http%3A%2F%2Fhercules.org%2Fum%2Fres%2FCvnRootBean%2F&languageCode=es-ES&storageName=wikibase" -H "accept: */*"
+```
+
+**RESPUESTA**
+
+```bash
+[
+  {
+    "id": 16,
+    "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/",
+    "storageTypeStr": "wikibase",
+    "localUri": "http://wikibase/Q1"
+  }
+]
+```
+
+###### POST /uri-factory/local/entity
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite asociar una URI Local con una URI Canónica por idioma de una entidad , mediante parámetros.
+
+**Parámetros**
+
+- **domain :** (Requerido)  Componente dominio de la URI Canónica por idioma a asociar.
+- **subDomain :** (Requerido)  Componente sub-dominio de la URI Canónica por idioma a asociar.
+- **typeCode:** (Requerido)  Componente tipo de la URI Canónica por idioma a asociar.
+- **languageCode:** (Requerido)  Componente idioma en codigo ISO de la URI Canónica por idioma a asociar.
+- **entity:** (Requerido)  Nombre de la entidad URI Canónica por idioma a asociar.
+- **localURI:** (Requerido)  URI Local a asociar.
+- **storageName:** (Requerido)  Tipo de almacenamiento a asociar.
+
+**PETICIÓN:**
+
+```bash
+curl -X POST "http://localhost:9326/uri-factory/local/entity?domain=hercules.org&entity=Concepto1&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fconceptos%2F11&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
+```
+
+**RESPUESTA**
+
+```bash
+{
+  "id": 34,
+  "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/Concepto1",
+  "storageTypeStr": "trellis",
+  "localUri": "http://trellis/conceptos/11"
+}
+```
+
+###### DELETE /uri-factory/local/entity
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite desasociar una URI Local con una URI Canónica por idioma de una entidad , mediante parámetros.
+
+**Parámetros**
+
+- **domain :** (Requerido)  Componente dominio de la URI Canónica por idioma a desasociar.
+- **subDomain :** (Requerido)  Componente sub-dominio de la URI Canónica por idioma a desasociar.
+- **typeCode:** (Requerido)  Componente tipo de la URI Canónica por idioma a desasociar.
+- **languageCode:** (Requerido)  Componente idioma en codigo ISO de la URI Canónica por idioma a desasociar.
+- **entity:** (Requerido)  Nombre de la entidad URI Canónica por idioma a desasociar.
+- **localURI:** (Requerido)  URI Local a desasociar.
+- **storageName:** (Requerido)  Tipo de almacenamiento a desasociar.
+
+**PETICIÓN:**
+
+```bash
+curl -X DELETE "http://localhost:9326/uri-factory/local/entity?domain=hercules.org&entity=Concepto1&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fconceptos%2F11&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
+```
+
+**RESPUESTA**
+
+```bash
+StatusCode: 200 OK
+```
+
+###### POST /uri-factory/local/property
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite asociar una URI Local con una URI Canónica por idioma de una propiedad, mediante parámetros.
+
+**Parámetros**
+
+- **domain :** (Requerido)  Componente dominio de la URI Canónica por idioma a asociar.
+- **subDomain :** (Requerido)  Componente sub-dominio de la URI Canónica por idioma a asociar.
+- **typeCode:** (Requerido)  Componente tipo de la URI Canónica por idioma a asociar.
+- **languageCode:** (Requerido)  Componente idioma en codigo ISO de la URI Canónica por idioma a asociar.
+- **property:** (Requerido)  Nombre de la propiedad URI Canónica por idioma a asociar.
+- **localURI:** (Requerido)  URI Local a asociar.
+- **storageName:** (Requerido)  Tipo de almacenamiento a asociar.
+
+**PETICIÓN:**
+
+```bash
+curl -X POST "http://localhost:9326/uri-factory/local/property?domain=hercules.org&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fproperty%2F11&property=cvnItemBean&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
+```
+
+**RESPUESTA**
+
+```bash
+{
+  "id": 35,
+  "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/cvnItemBean",
+  "storageTypeStr": "trellis",
+  "localUri": "http://trellis/property/11"
+}
+```
+
+###### DELETE /uri-factory/local/property
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite desasociar una URI Local con una URI Canónica por idioma de una propiedad, mediante parámetros.
+
+**Parámetros**
+
+- **domain :** (Requerido)  Componente dominio de la URI Canónica por idioma a desasociar.
+- **subDomain :** (Requerido)  Componente sub-dominio de la URI Canónica por idioma a desasociar.
+- **typeCode:** (Requerido)  Componente tipo de la URI Canónica por idioma a desasociar.
+- **languageCode:** (Requerido)  Componente idioma en codigo ISO de la URI Canónica por idioma a desasociar.
+- **property:** (Requerido)  Nombre de la propiedad URI Canónica por idioma a desasociar.
+- **localURI:** (Requerido)  URI Local a asociar.
+- **storageName:** (Requerido)  Tipo de almacenamiento a desasociar.
+
+**PETICIÓN:**
+
+```bash
+curl -X DELETE "http://localhost:9326/uri-factory/local/property?domain=hercules.org&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fproperty%2F11&property=cvnItemBean&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
+```
+
+**RESPUESTA**
+
+```bash
+StatusCode: 200 OK
+```
+
+###### POST /uri-factory/local/resource
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite asociar una URI Local con una URI Canónica por idioma de una propiedad, mediante parámetros.
+
+**Parámetros**
+
+- **domain :** (Requerido)  Componente dominio de la URI Canónica por idioma a asociar.
+- **subDomain :** (Requerido)  Componente sub-dominio de la URI Canónica por idioma a asociar.
+- **typeCode:** (Requerido)  Componente tipo de la URI Canónica por idioma a asociar.
+- **languageCode:** (Requerido)  Componente idioma en codigo ISO de la URI Canónica por idioma a asociar.
+- **entity**: (Requerido)  Identificador de la entidad para la URI Canónica por idioma a desasociar.
+- **reference**: (Requerido)  Identificador del recurso para la URI Canónica por idioma a asociar.
+- **localURI:** (Requerido)  URI Local a asociar.
+- **storageName:** (Requerido)  Tipo de almacenamiento a asociar.
+
+**PETICIÓN:**
+
+```bash
+curl -X POST "http://localhost:9326/uri-factory/local/property?domain=hercules.org&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fproperty%2F11&property=cvnItemBean&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
+```
+
+**RESPUESTA**
+
+```bash
+{
+  "id": 35,
+  "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/cvnItemBean",
+  "storageTypeStr": "trellis",
+  "localUri": "http://trellis/property/11"
+}
+```
+
+###### DELETE /uri-factory/local/resource
+
+Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
+
+**Semántica**
+
+Permite desasociar una URI Local con una URI Canónica por idioma de una propiedad, mediante parámetros.
+
+**Parámetros**
+
+- **domain :** (Requerido)  Componente dominio de la URI Canónica por idioma a desasociar.
+- **subDomain :** (Requerido)  Componente sub-dominio de la URI Canónica por idioma a desasociar.
+- **typeCode:** (Requerido)  Componente tipo de la URI Canónica por idioma a desasociar.
+- **languageCode:** (Requerido)  Componente idioma en codigo ISO de la URI Canónica por idioma a desasociar.
+- **entity**: (Requerido)  Identificador de la entidad para la URI Canónica por idioma a desasociar.
+- **reference**: (Requerido)  Identificador del recurso para la URI Canónica por idioma a desasociar.
+- **localURI:** (Requerido)  URI Local a desasociar.
+- **storageName:** (Requerido)  Tipo de almacenamiento a desasociar.
+
+**PETICIÓN:**
+
+```bash
+curl -X DELETE "http://localhost:9326/uri-factory/local/property?domain=hercules.org&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fproperty%2F11&property=cvnItemBean&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
+```
+
+**RESPUESTA**
+
+```bash
+StatusCode: 200 OK
+```
 
