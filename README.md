@@ -113,11 +113,11 @@ mvn clean verify
 
 y el resultado se puede obtener bien en el log del propio comando
 
-![test](C:\Users\druiz\repositorios\UM\uris-generator\images\test_result.png)
+![test](./images/test_result.png)
 
 o en la ruta `\uris-generator\[nombre del módulo]\target\surefire-reports`
 
-![test2](C:\Users\druiz\repositorios\UM\uris-generator\images\test.png)
+![test2](./images/test.png)
 
  ## Mapeo de URIs
 
