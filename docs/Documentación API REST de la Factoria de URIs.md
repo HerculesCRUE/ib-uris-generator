@@ -23,11 +23,11 @@ Es necesaria para el multilingüismo ya que la combinación de un tipo con un id
 
 ##### Implementación
 
-Es implementado por el controlador [TypeController]()
+Es implementado por el controlador TypeController
 
 ##### Test
 
-Test de integración disponibles en [TypeControllerTest]()
+Test de integración disponibles en TypeControllerTest
 
 ##### EndPoints
 
@@ -190,11 +190,11 @@ Otro atributo de importancia en la entidad Language es IS_DEFAULT, que establece
 
 ##### Implementación
 
-Es implementado por el controlador [LanguageController]()
+Es implementado por el controlador LanguageController
 
 ##### Test
 
-Test de integración disponibles en [LanguageControllerTest]()
+Test de integración disponibles en LanguageControllerTest
 
 ##### EndPoints
 
@@ -401,11 +401,11 @@ La entidad **LANGUAGE_TYPE** representa la unión de un determinado tipo, con un
 
 ##### Implementación
 
-Es implementado por el controlador [LanguageTypeController]()
+Es implementado por el controlador LanguageTypeController
 
 ##### Test
 
-Test de integración disponibles en [LanguageTypeControllerTest]()
+Test de integración disponibles en LanguageTypeControllerTest
 
 ##### EndPoints
 
@@ -619,15 +619,15 @@ La entidad **STORAGE_TYPE** almacena información relativa al un determinado tip
 
 ##### Implementación
 
-Es implementado por el controlador [StorageTypeController]()
+Es implementado por el controlador StorageTypeController
 
 ##### Test
 
-Test de integración disponibles en [StorageTypeControllerTest]()
+Test de integración disponibles en StorageTypeControllerTest
 
 ##### EndPoints
 
-[![TypeController](data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==)]()
+![local_uri](../images/StorageTypeController.png)
 
 ###### GET /storage-type
 
@@ -805,11 +805,11 @@ La entidad **CANONICAL_URI** representa un URI canónica para un determinado rec
 
 ##### Implementación
 
-Es implementado por el controlador [CanonicalURIController]()
+Es implementado por el controlador CanonicalURIController
 
 ##### Test
 
-Test de integración disponibles en [CanonicalURIControllerTest]()
+Test de integración disponibles en CanonicalURIControllerTest
 
 ##### EndPoints
 
@@ -1336,11 +1336,11 @@ La entidad **CANONICAL_URI** representa un URI canónica para un determinado rec
 
 ##### Implementación
 
-Es implementado por el controlador [CanonicalURILanguageController]()
+Es implementado por el controlador CanonicalURILanguageController
 
 ##### Test
 
-Test de integración disponibles en [CanonicalURILanguageControllerTest]()
+Test de integración disponibles en CanonicalURILanguageControllerTest
 
 ##### EndPoints
 
@@ -2060,11 +2060,11 @@ La entidad **LOCAL_URI** representa un URI local asociada con una URI Canónica 
 
 ##### Implementación
 
-Es implementado por el controlador [LocalURIController]()
+Es implementado por el controlador LocalURIController
 
 ##### Test
 
-Test de integración disponibles en [CanonicalURILanguageControllerTest]()
+Test de integración disponibles en CanonicalURILanguageControllerTest
 
 ##### EndPoints
 
@@ -2278,15 +2278,15 @@ Es la implementación de la Factoría de URIs que implementa operaciones de alto
 
 ##### Implementación
 
-Es implementado por el controlador [CanonicalURISController]()
+Es implementado por el controlador URISController
 
 ##### Test
 
-Test de integración disponibles en [CanonicalURISControllerTest]()
+Test de integración disponibles en URISControllerTest
 
 ##### EndPoints
 
-[![TypeController](data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==)]()
+[![TypeController](./images/URISController.png)
 
 ###### POST /uri-factory/canonical/entity
 

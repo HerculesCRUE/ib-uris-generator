@@ -114,7 +114,7 @@ La Factoría de URIs implementa la normalización descrita en el documento [esqu
 
 Es conveniente para mejorar la comprensión, conocer el modelo de datos, que soporta la funcionalidad de la librería de URIs.
 
-### ![modelo datos](C:/Users/druiz/repositorios/UM/uris-generator/docs/images/model_data.png)
+### ![modelo datos](./images/model_data.png)
 
 Entre las entidades presentes en el esquema podemos destacar:
 
@@ -122,25 +122,25 @@ Entre las entidades presentes en el esquema podemos destacar:
 
 Representa el componente tipo, descrito en el  [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md). El atributo code actúa como calve primaria y representa el código (de 3 caracteres) que será usado en el esquema de URIs, para las URIs canónicas y el atributo name, su descripción larga.
 
-![Type](C:/Users/druiz/repositorios/UM/uris-generator/docs/images/type_entity.png)
+![Type](./images/type_entity.png)
 
 ### Entidad LANGUAGE
 
 Modela los atributos necesarios para el modelado de un lenguaje aplicable al proyecto de Factoría de URIS. El atributo ISO, representa el idioma en codigo ISO 639-1, otros atributos tales como LANGUAGE, NAME, REGION, SCRIPT y VARIANT, representan metadatos extraídos de ese mismo código, y los atributos DOMAIN_NAME, SUB_DOMAIN_NAME, TYPE_NAME, CONCEPT_NAME y REFERENCE_NAME, representan la traducción al idioma indicado de los componentes del esquema de URIS  dominio, sub-dominio, tipo, concepto y referencia respectivamente. Por otro lado cabe destacar el atributo IS_DEFAULT, que determina si este, es el idioma por defecto. Solo un idioma podrá ser  definido como idioma por defecto y es obligado que este definido uno.
 
-![Type](C:/Users/druiz/repositorios/UM/uris-generator/docs/images/language_entity.png)
+![Type](./images/language_entity.png)
 
 ### Entidad LANGUAGE_TYPE
 
 Modela la unión de un lenguaje y un tipo, y por lo tanto ofrece la traducción de dicho tipo al lenguaje indicado, incluso en la construcción de la URI Canónica por idioma.
 
-![Type](C:/Users/druiz/repositorios/UM/uris-generator/docs/images/language_type_entity.png)
+![Type](./images/language_type_entity.png)
 
 ### Entidad STORAGE_TYPE:
 
 La entidad **STORAGE_TYPE** almacena información relativa al un determinado tipo de almacenamiento, por ejemplo en el estado actual del proyecto, Trellis y Wikibase. Mantiene asimismo la capacidad de guardar metadatos relativos a dichos sistemas tales como la URL del EndPoint SPARQL o de su API .
 
-![Type](C:/Users/druiz/repositorios/UM/uris-generator/docs/images/storage_type_entity.png)
+![Type](./images/storage_type_entity.png)
 
 
 
@@ -148,7 +148,7 @@ La entidad **STORAGE_TYPE** almacena información relativa al un determinado tip
 
 La entidad **CANONICAL_URI** representa un URI canónica para un determinado recurso, ya sea una clase, una propiedad o una instancia. 
 
-![Type](C:/Users/druiz/repositorios/UM/uris-generator/docs/images/canonical_uri_entity.png)
+![Type](./images/canonical_uri_entity.png)
 
 
 
@@ -156,13 +156,13 @@ La entidad **CANONICAL_URI** representa un URI canónica para un determinado rec
 
  La entidad **CANONICAL_URI** representa un URI canónica para un determinado recurso, ya sea una clase, una propiedad o una instancia. 
 
-![language](C:/Users/druiz/repositorios/UM/uris-generator/docs/images/canonical_uri_language_entity.png)
+![language](./images/canonical_uri_language_entity.png)
 
 ### Entidad LOCAL_URI: 
 
 La entidad **LOCAL_URI** representa un URI local asociada con una URI Canónica por idioma y un tipo de almacenamiento. 
 
-![language](C:/Users/druiz/repositorios/UM/uris-generator/docs/images/local_uri_entity.png)
+![language](./images/local_uri_entity.png)
 
 ## API REST de Factoría de URIS
 
@@ -180,7 +180,7 @@ http://localhost:9326/swagger-ui.html
 
 Obteniendo el siguiente resultado
 
-![swagger](C:/Users/druiz/repositorios/UM/uris-generator/docs/images/swagger.png)
+![swagger](./images/swagger.png)
 
 Por otro lado, puede encontrarse una documentación exahustiva de los Endpoint desplegados por el API, en el documento
 
