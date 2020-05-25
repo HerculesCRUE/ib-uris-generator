@@ -1,130 +1,4 @@
-![cabecera](C:\Users\druiz\repositorios\UM\uris-generator\images\logos_feder.png)
-
-# Documentación técnica para la Factoría de URIs 
-
-| Entregable     | Documentación de la librería factoría de URIs                |
-| -------------- | ------------------------------------------------------------ |
-| Fecha          | 25/05/2020                                                   |
-| Proyecto       | [ASIO](https://www.um.es/web/hercules/proyectos/asio) (Arquitectura Semántica e Infraestructura Ontológica) en el marco de la iniciativa [Hércules](https://www.um.es/web/hercules/) para la Semántica de Datos de Investigación de Universidades que forma parte de [CRUE-TIC](http://www.crue.org/SitePages/ProyectoHercules.aspx) |
-| Módulo         | Arquitectura Semántica                                       |
-| Tipo           | Documento                                                    |
-| Objetivo       | El presente documento pretende ser la documentación técnica relativa a el entregable Factoría de URIs. Para ello, se documentaran exhaustivamente tanto los aspectos relativos a su despliegue, como todos los End Point que esta ofrece a otros procesos o usuarios, para interactuar con la misma. |
-| Estado         | Implementada al **100%**, según la funcionalidad prevista para cubrir lo expresado en los documentos de [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)  , y  [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md).  Por otro lado la exposición de los EndPoint relativos al [CRUD](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md) sobre [modelo de datos](#Modelo de datos) completo, hace posible realizar cualquier operación, aunque esta en principio no estuviese prevista. |
-| Próximos pasos | La integración con componentes desarrollados en una fase de madurez no final, o otros por desarrollar (tales como el servicio de publicación web), quizás requieran la modificación o creación de algún EndPoint adicional, aunque según lo descrito en el apartado anterior, dado que existe un CRUD completo sobre todas las entidades, la implementación, debería de ser trivial. |
-| Documentación  | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Manual de usuario](./Manual de usuario.md) (documentación de alto nivel)<br />[Documentación técnica](./Documentación tecnica.md) (documentación de bajo nivel)<br/> |
-
-
-
-## Despliegue
-
-### Requisitos
-
-* OpenJDK 11
-* Maven 3.6.x
-* Docker
-
-### Compilación
-
-Para realizar la compilación se ejecutará el siguiente comando:
-
-```bash
-mvn clean package
-```
-
-También sería posible instalar o desplegar los artefactos sustituyendo `package` por `install` o `deploy` respectivamente.
-
-Los artefactos se generarán dentro del directorio `target` de cada uno de los módulos:
-
-#### Módulo Back
-
-Módulo que añade una capa de servicios REST a la funcionalidad de la aplicación.
-
-Los artefactos se encuentran dentro de uris-generator-back/target
-
-* Artefacto: uris-generator-back-{version}.jar
-
-#### Módulo Service
-
-Módulo que contiene la lógica de la aplicación. Puede ser utilizado como librería independiente para ser integrado en otras aplicaciones
-
-* Los artefactos se encuentran dentro de triples-storage-adapter-service-abstractions/target
-
-  * Artefacto: triples-storage-adapter-service-abstractions-{version}.jar
-
-#### Módulo jpa-abstractions
-
-Módulo con utilidades para el acceso a datos mediante JPA.
-
-#### Módulo service-abstractions
-
-Módulo con utilidades para la generación de servicios.
-
-#### Módulo swagger
-
-Módulo que contiene la funcionalidad necesaria para añadir [Swagger](https://swagger.io/) para la interacción con el API Rest.
-
-#### Módulo audit
-
-Módulo que contiene la funcionalidad necesaria para la generación de datos de auditoría para las tablas de base de datos.
-
-### Metodología de desarrollo
-
-La metodología de desarrollo es [Git Flow](https://www.atlassian.com/es/git/tutorials/comparing-workflows/gitflow-workflow).
-
-### Entorno de desarrollo Docker
-
-La generación de la imagen Docker y su despliegue están descritas en el documento [Generación Docker](docs/docker.md)
-
-También es necesario desplegar el entorno de servicios necesarios, por ejemplo MariaDB.
-
-Para ello existe en el directorio **docker-devenv** el dichero docker-compose.yml que despliega dicho entorno. Para ello es suficiente ejecutar los siguientes comandos:
-
- Para arrancar el entorno:
-
-```bash
-docker-compose up -d
-```
-
-Para pararlo:
-
-```bash
-docker-compose down
-```
-
-### Variables de entorno
-
-La configuración se encuentra en el fichero application.yml
-
-Esta puede ser sustituida por las siguientes variables de entorno disponibles en la maquina donde se realiza el despliegue
-
-| Nombre                                         |                            Valor                             |
-| ---------------------------------------------- | :----------------------------------------------------------: |
-| `APP_PERSISTENCE_DATASOURCE_DRIVER-CLASS-NAME` |                   org.mariadb.jdbc.Driver                    |
-| `APP_PERSISTENCE_DATASOURCE_USERNAME`          |                             app                              |
-| `APP_PERSISTENCE_DATASOURCE_PASSWORD`          |                           sqlpass                            |
-| `APP_PERSISTENCE_DATASOURCE_URL`               |         jdbc:mariadb://127.0.0.1:3307/app?ssl=false          |
-| `APP_URI_CANONICALURISCHEMA`                   |  http://$domain$/$sub-domain$/$type$/$concept$/$reference$   |
-| `APP_URI_CANONICALURILANGUAGESCHEMA`           | http://$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$ |
-
-
-
-### Swagger
-
-Se desplegara un API Swagger automáticamente al desplegar el proyecto.
-
-El API esta disponible en
-
-[http://{HOST_FACTORIA_URIS}:[SWAGGER_PORT]/swagger-ui.html](http://localhost:9326/swagger-ui.html)
-
-Para activar Swagger se utilizará la variable `app.swagger.enabled`
-
-### Modelo de datos
-
-Es conveniente para mejorar la comprensión, ver la representación del modelo de datos que soporta la librería de URIs y se encuentra desplegado en MariaDB
-
-![modelo datos](C:\Users\druiz\repositorios\UM\uris-generator\images\model_data.png)
-
-## API REST de Factoría de URIS
+# API REST de Factoría de URIS
 
 La documentación de esta sección hará referencia a cada uno de los EndPoints desplegados por la librería de URIs, apoyándose en la documentación proporcionada por Swagger, por lo tanto los enlaces que se facilitan para los EndPoint descritos en Swagger, solo estarán disponibles se ha realizado el despliegue, y dicho despliegue se ha realizado en la misma máquina donde se encuentra la presente documentación. En otro caso es necesario cambiar el host y el puerto por aquellos donde la librería de URIs ha sido desplegada.
 
@@ -136,7 +10,7 @@ La librería de URIs despliega dos grandes módulos de EndPoints uno para todas 
 
 La entidad **Type** representa el tipo ($type$) disponible en el esquema de URIS
 
-```bash
+```
 # Canonical Schema
 Esquema canonico -> http://$domain$/$sub-domain$/$type$/$concept$/$reference$ 
 # Canonical Langauge Schema
@@ -145,25 +19,23 @@ Esquema canonico por idioma -> http://$domain$/$sub-domain$/$type$/$concept$/$re
 
 Es necesaria para el multilingüismo ya que la combinación de un tipo con un idioma, permitirá acceder a la traducción de dicho tipo.
 
-![language](C:\Users\druiz\repositorios\UM\uris-generator\images\type_entity.png)
+![language](..\images\type_entity.png)
 
 ##### Implementación
 
-Es implementado por el controlador [TypeController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\crud\type\TypeController.java)
+Es implementado por el controlador [TypeController]()
 
 ##### Test
 
-Test de integración disponibles en [TypeControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\crud\type\TypeControllerTest.java)
+Test de integración disponibles en [TypeControllerTest]()
 
 ##### EndPoints
 
-![TypeController](C:\Users\druiz\repositorios\UM\uris-generator\images\TypeController.png)
+![local_uri](../images/TypeController.png)
 
 ###### GET /type
 
 Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
-
-
 
 **Semántica**
 
@@ -175,20 +47,18 @@ Obtención de un recurso por su código
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/type?code=res" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "code": "res",
   "name": "resources"
 }
 ```
-
-
 
 ###### POST /type
 
@@ -205,13 +75,13 @@ Inserción de un recurso por su código y nombre
 
 **Petición**
 
-```bash
+```
 curl -X POST "http://localhost:9326/type?code=res&name=res" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "code": "res",
   "name": "res"
@@ -232,17 +102,15 @@ Borrado de un recurso por su código y nombre
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/type?code=res" -H "accept: */*"
 ```
 
-**Respuesta**: 
+**Respuesta**:
 
-```bash
+```
 Status 200 OK
 ```
-
-
 
 ###### GET /type/all
 
@@ -258,13 +126,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/type/all" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "code": "cat",
@@ -297,13 +165,13 @@ Inserción de un tipo en formato json.
 
 - (Requerido) JSON del tipo a insertar enviado el body de la petición
 
-```bash
+```
 curl -X POST "http://localhost:9326/type/json" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"code\": \"cat\", \"name\": \"category\"}"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "code": "cat",
   "name": "category"
@@ -316,21 +184,21 @@ La entidad **LANGUAGE** representa un determinado idioma y la traducción de los
 
 Es necesaria para el multilingüismo ya que la combinación de una URI Canónica con un lenguaje, dará como resultado una URI Canonical en un determinado idioma.
 
-![language](C:\Users\druiz\repositorios\UM\uris-generator\images\language_entity.png)
+![LANGUAJE](..\images\language_entity.png)
 
 Otro atributo de importancia en la entidad Language es IS_DEFAULT, que establece si es el idioma por defecto, que será el retornado en caso de hacerse una solicitud a una URI Canoníca, indicando un recurso en un idioma no disponible para dicho recurso.
 
 ##### Implementación
 
-Es implementado por el controlador [LanguageController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\crud\language\LanguageController.java)
+Es implementado por el controlador [LanguageController]()
 
 ##### Test
 
-Test de integración disponibles en [LanguageControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\crud\language\LanguageControllerTest.java)
+Test de integración disponibles en [LanguageControllerTest]()
 
 ##### EndPoints
 
-![TypeController](C:\Users\druiz\repositorios\UM\uris-generator\images\LanguageController.png)
+![local_uri](../images/LanguageController.png)
 
 ###### GET /language
 
@@ -346,13 +214,13 @@ Obtención de un idioma por su código ISO 639-1
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/language?ISO=es-ES" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "iso": "es-ES",
   "languageStr": "español",
@@ -368,8 +236,6 @@ curl -X GET "http://localhost:9326/language?ISO=es-ES" -H "accept: */*"
   "isDefault": true
 }
 ```
-
-
 
 ###### POST /language
 
@@ -392,13 +258,13 @@ Inserción de un idioma, ofreciendo configuración y traducción de los componen
 
 **Petición**
 
-```bash
+```
 curl -X POST "http://localhost:9326/language?ISO=pt-PT&concept=conceito&domain=dom%C3%ADnio&isDefault=false&name=nome&reference=refer%C3%AAncia&subDomain=%20sub-dom%C3%ADnio&type=tipo" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "iso": "pt-PT",
   "languageStr": "portugués",
@@ -429,17 +295,15 @@ Borrado de un recurso por su código y nombre
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/language?ISO=pt-PT" -H "accept: */*"
 ```
 
-**Respuesta**: 
+**Respuesta**:
 
-```bash
+```
 Status 200 OK
 ```
-
-
 
 ###### GET /language/all
 
@@ -455,13 +319,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/type/all" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "iso": "en-EN",
@@ -506,13 +370,13 @@ Inserción de un idioma en formato json.
 
 - (Requerido) JSON del tipo a insertar enviado el body de la petición
 
-```bash
+```
 curl -X POST "http://localhost:9326/language/json" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"iso\": \"ES\", \"languageStr\": \"ES\", \"name\": \"Spain\", \"region\": \"ES\", \"script\": \"ES\", \"variant\": \"ES\", \"domain\": \"dominio\", \"subDomain\": \"sub-dominio\", \"type\": \"tipo\", \"concept\": \"class\", \"reference\": \"item\", \"isDefault\": true}"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "iso": "ES",
   "languageStr": "ES",
@@ -529,25 +393,23 @@ curl -X POST "http://localhost:9326/language/json" -H "accept: */*" -H "Content-
 }
 ```
 
-
-
 #### Operaciones sobre la entidad LANGUAGE_TYPE
 
 La entidad **LANGUAGE_TYPE** representa la unión de un determinado tipo, con un determinado idioma, y por lo tanto otorga la capacidad de traducir el atributo type de las URIs Canónicas por Idioma
 
-![language](C:\Users\druiz\repositorios\UM\uris-generator\images\language_type_entity.png)
+![LANGUAJE](.\images\language_type_entity.png).
 
 ##### Implementación
 
-Es implementado por el controlador [LanguageTypeController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\crud\language_type\LanguageTypeController.java)
+Es implementado por el controlador [LanguageTypeController]()
 
 ##### Test
 
-Test de integración disponibles en [LanguageTypeControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\crud\language_type\language\LanguageTypeControllerTest.java)
+Test de integración disponibles en [LanguageTypeControllerTest]()
 
 ##### EndPoints
 
-![TypeController](C:\Users\druiz\repositorios\UM\uris-generator\images\LanguageTypeController.png)
+![local_uri](../images/LanguageTypeController.png)
 
 ###### GET /language-type
 
@@ -564,13 +426,13 @@ Ofrece la traducción del tipo para el idioma indicado. Esto es necesario para l
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/language-type?ISO=es-ES&type=res" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 3,
@@ -581,8 +443,6 @@ curl -X GET "http://localhost:9326/language-type?ISO=es-ES&type=res" -H "accept:
   }
 ]
 ```
-
-
 
 ###### POST /language-type
 
@@ -601,13 +461,13 @@ Inserción de la traducción del tipo para el idioma indicado. Esto es necesario
 
 **Petición**
 
-```bash
+```
 curl -X POST "http://localhost:9326/language-type?ISOCode=es-ES&description=recurso&languageTypeCode=rec&typeCode=res" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "id": 3,
   "languageId": "es-ES",
@@ -624,7 +484,7 @@ Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.htm
 **Parámetros**
 
 - **ISO:** (*Requerido) Código del idioma a borrar
-- **type:** (*Requerido) Código del tipo (canonico) a borrar 
+- **type:** (*Requerido) Código del tipo (canonico) a borrar
 
 **Semántica**
 
@@ -632,17 +492,15 @@ Borrado de la tradición de un tipo a un idioma por su código ISO y su tipo
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/language?ISO=es-ES&type=res" -H "accept: */*"
 ```
 
-**Respuesta**: 
+**Respuesta**:
 
-```bash
+```
 Status 200 OK
 ```
-
-
 
 ###### GET /language-type/all
 
@@ -658,13 +516,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/language-type/all" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 1,
@@ -723,7 +581,6 @@ curl -X GET "http://localhost:9326/language-type/all" -H "accept: */*"
     "description": "catalog"
   }
 ]
-
 ```
 
 ###### POST /language-type/json
@@ -738,13 +595,13 @@ Inserción de un idioma en formato json.
 
 - (Requerido) JSON del tipo a insertar enviado el body de la petición
 
-```bash
+```
 curl -X POST "http://localhost:9326/language-type/json" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"languageId\": \"es-ES\", \"typeId\": \"res\", \"typeLangCode\": \"rec\", \"description\": \"recurso\"}"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "id": 3,
   "languageId": "es-ES",
@@ -754,25 +611,23 @@ curl -X POST "http://localhost:9326/language-type/json" -H "accept: */*" -H "Con
 }
 ```
 
-
-
 #### Operaciones sobre la entidad STORAGE_TYPE
 
 La entidad **STORAGE_TYPE** almacena información relativa al un determinado tipo de almacenamiento, por ejemplo en el estado actual del proyecto, Trellis y Wikibase. Mantiene asimismo la capacidad de guardar metadatos relativos a dichos sistemas tales como la URL del EndPoint SPARQL o de su API
 
-![language](C:\Users\druiz\repositorios\UM\uris-generator\images\storage_type_entity.png)
+![LANGUAJE](C:\Users\druiz\repositorios\UM\uris-generator\docs\images\storage_type_entity.png)
 
 ##### Implementación
 
-Es implementado por el controlador [StorageTypeController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\crud\storage_type\StorageTypeController.java)
+Es implementado por el controlador [StorageTypeController]()
 
 ##### Test
 
-Test de integración disponibles en [StorageTypeControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\crud\storage_type\type\StorageTypeControllerTest.java)
+Test de integración disponibles en [StorageTypeControllerTest]()
 
 ##### EndPoints
 
-![TypeController](C:\Users\druiz\repositorios\UM\uris-generator\images\StorageTypeController.png)
+[![TypeController](data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==)]()
 
 ###### GET /storage-type
 
@@ -788,13 +643,13 @@ Ofrece los datos relativos a un determinado sistema de almacenamiento.
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/storage-type?name=trellis" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "id": 9,
   "name": "trellis",
@@ -803,8 +658,6 @@ curl -X GET "http://localhost:9326/storage-type?name=trellis" -H "accept: */*"
   "schemaURI": null
 }
 ```
-
-
 
 ###### POST /storage-type
 
@@ -823,13 +676,13 @@ Inserción de los datos relativos a un determinado sistema de almacenamiento.
 
 **Petición**
 
-```bash
+```
 curl -X POST "http://localhost:9326/storage-type?apiURL=http%3A%2F%2Ftrellis-otro%2Fapi&endPointURL=http%3A%2F%2Ftrellis-otro%2FendPoint&name=trellis-otro" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "id": 22,
   "name": "trellis-otro",
@@ -853,17 +706,15 @@ Borrado de un sistema de almacenamiento determinado por su nombre.
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/language?name=trellis-otro" -H "accept: */*"
 ```
 
-**Respuesta**: 
+**Respuesta**:
 
-```bash
+```
 Status 200 OK
 ```
-
-
 
 ###### GET /storage-type/all
 
@@ -879,13 +730,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/storage-type/all" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 9,
@@ -916,7 +767,6 @@ curl -X GET "http://localhost:9326/storage-type/all" -H "accept: */*"
     "schemaURI": null
   }
 ]
-
 ```
 
 ###### POST /storage-type/json
@@ -931,13 +781,13 @@ Inserción de un sistema de almacenamiento en formato json.
 
 - (Requerido) JSON del tipo a insertar enviado el body de la petición
 
-```bash
+```
 curl -X POST "http://localhost:9326/storage-type/json" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"name\": \"WIKIBASE-NO\"}"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "id": 23,
   "name": "WIKIBASE-NO",
@@ -949,21 +799,21 @@ curl -X POST "http://localhost:9326/storage-type/json" -H "accept: */*" -H "Cont
 
 #### Operaciones sobre la entidad CANONICAL_URI
 
-La entidad **CANONICAL_URI** representa un URI canónica para un determinado recurso, ya sea una clase, una propiedad o una instancia. 
+La entidad **CANONICAL_URI** representa un URI canónica para un determinado recurso, ya sea una clase, una propiedad o una instancia.
 
-![language](C:\Users\druiz\repositorios\UM\uris-generator\images\canonical_uri_entity.png)
+![LANGUAJE](..\images\canonical_uri_entity.png)
 
 ##### Implementación
 
-Es implementado por el controlador [CanonicalURIController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\crud\canonical\CanonicalURIController.java)
+Es implementado por el controlador [CanonicalURIController]()
 
 ##### Test
 
-Test de integración disponibles en [CanonicalURIControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\crud\canonical\CanonicalURIControllerTest.java)
+Test de integración disponibles en [CanonicalURIControllerTest]()
 
 ##### EndPoints
 
-![TypeController](C:\Users\druiz\repositorios\UM\uris-generator\images\CanonicalURIController.png)
+![local_uri](../images/CanonicalURIController.png)
 
 ###### GET /canonical-uri
 
@@ -983,13 +833,13 @@ Permite recuperar una URI Canónica por sus componentes definidos en el esquema 
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri?concept=CvnRootBean&domain=hercules.org&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 15,
@@ -1037,8 +887,6 @@ curl -X GET "http://localhost:9326/canonical-uri?concept=CvnRootBean&domain=herc
 ]
 ```
 
-
-
 ###### POST /canonical-uri
 
 Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.html#/CRUD Operations (GET, POST, DELETE) for Type/getUsingGET_5)
@@ -1058,13 +906,13 @@ Inserción de los datos relativos a una URI Canónica por sus componentes defini
 
 **Petición**
 
-```bash
+```
 curl -X POST "http://localhost:9326/canonical-uri?domain=hercules.org&property=propiedad1&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "id": 12,
   "domain": "hercules.org",
@@ -1121,17 +969,15 @@ Borrado de una URI Canónica, según parámetros.
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/canonical-uri?concept=propiedad1&domain=hercules.org&subDomain=um&type=res" -H "accept: */*"
 ```
 
-**Respuesta**: 
+**Respuesta**:
 
-```bash
+```
 Status 200 OK
 ```
-
-
 
 ###### GET /canonical-uri/all
 
@@ -1147,13 +993,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri/all" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "canonicalURILanguages": [
@@ -1191,7 +1037,6 @@ curl -X GET "http://localhost:9326/canonical-uri/all" -H "accept: */*"
     "propertyName": "property"
   }
 ]
-
 ```
 
 ###### GET /canonical-uri/entity/{entityName}
@@ -1208,13 +1053,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri-language/entity/CvnRootBean" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 12,
@@ -1260,13 +1105,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/canonical-uri-language/entity/CvnRootBean" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 Status Code: 200 OK
 ```
 
@@ -1284,13 +1129,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri-language/entity/CvnRootBean/reference/e09d18f4-7db1-4f8b-b985-a8196b566de1" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 12,
@@ -1319,7 +1164,6 @@ curl -X GET "http://localhost:9326/canonical-uri-language/entity/CvnRootBean/ref
       }
     ]
   }
-
 ```
 
 ###### DELETE /canonical-uri/entity/{entityName}/reference/{referenceId}
@@ -1336,13 +1180,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/canonical-uri-language/entity/CvnRootBean/reference/e09d18f4-7db1-4f8b-b985-a8196b566de1" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 Status Code: 200 OK
 ```
 
@@ -1360,13 +1204,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri-language/property/propiedad1" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 13,
@@ -1389,7 +1233,6 @@ curl -X GET "http://localhost:9326/canonical-uri-language/property/propiedad1" -
     "localURIs": []
   }
 ]
-
 ```
 
 ###### DELETE /canonical-uri/property/{propertyName}
@@ -1406,13 +1249,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/canonical-uri-language/property/propiedad1" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 Status Code: 200 OK
 ```
 
@@ -1430,13 +1273,13 @@ Obtención de las URIS Canónicas por la URI canónica.
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri-language/uri?fullURI=http%3A%2F%2Fhercules.org%2Fum%2Fres%2FImportResult%2F9b875466-3a12-45b3-86f2-d4ced28b9c59" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 13,
@@ -1459,7 +1302,6 @@ curl -X GET "http://localhost:9326/canonical-uri-language/uri?fullURI=http%3A%2F
     "localURIs": []
   }
 ]
-
 ```
 
 ###### DELETE /canonical-uri/uri
@@ -1476,33 +1318,33 @@ BORRADO de las URIS Canónicas por la URI canónica.
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/canonical-uri-language/uri?fullURI=http%3A%2F%2Fhercules.org%2Fum%2Fres%2FImportResult%2F9b875466-3a12-45b3-86f2-d4ced28b9c59" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 Status Code: 200 OK
 ```
 
 #### Operaciones sobre la entidad CANONICAL_URI_LANGUAGE
 
-La entidad **CANONICAL_URI** representa un URI canónica para un determinado recurso, ya sea una clase, una propiedad o una instancia. 
+La entidad **CANONICAL_URI** representa un URI canónica para un determinado recurso, ya sea una clase, una propiedad o una instancia.
 
-![language](C:\Users\druiz\repositorios\UM\uris-generator\images\canonical_uri_language_entity.png)
+![LANGUAJE](..\images\canonical_uri_language_entity.png)
 
 ##### Implementación
 
-Es implementado por el controlador [CanonicalURILanguageController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\crud\canonical_language\CanonicalURILanguageController.java)
+Es implementado por el controlador [CanonicalURILanguageController]()
 
 ##### Test
 
-Test de integración disponibles en [CanonicalURILanguageControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\crud\canonical_language\CanonicalURILanguageControllerTest.java)
+Test de integración disponibles en [CanonicalURILanguageControllerTest]()
 
 ##### EndPoints
 
-![TypeController](C:\Users\druiz\repositorios\UM\uris-generator\images\CanonicalURILanguageController.png)
+![local_uri](../images/CanonicalURILanguageController.png)
 
 ###### GET /canonical-uri-language
 
@@ -1521,13 +1363,13 @@ Permite recuperar una URI Canónica por sus componentes definidos en el esquema 
 - **concept:** (Opcional) Nombre del concepto para filtrar (clase o propiedad).
 - **reference:** (Opcional) Nombre el identificador de la referencia para filtrar (instancia).
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri-language?concept=CvnRootBean&domain=hercules.org&language=es-ES&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 16,
@@ -1557,10 +1399,7 @@ curl -X GET "http://localhost:9326/canonical-uri-language?concept=CvnRootBean&do
     ]
   }
 ]
-
 ```
-
-
 
 ###### POST /canonical-uri-language
 
@@ -1573,9 +1412,9 @@ Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.htm
 - **typeCode:** (Opcional) Nombre del tipo canónico para crear .
 - **language:** (Opcional) Nombre del idioma en ISO 639-1 para crear.
 - **concept:** (Opcional) Nombre del concepto para filtrar (clase).
-- **parentEntity:** (Opcional) Nombre del concepto padre para enlazar con la URI Canónica, si es nulo, se usa el valor del atributo concept. 
+- **parentEntity:** (Opcional) Nombre del concepto padre para enlazar con la URI Canónica, si es nulo, se usa el valor del atributo concept.
 - **property:** (Opcional) Nombre del propiedad para crear (propiedad).
-- **parentProperty:** (Opcional) Nombre de la propiedad padre para enlazar con la URI Canónica, si es nulo, se usa el valor del atributo property. 
+- **parentProperty:** (Opcional) Nombre de la propiedad padre para enlazar con la URI Canónica, si es nulo, se usa el valor del atributo property.
 - **reference:** (Opcional) Nombre el identificador de la referencia para crear (instancia).
 - **createCanonicalIfNotExist:** (Opcional) [true | false] Determina si se crea la URI Canónica a partir de la URI Canónica por idioma.
 
@@ -1585,13 +1424,13 @@ Inserción de los datos relativos a una URI Canónica por idioma por sus compone
 
 **Petición**
 
-```bash
+```
 curl -X POST "http://localhost:9326/canonical-uri-language?concept=concepto1&createCanonicalIfNotExist=true&domain=hercules.org&language=es-ES&parentEntity=concepto1&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "id": 25,
   "languageID": "es-ES",
@@ -1633,17 +1472,15 @@ Borrado de una URI Canónica por idioma, según parámetros.
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/canonical-uri-language?concept=CvnRootBean&domain=hercules.org&language=es-ES&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
-**Respuesta**: 
+**Respuesta**:
 
-```bash
+```
 Status 200 OK
 ```
-
-
 
 ###### GET /canonical-uri-language/all
 
@@ -1659,13 +1496,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri-language/all" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 16,
@@ -1711,14 +1548,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri-language/entity/CvnRootBean" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
-
+```
 Request URL
 http://localhost:9326/canonical-uri-language/entity/CvnRootBean
 Server response
@@ -1958,13 +1794,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/canonical-uri-language/entity/CvnRootBean" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 Status Code: 200 OK
 ```
 
@@ -1982,13 +1818,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri-language/entity/CvnRootBean/reference/e09d18f4-7db1-4f8b-b985-a8196b566de1" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 12,
@@ -2034,13 +1870,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/canonical-uri-language/entity/CvnRootBean/reference/e09d18f4-7db1-4f8b-b985-a8196b566de1" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 Status Code: 200 OK
 ```
 
@@ -2058,13 +1894,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri-language/property/propiedad1" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 13,
@@ -2123,7 +1959,6 @@ Model
     "propertyName": "property"
   }
 ]
-
 ```
 
 ###### DELETE /canonical-uri-language/property/{propertyName}
@@ -2140,13 +1975,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/canonical-uri-language/property/propiedad1" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 Status Code: 200 OK
 ```
 
@@ -2164,13 +1999,13 @@ Obtención de las URIS Canónicas  por idioma por la URI canónica por idioma.
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri-language/uri?fullURI=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2Fpropiedad1" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "id": 13,
   "languageID": "es-ES",
@@ -2191,7 +2026,6 @@ curl -X GET "http://localhost:9326/canonical-uri-language/uri?fullURI=http%3A%2F
   "parentPropertyName": "propiedad1",
   "localURIs": []
 }
-
 ```
 
 ###### DELETE /canonical-uri-language/uri
@@ -2208,33 +2042,33 @@ BORRADO de las URIS Canónicas  por idioma por la URI canónica por idioma .
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/canonical-uri-language/uri?fullURI=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2Fpropiedad1" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 Status Code: 200 OK
 ```
 
 #### Operaciones sobre la entidad LOCAL_URI
 
-La entidad **LOCAL_URI** representa un URI local asociada con una URI Canónica por idioma y un tipo de almacenamiento. 
+La entidad **LOCAL_URI** representa un URI local asociada con una URI Canónica por idioma y un tipo de almacenamiento.
 
-![language](C:\Users\druiz\repositorios\UM\uris-generator\images\local_uri_language_entity.png)
+![LANGUAJE](..\images\local_uri_entity.png)
 
 ##### Implementación
 
-Es implementado por el controlador [LocalURIController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\crud\local\LocalURIController.java)
+Es implementado por el controlador [LocalURIController]()
 
 ##### Test
 
-Test de integración disponibles en [CanonicalURILanguageControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\crud\local\LocalURIControllerTest.java)
+Test de integración disponibles en [CanonicalURILanguageControllerTest]()
 
 ##### EndPoints
 
-![TypeController](C:\Users\druiz\repositorios\UM\uris-generator\images\LocalURIController.png)
+![local_uri](../images/LocalURIController.png)
 
 ###### POST /local-uri
 
@@ -2250,13 +2084,13 @@ Permite guardar una URI Local a partir de la URI Canónica en un idioma y el tip
 - **localURI:** (Requerido) URI Local en el almacenamiento seleccionado
 - **storageType:** (Requerido) Tipo de almacenamiento por nombre.
 
-```bash
+```
 curl -X POST "http://localhost:9326/local-uri?canonicalURILanguage=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2Fpropiedad1&localURI=http%3A%2F%2Fwikibase%2FP10&storageType=wikibase" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 {
   "id": 26,
   "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/propiedad1",
@@ -2264,8 +2098,6 @@ curl -X POST "http://localhost:9326/local-uri?canonicalURILanguage=http%3A%2F%2F
   "localUri": "http://wikibase/P10"
 }
 ```
-
-
 
 ###### GET /local-uri/all
 
@@ -2281,13 +2113,13 @@ Obtención de todas las URIS Locales
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/local-uri/all" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 16,
@@ -2323,20 +2155,12 @@ Disponible en Swagger el siguiente [enlace](http://localhost:9326/swagger-ui.htm
 **Parámetros**
 
 - **canonicalEntity:** (Opcional) Nombre del la entidad canónica a enlazar con la URI local.
-
 - **canonicalProperty:** (Opcional) Nombre del la propiedad canónica a enlazar con la URI local.
-
 - **canonicalReference:** (Opcional) Referencia canónica a enlazar con la URI local.
-
 - **language:** (Opcional) Nombre del idioma en ISO 639-1 para enlazar.
-
 - **typeCode:** (Opcional) Nombre el tipo a enlazar.
-
 - **localURI:** (Opcional) URI local a enlazar.
-
 - **storageType:** (Opcional) tipo de almacenamiento.
-
-  
 
 **Semántica**
 
@@ -2344,13 +2168,13 @@ Permite guardar una URI Local a partir de la URI Canónica definida por sus atri
 
 **Petición**
 
-```bash
+```
 curl -X POST "http://localhost:9326/local-uri/canonical?canonicalEntity=CvnRootBean&reference=e09d18f4-7db1-4f8b-b985-a8196b566de1&language=es-ES&localURI=http%3A%2F%2Ftrellis%2F1&storageType=trellis&typeCode=res" -H "accept: */*"
 ```
 
-**Respuesta**: 
+**Respuesta**:
 
-```bash
+```
 {
     "id": 20,
     "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/e09d18f4-7db1-4f8b-b985-a8196b566de1",
@@ -2358,8 +2182,6 @@ curl -X POST "http://localhost:9326/local-uri/canonical?canonicalEntity=CvnRootB
     "localUri": "http://wikibase/Q2"
 }
 ```
-
-
 
 ###### DELETE /local-uri/uri
 
@@ -2375,13 +2197,13 @@ Ninguno
 
 **Petición**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/local-uri/uri?localURI=http%3A%2F%2Fwikibase%2FP10" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 StatusCode: 200 Ok
 ```
 
@@ -2395,18 +2217,18 @@ Obtención de URI local a partir de URI Canónica por idioma y tipo de almacenma
 
 **Parámetros**
 
-* **canonicalLanguageURI**: (Requerido) URI Canónica por idioma.
-* **storageType**: (Requerido) Tipo de almacenamiento.
+- **canonicalLanguageURI**: (Requerido) URI Canónica por idioma.
+- **storageType**: (Requerido) Tipo de almacenamiento.
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/local-uri/uri/canonical?canonicalLanguageURI=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2FcvnItemBeanNew&storageType=wikibase" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 21,
@@ -2431,13 +2253,13 @@ Obtención de URI Canónica a partir de URI local.
 
 **Petición**
 
-```bash
+```
 curl -X GET "http://localhost:9326/local-uri/uri/local?uriLocal=http%3A%2F%2Fwikibase%2FP3" -H "accept: */*"
 ```
 
 **Respuesta**
 
-```bash
+```
 [
   {
     "id": 21,
@@ -2456,15 +2278,15 @@ Es la implementación de la Factoría de URIs que implementa operaciones de alto
 
 ##### Implementación
 
-Es implementado por el controlador [CanonicalURISController](.\uris-generator-back\src\main\java\es\um\asio\back\controller\URISController.java)
+Es implementado por el controlador [CanonicalURISController]()
 
 ##### Test
 
-Test de integración disponibles en [CanonicalURISControllerTest](.\uris-generator-back\src\test\java\es\um\asio\back\test\controller\URISControllerTest.java)
+Test de integración disponibles en [CanonicalURISControllerTest]()
 
 ##### EndPoints
 
-![TypeController](C:\Users\druiz\repositorios\UM\uris-generator\images\URISController.png)
+[![TypeController](data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==)]()
 
 ###### POST /uri-factory/canonical/entity
 
@@ -2491,13 +2313,13 @@ Permite guardar una clase a partir de los parámetros definidos y el cuerpo del 
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X POST "http://localhost:9326/uri-factory/canonical/entity?domain=hercules.org&lang=es-ES&subDomain=um" -H "accept: */*" -H "Content-Type: application/json" -d "{\"@class\": \"ConceptoGrupo\" }"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 {
   "canonicalURI": "http://hercules.org/um/res/Concepto-grupo",
   "canonicalLanguageURI": "http://hercules.org/um/es-ES/rec/Concepto-grupo",
@@ -2520,13 +2342,13 @@ Permite Obtener todas las URIS Canónicas por idioma (si se especifica el idioma
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X GET "http://localhost:9326/uri-factory/canonical/languages?canonicalURI=http%3A%2F%2Fhercules.org%2Fum%2Fres%2FConcepto1" -H "accept: */*"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 {
   "http://hercules.org/um/res/Concepto1": [
     {
@@ -2563,13 +2385,13 @@ Permite guardar una propiedad a partir de los parámetros definidos y el cuerpo 
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X POST "http://localhost:9326/uri-factory/canonical/property?domain=hercules.org&lang=es-ES&subDomain=um" -H "accept: */*" -H "Content-Type: application/json" -d "{\"property\": \"idGrupoInvestigacion\",\"canonicalProperty\": \"idGrupoInvestigacion\" }"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 {
   "canonicalURI": "http://hercules.org/um/res/id-Grupo-Investigacion",
   "canonicalLanguageURI": "http://hercules.org/um/es-ES/rec/id-Grupo-Investigacion",
@@ -2593,7 +2415,7 @@ Permite guardar una instancia partir de los parámetros definidos y el cuerpo de
 
 **BODY:**
 
-```json
+```
 {	
 	"@class": "es.um.asio.service.util.data.ConceptoGrupo", # Nombre de la clase a la que pertenece instancia
     "entityId": null, # identificador a usar, en caso de ser nulo, se generara a partir de atributos
@@ -2606,13 +2428,13 @@ Permite guardar una instancia partir de los parámetros definidos y el cuerpo de
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X POST "http://localhost:9326/uri-factory/canonical/resource?domain=hercules.org&lang=es-ES&subDomain=um" -H "accept: */*" -H "Content-Type: application/json" -d "{\t\t\"@class\": \"es.um.asio.service.util.data.ConceptoGrupo\", \"entityId\": null, \"version\": 0, \"idGrupoInvestigacion\": \"E0A6-01\", \"numero\": 5, \"codTipoConcepto\": \"DESCRIPTORES\"}"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 {
   "canonicalURI": "http://hercules.org/um/res/Concepto-grupo/7911d484-bfb8-3d11-9255-125e762bac32",
   "canonicalLanguageURI": "http://hercules.org/um/es-ES/rec/Concepto-grupo/7911d484-bfb8-3d11-9255-125e762bac32",
@@ -2636,13 +2458,13 @@ Permite recuperar una URI Canónica en un idioma, mediante la URI local.
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X GET "http://localhost:9326/uri-factory/local?localURI=http%3A%2F%2Fwikibase%2FP3" -H "accept: */*"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 [
   {
     "id": 15,
@@ -2690,13 +2512,13 @@ Permite asociar una URI Canónica en un idioma con Una URI Local, para un tipo d
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X POST "http://localhost:9326/uri-factory/local?canonicalLanguageURI=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2FImportResult%2FstartTime&localURI=http%3A%2F%2Ftrellis%2Fclase%2F1&storageName=trellis" -H "accept: */*"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 [
   {
     "id": 0,
@@ -2723,13 +2545,13 @@ Permite desasociar una URI Canónica en un idioma con Una URI Local, para un tip
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/uri-factory/local?canonicalLanguageURI=http%3A%2F%2Fhercules.org%2Fum%2Fes-ES%2Frec%2FImportResult%2FstartTime&localURI=http%3A%2F%2Ftrellis%2Fclase%2F1&storageName=trellis" -H "accept: */*"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 StatusCode: 200 OK
 ```
 
@@ -2749,13 +2571,13 @@ Permite recuperar una URI Canónica en un idioma, mediante parámetros.
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X GET "http://localhost:9326/uri-factory/local/canonical?canonicalUri=http%3A%2F%2Fhercules.org%2Fum%2Fres%2FCvnRootBean%2F&languageCode=es-ES&storageName=wikibase" -H "accept: */*"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 [
   {
     "id": 16,
@@ -2786,13 +2608,13 @@ Permite asociar una URI Local con una URI Canónica por idioma de una entidad , 
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X POST "http://localhost:9326/uri-factory/local/entity?domain=hercules.org&entity=Concepto1&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fconceptos%2F11&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 {
   "id": 34,
   "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/Concepto1",
@@ -2821,13 +2643,13 @@ Permite desasociar una URI Local con una URI Canónica por idioma de una entidad
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/uri-factory/local/entity?domain=hercules.org&entity=Concepto1&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fconceptos%2F11&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 StatusCode: 200 OK
 ```
 
@@ -2851,13 +2673,13 @@ Permite asociar una URI Local con una URI Canónica por idioma de una propiedad,
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X POST "http://localhost:9326/uri-factory/local/property?domain=hercules.org&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fproperty%2F11&property=cvnItemBean&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 {
   "id": 35,
   "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/cvnItemBean",
@@ -2886,13 +2708,13 @@ Permite desasociar una URI Local con una URI Canónica por idioma de una propied
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/uri-factory/local/property?domain=hercules.org&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fproperty%2F11&property=cvnItemBean&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 StatusCode: 200 OK
 ```
 
@@ -2917,13 +2739,13 @@ Permite asociar una URI Local con una URI Canónica por idioma de una propiedad,
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X POST "http://localhost:9326/uri-factory/local/property?domain=hercules.org&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fproperty%2F11&property=cvnItemBean&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 {
   "id": 35,
   "canonicalURILanguageStr": "http://hercules.org/um/es-ES/rec/CvnRootBean/cvnItemBean",
@@ -2953,13 +2775,12 @@ Permite desasociar una URI Local con una URI Canónica por idioma de una propied
 
 **PETICIÓN:**
 
-```bash
+```
 curl -X DELETE "http://localhost:9326/uri-factory/local/property?domain=hercules.org&languageCode=es-ES&localURI=http%3A%2F%2Ftrellis%2Fproperty%2F11&property=cvnItemBean&storageName=trellis&subDomain=um&typeCode=res" -H "accept: */*"
 ```
 
 **RESPUESTA**
 
-```bash
+```
 StatusCode: 200 OK
 ```
-
