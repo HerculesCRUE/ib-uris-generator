@@ -311,39 +311,13 @@
 							<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
 						</configuration>
 					</execution>
-					<!-- Estas ejecuciones requieren que los tests unitarios se omitan. -->
-					<!--
-                        Prepara el agente de tiempo de ejecución de JaCoCo, el cual
-                        se pasa como agumento a la VM cuando Maven ejecuta el plugin Failsafe plugin.
-                    -->
+					
 					<execution>
-						<id>pre-integration-test</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<configuration>
-							<!-- Establece la ruta del fichero que contiene los datos de ejecución. -->
-							<destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-							<!--
-                                Establece el nombre de la propiedad que contiene la configuración
-                                para el agente en tiempo de ejecución de JaCoCo.
-                            -->
-							<propertyName>failsafeArgLine</propertyName>
-						</configuration>
-					</execution>
-					<execution>
-						<id>post-integration-test</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
-							<!-- Establece la ruta del fichero que contiene los datos de ejecución. -->
-							<dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
-							<!-- Establece el directorio de destino donde se almacenarán los informes de cobertura. -->
-							<outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-						</configuration>
+						<id>report-aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
 					</execution>
 				</executions>
 			</plugin>
@@ -351,23 +325,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<!--
+
 				<configuration>
-					 Sets the VM argument line used when unit tests are run.
-					<argLine>${argLine} -Xmx4096m -XX:MaxPermSize=512M ${itCoverageAgent}</argLine>
-					Skips unit tests if the value of skip.unit.tests property is true
+					<!-- Sets the VM argument line used when unit tests are run. -->
+					<argLine>${surefireArgLine}</argLine>
+					<!-- Skips unit tests if the value of skip.unit.tests property is true -->
 					<skipTests>${skip.unit.tests}</skipTests>
-					Excludes integration tests when unit tests are run.
+					<!-- Excludes integration tests when unit tests are run. -->
 					<excludes>
 						<exclude>**/IT*.java</exclude>
 					</excludes>
-				</configuration>
-				-->
-				<configuration>
-					<forkCount>5</forkCount>
-					<reuseForks>true</reuseForks>
-					<argLine>-Xmx1024m -XX:MaxPermSize=256m -Dnet.sf.ehcache.disabled=true</argLine>
-					<testFailureIgnore>true</testFailureIgnore>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -388,10 +355,6 @@
 							<!-- Skips integration tests if the value of skip.integration.tests 
 								property is true -->
 							<skipTests>${skip.integration.tests}</skipTests>
-							<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-							<includes>
-								<include>**/*IT.java</include>
-							</includes>
 						</configuration>
 					</execution>
 				</executions>
