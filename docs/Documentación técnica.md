@@ -1,4 +1,4 @@
-![cabecera](C:\Users\druiz\repositorios\UM\uris-generator\images\logos_feder.png)
+![cabecera](./images/logos_feder.png)
 
 # Documentación técnica para la Factoría de URIs 
 
