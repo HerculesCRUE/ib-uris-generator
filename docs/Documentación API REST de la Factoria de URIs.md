@@ -2,7 +2,7 @@
 
 La documentación de esta sección hará referencia a cada uno de los EndPoints desplegados por la librería de URIs, apoyándose en la documentación proporcionada por Swagger, por lo tanto los enlaces que se facilitan para los EndPoint descritos en Swagger, solo estarán disponibles se ha realizado el despliegue, y dicho despliegue se ha realizado en la misma máquina donde se encuentra la presente documentación. En otro caso es necesario cambiar el host y el puerto por aquellos donde la librería de URIs ha sido desplegada.
 
-La librería de URIs despliega dos grandes módulos de EndPoints uno para todas aquellas operaciones [CRUD](#CRUD API REST) "Atómicas", para cada una de las entidades representadas en el modelo de datos y otra, para las operaciones implementadas por la factoría de URIs. En esta sección se documentaran ambas:
+La librería de URIs despliega dos grandes módulos de EndPoints uno para todas aquellas operaciones CRUD "Atómicas", para cada una de las entidades representadas en el modelo de datos y otra, para las operaciones implementadas por la factoría de URIs. En esta sección se documentaran ambas:
 
 ### CRUD API REST
 
