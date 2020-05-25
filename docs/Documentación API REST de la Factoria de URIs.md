@@ -19,7 +19,7 @@ Esquema canonico por idioma -> http://$domain$/$sub-domain$/$type$/$concept$/$re
 
 Es necesaria para el multilingüismo ya que la combinación de un tipo con un idioma, permitirá acceder a la traducción de dicho tipo.
 
-![language](..\images\type_entity.png)
+![language](./images/type_entity.png)
 
 ##### Implementación
 
@@ -184,7 +184,7 @@ La entidad **LANGUAGE** representa un determinado idioma y la traducción de los
 
 Es necesaria para el multilingüismo ya que la combinación de una URI Canónica con un lenguaje, dará como resultado una URI Canonical en un determinado idioma.
 
-![LANGUAJE](..\images\language_entity.png)
+![LANGUAJE](./images/language_entity.png)
 
 Otro atributo de importancia en la entidad Language es IS_DEFAULT, que establece si es el idioma por defecto, que será el retornado en caso de hacerse una solicitud a una URI Canoníca, indicando un recurso en un idioma no disponible para dicho recurso.
 
@@ -198,7 +198,7 @@ Test de integración disponibles en LanguageControllerTest
 
 ##### EndPoints
 
-![local_uri](../images/LanguageController.png)
+![local_uri](./images/LanguageController.png)
 
 ###### GET /language
 
@@ -397,7 +397,7 @@ curl -X POST "http://localhost:9326/language/json" -H "accept: */*" -H "Content-
 
 La entidad **LANGUAGE_TYPE** representa la unión de un determinado tipo, con un determinado idioma, y por lo tanto otorga la capacidad de traducir el atributo type de las URIs Canónicas por Idioma
 
-![LANGUAJE](.\images\language_type_entity.png).
+![LANGUAJE](./images/language_type_entity.png).
 
 ##### Implementación
 
@@ -615,7 +615,7 @@ curl -X POST "http://localhost:9326/language-type/json" -H "accept: */*" -H "Con
 
 La entidad **STORAGE_TYPE** almacena información relativa al un determinado tipo de almacenamiento, por ejemplo en el estado actual del proyecto, Trellis y Wikibase. Mantiene asimismo la capacidad de guardar metadatos relativos a dichos sistemas tales como la URL del EndPoint SPARQL o de su API
 
-![LANGUAJE](C:\Users\druiz\repositorios\UM\uris-generator\docs\images\storage_type_entity.png)
+![LANGUAJE](./images/storage_type_entity.png)
 
 ##### Implementación
 
@@ -801,7 +801,7 @@ curl -X POST "http://localhost:9326/storage-type/json" -H "accept: */*" -H "Cont
 
 La entidad **CANONICAL_URI** representa un URI canónica para un determinado recurso, ya sea una clase, una propiedad o una instancia.
 
-![LANGUAJE](..\images\canonical_uri_entity.png)
+![LANGUAJE](./images/canonical_uri_entity.png)
 
 ##### Implementación
 
@@ -1332,7 +1332,7 @@ Status Code: 200 OK
 
 La entidad **CANONICAL_URI** representa un URI canónica para un determinado recurso, ya sea una clase, una propiedad o una instancia.
 
-![LANGUAJE](..\images\canonical_uri_language_entity.png)
+![LANGUAJE](./images/canonical_uri_language_entity.png)
 
 ##### Implementación
 
@@ -2056,7 +2056,7 @@ Status Code: 200 OK
 
 La entidad **LOCAL_URI** representa un URI local asociada con una URI Canónica por idioma y un tipo de almacenamiento.
 
-![LANGUAJE](..\images\local_uri_entity.png)
+![LANGUAJE](./images/local_uri_entity.png)
 
 ##### Implementación
 
