@@ -1,3 +1,13 @@
+![](C:/Users/druiz/repositorios/UM/uris-generator/docs/images/logos_feder.png)
+
+| Fecha         | 25/05/2020                                                   |
+| ------------- | ------------------------------------------------------------ |
+| Proyecto      | [ASIO](https://www.um.es/web/hercules/proyectos/asio) (Arquitectura Semántica e Infraestructura Ontológica) en el marco de la iniciativa [Hércules](https://www.um.es/web/hercules/) para la Semántica de Datos de Investigación de Universidades que forma parte de [CRUE-TIC](http://www.crue.org/SitePages/ProyectoHercules.aspx) |
+| Módulo        | Arquitectura Semántica                                       |
+| Tipo          | Documentación                                                |
+| Objetivo      | El presente documento describe los EndPoint expuestos por la librería Factoría de URIs |
+| Documentación | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Manual de usuario](./Manual de usuario.md) (documentación de alto nivel)<br />[Documentación técnica](./Documentación técnica.md) (documentación de bajo nivel)<br/>[Documentación API REST de la Factoria de URIs](./Documentación API REST de la Factoria de URIs.md) (documentación de bajo nivel)<br/>[README](../README.md)<br/>[docker](./docker.md)<br/>[build](./build.md) |
+
 # API REST de Factoría de URIS
 
 La documentación de esta sección hará referencia a cada uno de los EndPoints desplegados por la librería de URIs, apoyándose en la documentación proporcionada por Swagger, por lo tanto los enlaces que se facilitan para los EndPoint descritos en Swagger, solo estarán disponibles se ha realizado el despliegue, y dicho despliegue se ha realizado en la misma máquina donde se encuentra la presente documentación. En otro caso es necesario cambiar el host y el puerto por aquellos donde la librería de URIs ha sido desplegada.

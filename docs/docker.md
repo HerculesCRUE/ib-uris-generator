@@ -19,7 +19,7 @@ Sustituyendo `{artifact-name}` y `{tag}` por el nombre del artefacto y la versi�
 En caso que se desee distribuir la imagen a través de un Registry de Docker, se deberá hacer un `pull` mediante la ejecución el comando:
 
 ```bash
-docker push {artifact-name}:{tag}
+docker pull {artifact-name}:{tag}
 ```
 
 Es posible que algunos Registros requieran de autenticación previa, debiendo para ello ejecutar previamente un `docker login`.
