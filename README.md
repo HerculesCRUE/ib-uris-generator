@@ -11,24 +11,23 @@
 | Objetivo       | El cumplimiento del requisito de poder intercambiar el Triple Store, impone al proyecto la complejidad de dar soporte a las distintas **URIs privadas**, que sean necesarias para el acceso al recurso a partir de las distintas APIs que para cada uno de los Triple Store, puedan estar desplegadas (actualmente [TDB2](https://jena.apache.org/documentation/tdb2/) [Triple Store] + [Fuseki2](https://jena.apache.org/documentation/fuseki2/) [API LDP] y [Wikibase](https://www.mediawiki.org/wiki/Wikibase/es) [almacenamiento en [BlazeGraph](https://blazegraph.com/) y API en [Wikibase/API](https://wikibase-api.readthedocs.io/en/latest/)]). <br/><br/>Esto hace de la Factoría de URIs un componente vital para el proyecto, ya que permite desacoplar las **URIs privadas** muy ligadas a la tecnologías de almacenamiento (Triple Store) empleadas, de las **URIs públicas** que se definen en los documentos [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)  , y  [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md), que proponen un esquema de URIs, adaptado a las necesidades del proyecto Hércules de forma que estas ofrezcan para cada recurso una URI única, inequívoca, estable, extensible, persistente en el tiempo y ofreciendo garantías de su procedencia, requisitos claves para facilitar su posterior reutilización, basada en los identificadores de recursos uniformes (URIs), para ello cumpliendo los principios de sencillez (URIs cortos y nemotécnicos), escalabilidad (ofrecer flexibilidad en su diseño para dar cabida a aquellos conjuntos de datos, que en el futuro se pudiesen incorporar), manejables (sencillos de administrar), persistentes (dado soporte para mantener la misma URI publica, ante operaciones tales como mover el recurso, eliminarlo o modificarlo, independientemente de que la URI privada pueda cambiar o desaparecer)<br/><br/>Por otro lado es necesario dar un soporte estable al [Modelo de multilingüismo](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/04-Modelo_multilingüismo/ASIO_Izertis_ModeloMultilinguismo.md), para lo cual la Factoría de URIs, ofrece el modelo propuesto por el esquema de URIs, de ofrecer para las  **URIs públicas** lo que se denomina **URI Canónica** , que identifica la URI única del recurso, y lo que denominaremos **URI Canónica por idioma**, que representa la asociación de la URI Canónica, con la representación de la misma URI canónica, en un idioma especifico, siguiendo el esquema propuesto en el documento [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md), y por otro lado, siguiendo por otro lado la recomendación de mantener la información semántica presente [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md#Buenas practicas para formato de URIs), se ofrece la posibilidad, de ofrecer la traducción a cada uno de los idiomas, de los componentes que forman la URI, por ejemplo el componente Tipo, para el caso de un recurso, puede ser resource en idioma ingles, o recurso en idioma español. <br/> <br/>Por otro lado la Factoría de URIs implementa la normalización de los componentes, expresada en el documento de [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md) tal y como se expresa en el apartado de [Normalización](#Normalización).<br/> <br/>Por último cabe indicarse que tal como se expresa en el pliego de condiciones, es posible cambiar el esquema de URIs tal como se menciona en el apartado Cambio de esquema |
 | Estado         | Implementada al **100%**, según la funcionalidad prevista para cubrir lo expresado en los documentos de [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)  , y  [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md).  Por otro lado la exposición de los EndPoint relativos al [CRUD](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md) sobre modelo de datos completo, hace posible realizar cualquier operación, aunque esta en principio no estuviese prevista. |
 | Próximos pasos | La integración con componentes desarrollados en una fase de madurez no final, o otros por desarrollar (tales como el servicio de publicación web), quizás requieran la modificación o creación de algún EndPoint adicional, aunque según lo descrito en el apartado anterior, dado que existe un CRUD completo sobre todas las entidades, la implementación, debería de ser trivial. |
-| Documentación  | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Manual de usuario](./docs/Manual de usuario.md) (documentación de alto nivel)<br />[Documentación técnica](./docs/Documentación tecnica.md) (documentación de bajo nivel)<br/>[Documentación API REST de la Factoria de URIs](./docs/Documentación API REST de la Factoria de URIs.md) (documentación de bajo nivel)<br/>[build](./docs/build.md)<br/>[docker](./docs/build.md) |
+| Documentación  | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Manual de usuario](./docs/Manual de usuario.md) (documentación de alto nivel)<br />[Documentación técnica](./docs/Documentación tecnica.md) (documentación de bajo nivel)<br/>[Documentación API REST de la Factoria de URIs](./docs/Documentación API REST de la Factoria de URIs.md) (documentación de bajo nivel)<br/>[build](./docs/build.md)<br/>[docker](./docs/docker.md) |
 
 
 
 # ASIO - URIs generator service
 
-EndPoint API Rest para operaciones CRUD sobre entidades y EndPoint de factoría de URIs, con base de datos relacional (MariaDB). La documentación exhaustiva de  el API Rest, puede encontrarse bien en la sección [Swagger](#Swagger) que describe como obtener acceso para interactuar con el API, o bien en la [Documentación técnica](./docs/Documentación tecnica.md) donde se describen también los End Point disponibles. 
+La Factoría de URIs despliega una API REST con los EndPoints necesarios para implementar todas las operaciones CRUD sobre entidades y los EndPoints de alto nivel propios de la factoría de URIs. Para ello usa una base de datos relacional (MariaDB). La documentación exhaustiva de  el API Rest, puede encontrarse bien en la sección [Swagger](#Swagger) que describe como obtener acceso para interactuar con el API, o bien en la [Documentación API REST de la Factoria de URIs](./docs/Documentación API REST de la Factoria de URIs.md) donde se describen también los End Point disponibles. 
 
-## OnBoarding
+## Documentación asociada al proyecto
 
-Para iniciar el entorno de desarrollo se necesita cumplir los siguientes requisitos:
+Para simplificar en la medida de lo posible cualquier tarea que cualquier perfil de usuario pueda requerir, esta a su disposición la siguiente documentación:
 
-* OpenJDK 11
-* Eclipse JEE 2019-09 con plugins:
-  * Spring Tools 4
-  * m2e-apt
-  * Lombok
-* Docker
+- [build](./docs/build.md): Describe los pasos a seguir para el despliegue y/o compilación de la aplicación según el perfil del usuario, ya sea virtualizada o sobre el sistema operativo nativo.
+- [docker](./docs/docker.md): Describe los pasos a seguir para generar una imagen docker.
+- [Manual de usuario](./docs/Manual de usuario.md): Describe la funcionalidad de la librería desde el punto de vista de un usuario final.
+- [Documentación técnica](./docs/Documentación tecnica.md): Describe la funcionalidad e implementación de la librería desde el punto de vista de un desarrollador.
+- [Documentación API REST de la Factoria de URIs](./docs/Documentación API REST de la Factoria de URIs.md): Describe todos los EndPoint desplegados por la librería Factoría de URIs
 
 ## Módulos disponibles
 
@@ -69,7 +68,7 @@ docker-compose down
 
 La configuración se encuentra en el fichero application.yml
 
-Esta puede ser sustituida por las siguientes variables de entorno disponibles en la maquina donde se realiza el despliegue
+Esta puede ser sustituida por las siguientes variables de entorno disponibles en la maquina donde se realiza el despliegue, lo que hará que sea posible realizar una configuración suficiente para cualquier entorno.
 
 | Nombre | Valor |
 |--------|:-----:|
@@ -97,7 +96,7 @@ No es necesario especificar la clase de inicio de la aplicación, ya que el fich
 
 Se ha añadido la posibilidad de utilizar Swagger. Para acceder a Swagger, se utilizará la siguiente URL:
 
-* http://localhost:8080/swagger-ui.html
+* http://localhost:9326/swagger-ui.html
 
 Para activar swagger se utilizará la variable `app.swagger.enabled`
 

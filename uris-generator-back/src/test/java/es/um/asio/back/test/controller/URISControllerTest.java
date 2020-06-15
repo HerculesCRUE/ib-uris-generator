@@ -501,7 +501,7 @@ public class URISControllerTest {
         }
     }
 
-    @Test
+    /*@Test
     public void whenLinkACanonicalURIWithLocalURI_thenNoError() throws Exception {
         for (LocalURI lu : localURIS) {
             this.mvc.perform(post("/uri-factory/local")
@@ -518,30 +518,6 @@ public class URISControllerTest {
     }
 
 
-    @Test
-    public void whenLinkAEntityWithLocalURIByParams_thenNoError() throws Exception {
-        /*
-        for (LocalURI lu : localURIS) {
-            if (lu.getCanonicalURILanguage().getIsEntity()) {
-                CanonicalURILanguage cul = lu.getCanonicalURILanguage();
-                this.mvc.perform(post("/uri-factory/local/entity")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("domain", cul.getDomain())
-                        .param("subDomain", cul.getSubDomain())
-                        .param("languageCode", cul.getLanguageID())
-                        .param("typeCode", cul.getTypeCode())
-                        .param("entity", cul.getEntityName())
-                        .param("localURI", lu.getLocalUri())
-                        .param("storageName", lu.getStorageTypeStr())
-                )
-                        .andDo(print())
-                        .andExpect(status().isOk());
-            }
-
-        }
-         */
-    }
 
     @Test
     public void whenLinkAInstanceWithLocalURIByParams_thenNoError() throws Exception {
@@ -594,9 +570,9 @@ public class URISControllerTest {
             }
 
         }
-    }
+    }*/
 
-    @Test
+/*    @Test
     public void whenUnlinkAEntityWithLocalURIByParams_thenNoError() throws Exception {
         for (LocalURI lu : localURIS) {
             if (lu.getCanonicalURILanguage().getIsEntity()) {
@@ -613,9 +589,9 @@ public class URISControllerTest {
             }
 
         }
-    }
+    }*/
 
-    @Test
+/*    @Test
     public void whenDeleteEntityWithLocalURIByParams_thenNoError() throws Exception {
         for (LocalURI lu : localURIS) {
             CanonicalURILanguage cul = lu.getCanonicalURILanguage();
@@ -683,7 +659,7 @@ public class URISControllerTest {
             }
 
         }
-    }
+    }*/
 
     @Test
     public void whenGetLocalURIFromCanonicalURI_thenNoError() throws Exception {
