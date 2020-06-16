@@ -1,4 +1,4 @@
-![](C:/Users/druiz/repositorios/UM/uris-generator/docs/images/logos_feder.png)
+![](./images/logos_feder.png)
 
 | Fecha         | 25/05/2020                                                   |
 | ------------- | ------------------------------------------------------------ |
@@ -6,7 +6,7 @@
 | Módulo        | Arquitectura Semántica                                       |
 | Tipo          | Documentación                                                |
 | Objetivo      | El presente documento describe el proceso de compilación y despliegue de la librería Factoría de URIs |
-| Documentación | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Manual de usuario](./Manual de usuario.md) (documentación de alto nivel)<br />[Documentación técnica](./Documentación técnica.md) (documentación de bajo nivel)<br/>[Documentación API REST de la Factoria de URIs](./Documentación API REST de la Factoria de URIs.md) (documentación de bajo nivel)<br/>[README](../README.md)<br/>[docker](./docker.md) |
+| Documentación | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Manual de usuario](./manual_de_usuario.md) (documentación de alto nivel)<br />[Documentación técnica](./documentacion-tecnica.md) (documentación de bajo nivel)<br/>[Documentación API REST de la Factoria de URIs](./documentacion_api_rest_de_la_factoria_de_uris.md) (documentación de bajo nivel)<br/>[README](../README.md)<br/>[docker](./docker.md) |
 
 # Compilación
 

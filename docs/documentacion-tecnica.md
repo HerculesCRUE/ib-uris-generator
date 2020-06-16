@@ -11,7 +11,7 @@
 | Objetivo       | El presente documento pretende ser la documentación técnica relativa a el entregable Factoría de URIs. Para ello, se documentaran exhaustivamente tanto los aspectos relativos a su despliegue, como todos los End Point que esta ofrece a otros procesos o usuarios, para interactuar con la misma. |
 | Estado         | Implementada al **100%**, según la funcionalidad prevista para cubrir lo expresado en los documentos de [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)  , y  [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md).  Por otro lado la exposición de los EndPoint relativos al CRUD sobre modelo de datos completo, hace posible realizar cualquier operación, aunque esta en principio no estuviese prevista. |
 | Próximos pasos | La integración con componentes desarrollados en una fase de madurez no final, o otros por desarrollar (tales como el servicio de publicación web), quizás requieran la modificación o creación de algún EndPoint adicional, aunque según lo descrito en el apartado anterior, dado que existe un CRUD completo sobre todas las entidades, la implementación, debería de ser trivial. |
-| Documentación  | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Manual de usuario](./Manual de usuario.md) (documentación de alto nivel)<br />[Documentación API REST de la Factoría de URIs](Documentación API REST de la Factoria de URIs.md)<br/>[build](./build.md)<br/>[docker](./docker.md) |
+| Documentación  | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Manual de usuario](./manual_de_usuario.md) (documentación de alto nivel)<br />[Documentación API REST de la Factoría de URIs](documentacion_api_rest_de_la_factoria_de_uris.md)<br/>[build](./build.md)<br/>[docker](./docker.md) |
 
 
 
@@ -154,7 +154,7 @@ Entre dichos controladores podemos encontrar los siguientes:
 
 En dicho modulo también podemos encontrar el controlador **URISController**, que implementa el controlador de la factoría de URIs, que realiza operaciones de alto nivel, mas complejas, apoyándose en los controladores anteriormente descritos.
 
-Los end Point desplegados por estos controladores están ampliamente descritos tanto en Swagger, como en la documentación [Documentación API REST de la Factoria de URIs](./Documentación API REST de la Factoria de URIs.md), creada para tal efecto.
+Los end Point desplegados por estos controladores están ampliamente descritos tanto en Swagger, como en la documentación [Documentación API REST de la Factoria de URIs](./documentacion_api_rest_de_la_factoria_de_uris.md), creada para tal efecto.
 
 Por otro lado el módulo **uris-generator-service** contiene la logica de la aplicación, siguiendo la siguiente estructura:
 
@@ -175,7 +175,7 @@ La metodología de desarrollo es [Git Flow](https://www.atlassian.com/es/git/tut
 
 ### Entorno de desarrollo Docker
 
-La generación de la imagen Docker y su despliegue están descritas en el documento [Generación Docker](docs/docker.md)
+La generación de la imagen Docker y su despliegue están descritas en el documento [Generación Docker](./docker.md)
 
 También es necesario desplegar el entorno de servicios necesarios, por ejemplo MariaDB.
 
@@ -240,6 +240,6 @@ Obteniendo el siguiente resultado
 
 ![swagger](./images/swagger.png)
 
-Por otro lado, puede encontrarse una documentación exahustiva de los Endpoint desplegados por el API, en el documento
+Por otro lado, puede encontrarse una documentación exhaustiva de los Endpoint desplegados por el API, en el documento
 
-[Documentación API REST de la Factoría de URIs](Documentación API REST de la Factoria de URIs.md)
+[Documentación API REST de la Factoría de URIs](documentacion_api_rest_de_la_factoria_de_uris.md)
