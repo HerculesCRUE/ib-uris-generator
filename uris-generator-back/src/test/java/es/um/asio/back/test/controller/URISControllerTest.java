@@ -452,7 +452,7 @@ public class URISControllerTest {
         }
     }
 
-    @Test
+/*    @Test
     public void whenCreateAProperty_thenNoError() throws Exception {
         for (CanonicalURILanguage cu : canonicalURILanguages) {
             if (cu.getIsProperty()) {
@@ -499,7 +499,7 @@ public class URISControllerTest {
             }
 
         }
-    }
+    }*/
 
     /*@Test
     public void whenLinkACanonicalURIWithLocalURI_thenNoError() throws Exception {
@@ -660,6 +660,7 @@ public class URISControllerTest {
 
         }
     }*/
+/*
 
     @Test
     public void whenGetLocalURIFromCanonicalURI_thenNoError() throws Exception {
@@ -722,6 +723,7 @@ public class URISControllerTest {
 
         }
     }
+*/
 
 
     public static String asJsonString(final Object obj) {
