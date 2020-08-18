@@ -39,21 +39,11 @@ Para ello daremos dos opciones:
 
 Para ello tenemos que seguir los siguientes pasos:
 
-1. Descarga de binarios de la ultima release en el [repositorio de la librería](https://github.com/HerculesCRUE/ib-uris-generator/releases)
+1. Descarga de binarios de la ultima release en el [repositorio de la librería](https://github.com/HerculesCRUE/ib-uris-generator/releases) o mediante el siguiente [enlace](https://bintray.com/herculescrue/backend-sgi/download_file?file_path=es%2Fum%2Fasio%2Furis-generator-1.0.0.jar) 
 
-   - Acceder a la pestaña releases en el repositorio del proyecto
+   
 
-     
-
-     ![releases](./images/rel.png)
-
-     
-
-   - Descargar el contenido (fichero con extensión jar)
-
-     
-
-     ![jar](./images/jar.png)
+   ![jar](./images/jar.png)
 
 
 
@@ -78,10 +68,10 @@ java -jar uris-generator-back-1.0.0.jar
 
 Para ello tenemos que seguir los siguientes pasos:
 
-1. Descargar imagen Docker desde su repositorio en Docker Hub ([imagen en docker hub](https://hub.docker.com/)) con el siguiente comando
+1. Descargar imagen Docker desde su repositorio en Docker Hub ([imagen en docker hub](https://hub.docker.com/r/herculescrue/uris-generator)) con el siguiente comando
 
    ```bash
-   docker pull {nombre_imagen_en_docker_hub:versión_imagen_en_docker_hub} 
+   docker pull herculescrue/uris-generator:latest
    ```
 
 2. Configurar variables de entorno (si no queremos aplicar los valores por defecto) tal como se indica en [README.md](https://github.com/HerculesCRUE/ib-uris-generator/blob/master/README.md#variables-de-entorno)
@@ -89,7 +79,7 @@ Para ello tenemos que seguir los siguientes pasos:
 3. Ejecutar imagen descargada con el siguiente comando
 
    ```bash
-   docker run -d -p {puerto_externo:puerto_interno} {nombre_imagen_en_docker_hub} -t {nombre_imagen:versión_imagen}
+   docker run -e APP_PERSISTENCE_DATASOURCE_DRIVER-CLASS-NAME=org.mariadb.jdbc.Driver -e APP_PERSISTENCE_DATASOURCE_USERNAME={usuario_en_ddbb} -e APP_PERSISTENCE_DATASOURCE_PASSWORD=sqlpass -e APP_PERSISTENCE_DATASOURCE_URL=jdbc:mariadb://127.0.0.1:3307/app?ssl=false -p 9326:9326 herculescrue/uris-generator:latest
    ```
 
    - -d: Indica que se ejecute en segundo plano
@@ -132,7 +122,7 @@ Para ello tenemos que seguir los siguientes pasos:
 
 ###### Ejecución
 
-1. Buscar y acceder por consola a el modulo **uris-generator-back**
+1. Buscar y acceder modulo **uris-generator-back** y copiar el ejecutable **uris-generator-back-1.0.0.jar** a el directorio deseado para su ejecución.
 
 2. Configurar variables de entorno (si no queremos aplicar los valores por defecto) tal como se indica en [README.md](https://github.com/HerculesCRUE/ib-uris-generator/blob/master/README.md#variables-de-entorno)
 
