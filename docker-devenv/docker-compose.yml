@@ -14,7 +14,7 @@ services:
       # MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
       MYSQL_ROOT_PASSWORD: root
       # CONFIG - Change the default values below (should match values passed to wikibase)
-      MYSQL_DATABASE: 'app'
+      MYSQL_DATABASE: 'uris'
       MYSQL_USER: 'app'
       MYSQL_PASSWORD: 'sqlpass'
     networks:
