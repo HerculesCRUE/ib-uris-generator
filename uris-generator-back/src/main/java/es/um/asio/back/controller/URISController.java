@@ -109,6 +109,12 @@ public class URISController {
 	@Autowired
 	private SchemaService schemaService;
 
+	@ApiOperation(value = "Check if server is Alive", notes = "Check if server is Alive")
+	@RequestMapping(method={RequestMethod.GET},value={Mappings.HEALTH})
+	public String getHealth() {
+		return "Alive";
+	}
+
 
 	/**
 	 * Creates the resourceID URI
@@ -137,8 +143,6 @@ public class URISController {
 	 * @param input
 	 * @return
 	 */
-
-
 	@ApiOperation(value = "Create or Get Canonical URI for Resource or Instance", notes = "Allow create canonical URI and canonical URI in language if not exist, if exist then return URIs")
 	@ApiImplicitParams({
 			@ApiImplicitParam(
@@ -933,6 +937,9 @@ public class URISController {
 
 		/** The Constant LOCAL_RESOURCE. */
 		public static final String LOCAL_PROPERTY_URI = "local/property";
+
+		/** The Constant LOCAL_RESOURCE. */
+		public static final String HEALTH = "health";
 
 		/**
 		 * Controller request mapping.
