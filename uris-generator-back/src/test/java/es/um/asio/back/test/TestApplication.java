@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootApplication
 @EnableAutoConfiguration
 @Import(MapperConfig.class)
-@WebMvcTest(URISController.class)
+//@WebMvcTest(URISController.class)
 @ActiveProfiles("dev")
 public class TestApplication {
     /**@SpringBootApplication

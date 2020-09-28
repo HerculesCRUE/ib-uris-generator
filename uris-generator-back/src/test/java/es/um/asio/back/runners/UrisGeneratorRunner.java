@@ -1,11 +1,4 @@
 package es.um.asio.back.runners;
-
-<<<<<<< HEAD
-import org.junit.runner.RunWith;
-
-@RunWith(Cucumber.class)
-public class UrisGeneratorRunner {
-=======
 import es.um.asio.back.Application;
 import es.um.asio.service.mapper.MapperConfig;
 import io.cucumber.junit.CucumberOptions;
@@ -37,5 +30,4 @@ public class UrisGeneratorRunner {
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
->>>>>>> develop
 }
