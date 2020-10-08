@@ -167,10 +167,10 @@ public class URISController {
 			final String type = Constants.TYPE_REST;
 
 			final HashMap map = (HashMap) input;
-			final String entity = Utils.getClassNameFromPath((String) map.get(Constants.CLASS));
+			final String entity = Utils.getClassNameFromPath(String.valueOf(map.get(Constants.CLASS) != null ? map.get(Constants.CLASS): map.get(Constants.CLASE)));
 			final String pEntity = Utils.getClassNameFromPath((String) (map.get(Constants.CANONICAL_CLASS_NAME) != null ? (map.get(Constants.CANONICAL_CLASS_NAME))	: (map.get(Constants.CANONICAL_CLASS))));
 			final String ref = Utils.generateUUIDFromOject(input);
-			String entityId = Utils.getClassNameFromPath((String) (map.get(Constants.ENTITY_ID) != null ? (map.get(Constants.ENTITY_ID)) : (map.get(Constants.ID))));
+			String entityId = Utils.getClassNameFromPath(String.valueOf((map.get(Constants.ENTITY_ID) != null ? (map.get(Constants.ENTITY_ID)) : (map.get(Constants.ID)))));
 			
 
 			CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(domain, subDomain,
