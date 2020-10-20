@@ -167,7 +167,7 @@ public class URISController {
 			final String type = Constants.TYPE_REST;
 
 			final HashMap map = (HashMap) input;
-			final String entity = Utils.getClassNameFromPath(String.valueOf(map.get(Constants.CLASS) != null ? map.get(Constants.CLASS): map.get(Constants.CLASE)));
+			final String entity = Utils.getClassNameFromPath(String.valueOf(map.get(Constants.CLASS) != null ? map.get(Constants.CLASS): map.get(Constants.CLASS)));
 			final String pEntity = Utils.getClassNameFromPath((String) (map.get(Constants.CANONICAL_CLASS_NAME) != null ? (map.get(Constants.CANONICAL_CLASS_NAME))	: (map.get(Constants.CANONICAL_CLASS))));
 			final String ref = Utils.generateUUIDFromOject(input);
 			String entityId = map.containsKey(Constants.ENTITY_ID)?String.valueOf(map.get(Constants.ENTITY_ID)) :
@@ -663,7 +663,7 @@ public class URISController {
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
 			@ApiParam(name = "typeCode", value = "Type Code", required = false, defaultValue = Constants.TYPE_REST)
 			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
-			@ApiParam(name = "property", value = "instance id", required = true)
+			@ApiParam(name = "property", value = "property id", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String property,
 			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
