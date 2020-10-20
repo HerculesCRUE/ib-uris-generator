@@ -167,7 +167,7 @@ public class URISController {
 			final String type = Constants.TYPE_REST;
 
 			final HashMap map = (HashMap) input;
-			final String entity = Utils.getClassNameFromPath((String) map.get(Constants.CLASS));
+			final String entity = Utils.getClassNameFromPath(String.valueOf(map.get(Constants.CLASS) != null ? map.get(Constants.CLASS): map.get(Constants.CLASE)));
 			final String pEntity = Utils.getClassNameFromPath((String) (map.get(Constants.CANONICAL_CLASS_NAME) != null ? (map.get(Constants.CANONICAL_CLASS_NAME))	: (map.get(Constants.CANONICAL_CLASS))));
 			final String ref = Utils.generateUUIDFromOject(input);
 			String entityId = map.containsKey(Constants.ENTITY_ID)?String.valueOf(map.get(Constants.ENTITY_ID)) :
