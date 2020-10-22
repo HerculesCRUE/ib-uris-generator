@@ -372,6 +372,7 @@ public class URISController {
 		if (lrs.isEmpty()) {
 			lr = new LocalURI(localURI, cu, storageType);
 			lrsAux.add(lr);
+			localURIController.save(lr);
 			return lrsAux;
 		} else {
 			for (LocalURI lu : lrs) {
