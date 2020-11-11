@@ -16,7 +16,7 @@
 
 	<properties>
 		<artifact.packaging>war</artifact.packaging>
-		<uris-generator-service.version>1.0.0</uris-generator-service.version>
+		<uris-generator-service.version>1.1.0</uris-generator-service.version>
 		<asio-abstractions.version>1.0-SNAPSHOT</asio-abstractions.version>
 		<cucumber.version>6.4.0</cucumber.version>
 	</properties>

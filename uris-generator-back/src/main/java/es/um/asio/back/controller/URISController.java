@@ -175,11 +175,12 @@ public class URISController {
 			final String ref = Utils.generateUUIDFromOject(input);
 			String entityId = map.containsKey(Constants.ENTITY_ID)?String.valueOf(map.get(Constants.ENTITY_ID)) :
 					map.containsKey(Constants.ID)?String.valueOf(map.get(Constants.ID)):null;
+			String localId = new String(entityId);
 			if (Utils.isValidString(entityId) && !Utils.isValidUUID(entityId)) {
 				entityId = Utils.getUUIDFromString(entityId);
 			}
 			CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(domain, subDomain,
-					lang, type, entity, (Utils.isValidString(entityId) ? entityId : ref), null,
+					lang, type, entity, (Utils.isValidString(entityId) ? entityId : ref),localId, null,
 					(pEntity != null) ? pEntity : entity, null, true);
 
 			// response
@@ -255,7 +256,7 @@ public class URISController {
 
 
 		CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(domain, subDomain,
-				lang, type, null, null, property, null,
+				lang, type, null, null,null, property, null,
 				(cProperty != null) ? cProperty : property, true);
 
 		// response
@@ -315,7 +316,7 @@ public class URISController {
 						: (map.get(Constants.CANONICAL_CLASS))));
 
 		CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(domain, subDomain,
-				lang, type, entity, null, null, (pEntity != null) ? pEntity : entity, null, true);
+				lang, type, entity, null, null, (pEntity != null) ? pEntity : entity,null, null, true);
 
 		// response
 		final Map<String, String> response = new HashMap<>();
