@@ -133,7 +133,7 @@ public class CanonicalURILanguageController {
                 if (canonicalURIs.isEmpty()) {
                     if (createCanonicalIfNotExist) {
                         String canonicalSchema = schemaService.getCanonicalLanguageSchema();
-                        CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity,reference, parentProperty,canonicalSchema);
+                        CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity != null ? parentEntity : concept,reference, parentProperty,canonicalSchema);
                         cu.setLocalId(localId);
                         cu.setEntityName(cu.getConcept());
                         cu.updateState();
