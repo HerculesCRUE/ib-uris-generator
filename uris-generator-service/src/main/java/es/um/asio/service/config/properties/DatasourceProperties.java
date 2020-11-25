@@ -25,6 +25,15 @@ public class DatasourceProperties {
     private String password;
 
     /**
+     * Username for the database.
+     */
+    private String rootUsername;
+    /**
+     * Password for the database.
+     */
+    private String rootPassword;
+
+    /**
      * URL of the database
      */
     private String url;
