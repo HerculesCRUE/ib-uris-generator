@@ -101,6 +101,8 @@ public class CanonicalURILanguageController {
             @RequestParam(required = false) @Validated(Create.class) final String concept,
             @ApiParam(name = "reference", value = "Reference (Instance) Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String reference,
+            @ApiParam(name = "localId", value = "Local id (Instance) for Element", defaultValue = "")
+            @RequestParam(required = false) @Validated(Create.class) final String localId,
             @ApiParam(name = "property", value = "Property Element", defaultValue = "")
             @RequestParam(required = false) @Validated(Create.class) final String property,
             @ApiParam(name = "parentEntity", value = "Property Element", defaultValue = "")
@@ -120,6 +122,8 @@ public class CanonicalURILanguageController {
         }
         String schema = schemaService.getCanonicalLanguageSchema();
         CanonicalURILanguage entity = new CanonicalURILanguage(domain,subDomain,lt,concept,reference,property,schema);
+        if (localId!=null)
+            entity.setLocalId(localId);
         entity.setParentPropertyName(parentProperty);
         List<CanonicalURI> canonicalURIs = getCanonicalURIS(entity,parentEntity,parentProperty,reference);
         try {
@@ -129,7 +133,8 @@ public class CanonicalURILanguageController {
                 if (canonicalURIs.isEmpty()) {
                     if (createCanonicalIfNotExist) {
                         String canonicalSchema = schemaService.getCanonicalLanguageSchema();
-                        CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity,reference, parentProperty,canonicalSchema);
+                        CanonicalURI cu = new CanonicalURI(domain,subDomain,t,parentEntity != null ? parentEntity : concept,reference, parentProperty,canonicalSchema);
+                        cu.setLocalId(localId);
                         cu.setEntityName(cu.getConcept());
                         cu.updateState();
                         if (property!=null) {
