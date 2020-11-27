@@ -114,9 +114,18 @@ public class CanonicalURILanguage {
     private String concept;
 
     /**
+     * LOCAL_ID.
+     */
+    @ApiModelProperty(	example="12345", allowEmptyValue = true, position =5, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional:"+
+            "Instances are representations in real world that correspond to the instances of the class defined in concepts. In addition to the concept, an unambiguous reference to specific instances may be represented. Required only if is a ref type, and concept is defined", required = true)
+    @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
+    @Column(name = Columns.LOCAL_ID, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
+    private String localId;
+
+    /**
      * REFERENCE.
      */
-    @ApiModelProperty(	example="12345", allowEmptyValue = true,position =5, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional:"+
+    @ApiModelProperty(	example="12345", allowEmptyValue = true,position =6, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Optional:"+
             "Instances are representations in real world that correspond to the instances of the class defined in concepts. In addition to the concept, an unambiguous reference to specific instances may be represented. Required only if is a ref type, and concept is defined", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @Column(name = Columns.REFERENCE, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
@@ -125,7 +134,7 @@ public class CanonicalURILanguage {
     /**
      * FULL_URI.
      */
-    @ApiModelProperty(	example="12345", allowEmptyValue = true, position =6, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Full URI Result", required = true)
+    @ApiModelProperty(	example="12345", allowEmptyValue = true, position =7, accessMode = ApiModelProperty.AccessMode.READ_WRITE, value = "Full URI Result", required = true)
     @Size(min = 1, max = ValidationConstants.MAX_LENGTH_DEFAULT)
     @Column(name = Columns.FULL_URI, unique = true,nullable = true,columnDefinition = "VARCHAR(400)",length = 400)
     private String fullURI;
@@ -137,49 +146,49 @@ public class CanonicalURILanguage {
     /**
      * Is Entity.
      */
-    @ApiModelProperty(	value = "true if is entity", example="true", allowEmptyValue = false, allowableValues = "true, false",position =7, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
+    @ApiModelProperty(	value = "true if is entity", example="true", allowEmptyValue = false, allowableValues = "true, false",position =8, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
     @Column(name = URIMap.Columns.IS_ENTITY)
     private Boolean isEntity = false;
 
     /**
      * Is Property.
      */
-    @ApiModelProperty(	value = "true if is property", example="true", allowEmptyValue = false, allowableValues = "true, false",position =8, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
+    @ApiModelProperty(	value = "true if is property", example="true", allowEmptyValue = false, allowableValues = "true, false",position =9, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
     @Column(name = URIMap.Columns.IS_PROPERTY)
     private Boolean isProperty = false;
 
     /**
      * Is Instance.
      */
-    @ApiModelProperty(	value = "true if is instance", example="true", allowEmptyValue = false, allowableValues = "true, false",position =9, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
+    @ApiModelProperty(	value = "true if is instance", example="true", allowEmptyValue = false, allowableValues = "true, false",position =10, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
     @Column(name = URIMap.Columns.IS_INSTANCE)
     private Boolean isInstance = false;
 
     /**
      * Entity Name.
      */
-    @ApiModelProperty(	value = "name of entity", example="entity", allowEmptyValue = false,position =10, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
+    @ApiModelProperty(	value = "name of entity", example="entity", allowEmptyValue = false,position =11, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
     @Column(name = Columns.ENTITY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String entityName;
 
     /**
      * Property Name.
      */
-    @ApiModelProperty(	value = "name of property", example="property", allowEmptyValue = true,position =11, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = false)
+    @ApiModelProperty(	value = "name of property", example="property", allowEmptyValue = true,position =12, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = false)
     @Column(name = Columns.PROPERTY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String propertyName;
 
     /**
      * Entity Name.
      */
-    @ApiModelProperty(	value = "name of parent entity", example="entity", allowEmptyValue = false,position =10, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
+    @ApiModelProperty(	value = "name of parent entity", example="entity", allowEmptyValue = false,position =13, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = true)
     @Column(name = Columns.PARENT_ENTITY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String parentEntityName;
 
     /**
      * Property Name.
      */
-    @ApiModelProperty(	value = "name of property", example="property", allowEmptyValue = true,position =11, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = false)
+    @ApiModelProperty(	value = "name of property", example="property", allowEmptyValue = true,position =14, accessMode = ApiModelProperty.AccessMode.READ_WRITE, required = false)
     @Column(name = Columns.PARENT_PROPERTY_NAME, nullable = true,columnDefinition = "VARCHAR(100)",length = 100)
     private String parentPropertyName;
 
@@ -309,6 +318,10 @@ public class CanonicalURILanguage {
         this.fullURI = fullURI;
     }
 
+    public void setLocalId(String localId) {
+        this.localId = localId;
+    }
+
     /**
      * Column name constants.
      */
@@ -358,6 +371,11 @@ public class CanonicalURILanguage {
          * CONCEPT column.
          */
         protected static final String CONCEPT = "CONCEPT";
+
+        /**
+         * REFERENCE column.
+         */
+        protected static final String LOCAL_ID = "LOCAL_ID";
 
         /**
          * REFERENCE column.

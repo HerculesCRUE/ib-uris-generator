@@ -35,7 +35,7 @@ public class Utils {
     }
 
     public static boolean isValidString(String s) {
-        return  !(s==null || s.equals(""));
+        return  !(s==null || s.equals("") || s.trim().toLowerCase().equals("null"));
     }
 
     public static String generateUUIDFromOject(Object o) throws NoSuchAlgorithmException {

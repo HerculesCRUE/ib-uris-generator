@@ -75,8 +75,8 @@ public class PersistenceConfig {
             // Paarameters connection
             config.setDriverClassName(datasourceProperties.getDriverClassName());
             config.setJdbcUrl(datasourceProperties.getUrl());
-            config.setUsername(datasourceProperties.getUsername());
-            config.setPassword(datasourceProperties.getPassword());
+            config.setUsername(datasourceProperties.getRootUsername());
+            config.setPassword(datasourceProperties.getRootPassword());
         }
 
         config.addDataSourceProperty("cachePrepStmts", "true");

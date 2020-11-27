@@ -1,17 +1,68 @@
----
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
 app:
   persistence:
     datasource:
-      driver-class-name: org.h2.Driver
-      username: root
-      password: 
-      url: 'jdbc:h2:mem:'
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: 'root'
+      password: 'root'
+      rootUsername: 'root'
+      rootPassword: 'root'
+      url: jdbc:mariadb://127.0.0.1:3307/uris?ssl=false&createDatabaseIfNotExist=true
     jpa:
-      dialect: org.hibernate.dialect.H2Dialect
-      generate-ddl: true
+      dialect: org.hibernate.dialect.MariaDB53Dialect
+      generate-ddl: false
       show-sql: true
+      format_sql: true
+      use_sql_comments: true
       properties:
         hibernate.temp.use_jdbc_metadata_defaults: false
-  # Solr
-  solr:
+  uri:
+    canonicalURISchema: http://$domain$/$sub-domain$/$type$/$reference$/$concept$
+    canonicalURILanguageSchema: http://$domain$/$sub-domain$/$language$/$type$/$reference$/$concept$
+
+  # CORS
+  cors:
+    enabled: true
+    allowedOrigin: '*'
+    allowedMethods: GET,POST,PUT,DELETE
+    allowedHeaders:
+      - Authorization
+      - X-Requested-With
+      - Content-Type
+    maxAge: 3600
+
+  # Cache configuration
+  cache:
+    embedded:
+      enabled: true
+
+  # Swagger
+  swagger:
     enabled: false
+
+## Actuator
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: /management
+  server:
+    port: 9321
+  health:
+    mail:
+      enabled: false
+    ldap:
+      enabled: false
+    redis:
+      enabled: false
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    #org.hibernate.type: TRACE

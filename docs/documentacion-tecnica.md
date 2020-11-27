@@ -202,9 +202,9 @@ Esta puede ser sustituida por las siguientes variables de entorno disponibles en
 | Nombre                                         |                            Valor                             |
 | ---------------------------------------------- | :----------------------------------------------------------: |
 | `APP_PERSISTENCE_DATASOURCE_DRIVER-CLASS-NAME` |                   org.mariadb.jdbc.Driver                    |
-| `APP_PERSISTENCE_DATASOURCE_USERNAME`          |                             app                              |
-| `APP_PERSISTENCE_DATASOURCE_PASSWORD`          |                           sqlpass                            |
-| `APP_PERSISTENCE_DATASOURCE_URL`               |         jdbc:mariadb://127.0.0.1:3307/app?ssl=false          |
+| `APP_PERSISTENCE_DATASOURCE_USERNAME`          |                             root                             |
+| `APP_PERSISTENCE_DATASOURCE_PASSWORD`          |                           root                               |
+| `APP_PERSISTENCE_DATASOURCE_URL`               |         jdbc:mariadb://127.0.0.1:3307/uris?ssl=false         |
 | `APP_URI_CANONICALURISCHEMA`                   |  http://$domain$/$sub-domain$/$type$/$concept$/$reference$   |
 | `APP_URI_CANONICALURILANGUAGESCHEMA`           | http://$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$ |
 
