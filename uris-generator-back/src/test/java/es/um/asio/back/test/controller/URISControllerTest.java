@@ -12,6 +12,7 @@ import es.um.asio.service.proxy.*;
 import es.um.asio.service.service.CanonicalURILanguageService;
 import es.um.asio.service.service.CanonicalURIService;
 import es.um.asio.service.service.SchemaService;
+import es.um.asio.service.util.Utils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -230,8 +231,8 @@ public class URISControllerTest {
             property.setCanonicalURI(cu2);
             canonicalURILanguages.add(property); // Property
 
-            // Add Instance
-            CanonicalURILanguage instance = new CanonicalURILanguage("hercules.org", "um", lt, String.format("entity-%d",counterLT+1), String.format("instance-%d",counterLT), null, canonicalLanguageSchema );
+            // Add Instance // Changed
+            CanonicalURILanguage instance = new CanonicalURILanguage("hercules.org", "um", lt, String.format("entity-%d",counterLT+1) , Utils.getUUIDFromString(String.format("instance-%d",counterLT)), null, canonicalLanguageSchema );
 
             CanonicalURI cu3 = new CanonicalURI(instance.getDomain(),instance.getSubDomain(),instance.getType(),instance.getConcept(),instance.getReference(),instance.getPropertyName(),canonicalSchema);
             if (canonicalURIMap.get(cu3.getFullURI()) == null) {
@@ -425,12 +426,8 @@ public class URISControllerTest {
 
 
     }
-    @Test
-    public void everTrue() {
-        Assert.assertTrue(true);
-    }
 
-/*    @Test
+    @Test
     public void whenCreateAResource_thenNoError() throws Exception {
         for (CanonicalURILanguage cu : canonicalURILanguages) {
             if (cu.getIsInstance()) {
@@ -449,15 +446,15 @@ public class URISControllerTest {
                 )
                         .andDo(print())
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.canonicalURI", is(cu.getFullParentURI())))
+                        .andExpect(jsonPath("$.canonicalURI", is(cu.getFullParentURI() )))
                         .andExpect(jsonPath("$.canonicalLanguageURI", is(cu.getFullURI())))
                         .andExpect(jsonPath("$.language", is(cu.getLanguageID())));
             }
 
         }
-    }*/
+    }
 
-/*    @Test
+    @Test
     public void whenCreateAProperty_thenNoError() throws Exception {
         for (CanonicalURILanguage cu : canonicalURILanguages) {
             if (cu.getIsProperty()) {
@@ -504,9 +501,9 @@ public class URISControllerTest {
             }
 
         }
-    }*/
+    }
 
-    /*@Test
+    @Test
     public void whenLinkACanonicalURIWithLocalURI_thenNoError() throws Exception {
         for (LocalURI lu : localURIS) {
             this.mvc.perform(post("/uri-factory/local")
@@ -575,9 +572,9 @@ public class URISControllerTest {
             }
 
         }
-    }*/
+    }
 
-/*    @Test
+    @Test
     public void whenUnlinkAEntityWithLocalURIByParams_thenNoError() throws Exception {
         for (LocalURI lu : localURIS) {
             if (lu.getCanonicalURILanguage().getIsEntity()) {
@@ -594,9 +591,9 @@ public class URISControllerTest {
             }
 
         }
-    }*/
+    }
 
-/*    @Test
+    @Test
     public void whenDeleteEntityWithLocalURIByParams_thenNoError() throws Exception {
         for (LocalURI lu : localURIS) {
             CanonicalURILanguage cul = lu.getCanonicalURILanguage();
@@ -664,8 +661,7 @@ public class URISControllerTest {
             }
 
         }
-    }*/
-/*
+    }
 
     @Test
     public void whenGetLocalURIFromCanonicalURI_thenNoError() throws Exception {
@@ -728,7 +724,7 @@ public class URISControllerTest {
 
         }
     }
-*/
+
 
 
     public static String asJsonString(final Object obj) {
