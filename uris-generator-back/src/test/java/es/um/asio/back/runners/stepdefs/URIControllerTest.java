@@ -11,6 +11,7 @@ import es.um.asio.service.proxy.*;
 import es.um.asio.service.service.CanonicalURILanguageService;
 import es.um.asio.service.service.CanonicalURIService;
 import es.um.asio.service.service.SchemaService;
+import es.um.asio.service.util.Utils;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -269,7 +270,7 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
             canonicalURILanguages.add(property); // Property
 
             // Add Instance
-            CanonicalURILanguage instance = new CanonicalURILanguage("hercules.org", "um", lt, String.format("entity-%d",counterLT+1), String.format("instance-%d",counterLT), null, canonicalLanguageSchema );
+            CanonicalURILanguage instance = new CanonicalURILanguage("hercules.org", "um", lt, String.format("entity-%d",counterLT+1), Utils.getUUIDFromString(String.format("instance-%d",counterLT)), null, canonicalLanguageSchema );
 
             CanonicalURI cu3 = new CanonicalURI(instance.getDomain(),instance.getSubDomain(),instance.getType(),instance.getConcept(),instance.getReference(),instance.getPropertyName(),canonicalSchema);
             if (canonicalURIMap.get(cu3.getFullURI()) == null) {
@@ -466,14 +467,11 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
 
     }
 
-/*
 
-
-    */
 /**
      * First step is to retrieve the base uri
-     * @param uri base uri
-     *//*
+     * @param uri base uri*/
+
 
     @Given("^baseUri is (.*)$")
     public void baseUri(String uri) {
@@ -481,16 +479,12 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         Assert.isTrue(!uri.isEmpty());
         baseUri = uri+":"+port;
     }
-    */
-/*
-     * Feature: GetEntityCanonicalURI
-     *//*
+     /** Feature: GetEntityCanonicalURI*/
 
 
-    */
-/*
-     * Scenario: The client invokes the end point to get the canonical URI
-     *//*
+
+     /** Scenario: The client invokes the end point to get the canonical URI*/
+
 
     @When("When post entity the client calls endpoint {string} with domain {string} ,subDomain {string}, language {string} with JSON body")
     public void the_client_post_entity(String endPoint,String domain,String subDomain, String lang,String body) throws Throwable {
@@ -528,15 +522,11 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         assertEquals(queryParams.get("lang"),res.get("language"));
     }
 
-    */
-/*
-     * Feature: GetEntityCanonicalURI
-     *//*
+/*     * Feature: GetEntityCanonicalURI
 
-    */
-/*
-     * Scenario: The client invokes the end point to get the canonical URI
-     *//*
+
+     * Scenario: The client invokes the end point to get the canonical URI*/
+
 
     @When("When post property the client calls endpoint {string} with domain {string} ,subDomain {string}, language {string} with JSON body")
     public void the_client_post_property_entity(String endPoint,String domain,String subDomain, String lang,String body) throws Throwable {
@@ -574,15 +564,11 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         assertEquals(queryParams.get("lang"),res.get("language"));
     }
 
-    */
-/*
-     * Feature: GetCanonicalLanguageFromCanonicalURI
-     *//*
+/*     * Feature: GetCanonicalLanguageFromCanonicalURI
 
-    */
-/*
-     * Scenario: The client invokes the end point to get the canonical URI
-     *//*
+
+     * Scenario: The client invokes the end point to get the canonical URI*/
+
 
     @When("When post instance the client calls endpoint {string} with domain {string} ,subDomain {string}, language {string} with JSON body")
     public void the_client_post_resource(String endPoint,String domain,String subDomain, String lang,String body) throws Throwable {
@@ -621,15 +607,11 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         assertEquals(queryParams.get("lang"),res.get("language"));
     }
 
-    */
-/*
-     * Feature: GetEntityCanonicalURI
-     *//*
+/*     * Feature: GetEntityCanonicalURI
 
-    */
-/*
-     * Scenario: The client invokes the end point to get the canonical URI
-     *//*
+
+     * Scenario: The client invokes the end point to get the canonical URI*/
+
 
     @When("When the client calls endpoint GET {string} with canonicalURI {string} and language {string}")
     public void the_client_get_canonical_uri_language_from_canonical_uri(String endPoint, String canonicalUri,String language) throws Throwable {
@@ -668,15 +650,11 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         assertTrue(cul.contains("rec") || cul.contains("res"));
     }
 
-    */
-/*
-     * Feature: LocalURI
-     *//*
+/*     * Feature: LocalURI
 
-    */
-/*
-     * Scenario: POST Local URI. The client invokes POST to endpoint /uri-factory/local to get response of API
-     *//*
+
+     * Scenario: POST Local URI. The client invokes POST to endpoint /uri-factory/local to get response of API*/
+
 
     @When("POST Local URI to endpoint {string} to link Canonical URI Language {string} to localUri {string} in storageName {string}")
     public void the_client_post_local_uri_from_canonical_uri(String endPoint, String canonicalUriLanguage,String localURI,String storageName) throws Throwable {
@@ -709,10 +687,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         assertTrue(responses.get(0).get("storageTypeStr").equals(queryParams.get("storageName")));
         assertTrue(responses.get(0).get("localUri").equals(queryParams.get("localURI")));
     }
-    */
-/*
-     * Scenario: GET Local URI. The client invokes GET to endpoint /uri-factory/local to get response of API
-     *//*
+     /** Scenario: GET Local URI. The client invokes GET to endpoint /uri-factory/local to get response of API*/
+
 
     @When("GET Local URI to endpoint {string} with localUri {string}")
     public void the_client_get_local_uri_from_canonical_uri(String endPoint, String localURI) throws Throwable {
@@ -738,10 +714,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         List<Map<Object,Object>> responses = new Gson().fromJson(result.getResponse().getContentAsString(),List.class);
         assertTrue(responses.size() == 1);
     }
-    */
-/*
-     * Scenario: GET Local URI. The client invokes GET to endpoint /uri-factory/local to get response of API
-     *//*
+     /** Scenario: GET Local URI. The client invokes GET to endpoint /uri-factory/local to get response of API*/
+
 
     @When("DELETE Local URI to endpoint {string} to unlink Canonical URI Language {string} to localUri {string} in storageName {string}")
     public void the_client_delete_local_uri_from_canonical_uri(String endPoint, String canonicalLanguageURI,String localURI, String storageName) throws Throwable {
@@ -766,10 +740,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         assertEquals(result.getResponse().getStatus(), statusCode);
     }
 
-    */
-/*
-     * GET Local URI from Canonical URI. The client invokes GET to endpoint /uri-factory/local/canonical to get response of API
-     *//*
+     /** GET Local URI from Canonical URI. The client invokes GET to endpoint /uri-factory/local/canonical to get response of API*/
+
 
     @When("GET Local URI from Canonical URI to endpoint {string} with canonicalUri {string} and languageCode {string} and storageName {string}")
     public void the_client_get_local_uri_from_canonical_uri2(String endPoint, String canonicalURI, String languageCode, String storageName) throws Throwable {
@@ -801,10 +773,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         assertTrue(responses.get(0).get("storageTypeStr").equals(queryParams.get("storageName")));
     }
 
-    */
-/*
-     * GET Local URI from Canonical Language URI. The client invokes GET to endpoint /uri-factory/local/canonical/language to get response of API
-     *//*
+     /** GET Local URI from Canonical Language URI. The client invokes GET to endpoint /uri-factory/local/canonical/language to get response of API*/
+
 
     @When("GET Local URI from Canonical Language URI to endpoint {string} with canonicalLanguageUri {string} and languageCode {string} and storageName {string}")
     public void the_client_get_local_uri_from_canonical_language_uri(String endPoint, String canonicalURI, String languageCode, String storageName) throws Throwable {
@@ -837,10 +807,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         assertTrue(responses.get(0).get("canonicalURILanguageStr").equals(queryParams.get("canonicalLanguageUri")));
     }
 
-    */
-/*
-     * POST Local URI Entity. The client invokes GET to endpoint /uri-factory/local/entity to get response of API
-     *//*
+     /** POST Local URI Entity. The client invokes GET to endpoint /uri-factory/local/entity to get response of API*/
+
 
     @When("POST Local URI Entity to endpoint {string} with domain {string} and subDomain {string} and languageCode {string} and typeCode {string} and entity {string} and localUri {string} and storageName {string}")
     public void the_client_post_local_uri_entity(String endPoint, String domain, String subDomain, String languageCode, String typeCode, String entity, String localUri, String storageName) throws Throwable {
@@ -880,10 +848,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         assertTrue(response.get("localUri").equals(queryParams.get("localUri")));
     }
 
-    */
-/*
-     * DELETE Local URI Entity. The client invokes DELETE to endpoint /uri-factory/local/entity to get response of API
-     *//*
+     /** DELETE Local URI Entity. The client invokes DELETE to endpoint /uri-factory/local/entity to get response of API*/
+
 
     @When("DELETE Local URI Entity to endpoint {string} with domain {string} and subDomain {string} and languageCode {string} and typeCode {string} and entity {string} and localUri {string} and storageName {string}")
     public void the_client_delete_local_uri_entity(String endPoint, String domain, String subDomain, String languageCode, String typeCode, String entity, String localUri, String storageName) throws Throwable {
@@ -921,10 +887,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
 
 
 
-    */
-/*
-     * POST Local URI Property. The client invokes GET to endpoint /uri-factory/local/entity to get response of API
-     *//*
+     /** POST Local URI Property. The client invokes GET to endpoint /uri-factory/local/entity to get response of API*/
+
 
     @When("POST Local URI Property to endpoint {string} with domain {string} and subDomain {string} and languageCode {string} and typeCode {string} and property {string} and localUri {string} and storageName {string}")
     public void the_client_post_local_uri_property(String endPoint, String domain, String subDomain, String languageCode, String typeCode, String property, String localUri, String storageName) throws Throwable {
@@ -964,10 +928,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         assertTrue(response.get("localUri").equals(queryParams.get("localUri")));
     }
 
-    */
-/*
-     * DELETE Local URI Property. The client invokes DELETE to endpoint /uri-factory/local/entity to get response of API
-     *//*
+     /** DELETE Local URI Property. The client invokes DELETE to endpoint /uri-factory/local/entity to get response of API*/
+
 
     @When("DELETE Local URI Property to endpoint {string} with domain {string} and subDomain {string} and languageCode {string} and typeCode {string} and entity {string} and localUri {string} and storageName {string}")
     public void the_client_delete_local_uri_property(String endPoint, String domain, String subDomain, String languageCode, String typeCode, String property, String localUri, String storageName) throws Throwable {
@@ -1003,10 +965,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
 
 
 
-    */
-/*
-     * POST Local URI Instance. The client invokes POST to endpoint /uri-factory/local/resource to get response of API
-     *//*
+     /** POST Local URI Instance. The client invokes POST to endpoint /uri-factory/local/resource to get response of API*/
+
 
     @When("POST Local URI Instance to endpoint {string} with domain {string} and subDomain {string} and languageCode {string} and typeCode {string} and entity {string} and reference {string} and localUri {string} and storageName {string}")
     public void the_client_post_local_uri_instance(String endPoint, String domain, String subDomain, String languageCode, String typeCode, String entity, String reference, String localUri, String storageName) throws Throwable {
@@ -1049,10 +1009,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         assertTrue(response.get("localUri").equals(queryParams.get("localUri")));
     }
 
-    */
-/*
-     * DELETE Local URI Property. The client invokes DELETE to endpoint /uri-factory/local/entity to get response of API
-     *//*
+     /** DELETE Local URI Property. The client invokes DELETE to endpoint /uri-factory/local/entity to get response of API*/
+
 
     @When("DELETE Local URI Instance to endpoint {string} with domain {string} and subDomain {string} and languageCode {string} and typeCode {string} and entity {string} and reference {string} and localUri {string} and storageName {string}")
     public void the_client_delete_local_uri_instance(String endPoint, String domain, String subDomain, String languageCode, String typeCode, String entity, String reference, String localUri, String storageName) throws Throwable {
@@ -1101,10 +1059,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
 
 
 
-    */
-/*
-     * Private functions
-     *//*
+     /** Private functions*/
+
 
 
     public static String asJsonString(final Object obj) {
@@ -1133,6 +1089,5 @@ public class URIControllerTest extends AbstractStepDefinitionConsumer {
         bodyRequest = new HashMap();
     }
 
-*/
 
 }

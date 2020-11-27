@@ -13,7 +13,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 
-/*
 @CucumberContextConfiguration
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -32,4 +31,3 @@ public class UrisGeneratorRunner {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }
-*/
