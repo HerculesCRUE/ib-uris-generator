@@ -5,11 +5,12 @@ app:
       generate-ddl: true
       show-sql: true
     datasource:
-       username: root
-       password: root
-       rootUsername: root
-       rootPassword: root
-       url: jdbc:mariadb://127.0.0.1:3307/uris?ssl=false&createDatabaseIfNotExist=true
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: 'root'
+      password: 'root'
+      rootUsername: 'root'
+      rootPassword: 'root'
+      url: jdbc:mariadb://127.0.0.1:3307/uris?ssl=false&createDatabaseIfNotExist=true
   # Swagger
   swagger:
     enabled: true

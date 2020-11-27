@@ -2,8 +2,10 @@ app:
   persistence:
     datasource:
       driver-class-name: org.mariadb.jdbc.Driver
-      username: root
-      password: root
+      username: 'root'
+      password: 'root'
+      rootUsername: 'root'
+      rootPassword: 'root'
       url: jdbc:mariadb://127.0.0.1:3307/uris?ssl=false&createDatabaseIfNotExist=true
     jpa:
       dialect: org.hibernate.dialect.MariaDB53Dialect
