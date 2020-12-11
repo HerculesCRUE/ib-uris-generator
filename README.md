@@ -1,4 +1,3 @@
-
 ![](./images/logos_feder.png)
 
 | Entregable     | Librería factoria de URIs                                    |
@@ -15,6 +14,10 @@
 
 
 # ASIO - URIs generator service
+
+|     | Master |
+| --- | ------ |
+| Quality Gate | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=HerculesCRUE_ib-uris-generator&metric=alert_status)](https://sonarcloud.io/dashboard?id=HerculesCRUE_ib-uris-generator) |
 
 La Factoría de URIs despliega una API REST con los EndPoints necesarios para implementar todas las operaciones CRUD sobre entidades y los EndPoints de alto nivel propios de la factoría de URIs. Para ello usa una base de datos relacional (MariaDB). La documentación exhaustiva de  el API Rest, puede encontrarse bien en la sección [Swagger](#Swagger) que describe como obtener acceso para interactuar con el API, o bien en la [Documentación API REST de la Factoria de URIs](./docs/documentacion_api_rest_de_la_factoria_de_uris.md) donde se describen también los End Point disponibles. 
 
