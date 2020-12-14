@@ -21,7 +21,7 @@ import org.junit.Assert.*;
  * Http request are made using {@link RestTemplate} RestTemplate
  */
 @SuppressWarnings("unchecked")
-public class AbstractStepDefinitionConsumer {
+public class AbstractStepDefinitionConsumerTest {
 
     // Stored base uri
     String baseUri;
@@ -46,7 +46,7 @@ public class AbstractStepDefinitionConsumer {
     //Scenario Scope
     private ScenarioScope scenarioScope;
 
-    AbstractStepDefinitionConsumer() {
+    AbstractStepDefinitionConsumerTest() {
         template = new RestTemplate();
         objectMapper = new ObjectMapper();
         scenarioScope = new ScenarioScope();
