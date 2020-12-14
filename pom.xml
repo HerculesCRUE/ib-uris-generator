@@ -17,6 +17,7 @@
 	<packaging>pom</packaging>
 	<name>UM - ASIO - uris-generator</name>
 	<description>UM - ASIO - uris-generator</description>
+	<url>https://www.um.es/web/hercules/</url>
 
 
 	<scm>
