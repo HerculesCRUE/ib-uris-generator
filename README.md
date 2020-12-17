@@ -104,7 +104,7 @@ Para activar swagger se utilizará la variable `app.swagger.enabled`
 Se incluyen los resultados del testing y cobertura en los siguientes enlaces:
 
 - [Testing TDD](http://herc-iz-front-desa.atica.um.es:8070/uris-generator/surefire/surefire-report.html)
-- [Cobertura TDD](http://herc-iz-front-desa.atica.um.es:8070/uris-generator/jacoco/)
+- [Cobertura TDD](https://sonarcloud.io/component_measures?id=HerculesCRUE_ib-uris-generator&metric=coverage&view=list)
 - [Testing BDD](docs/testing.md)
 
 Para todos los End Point desplegados se ha creado su oportuno **test de integración**.
