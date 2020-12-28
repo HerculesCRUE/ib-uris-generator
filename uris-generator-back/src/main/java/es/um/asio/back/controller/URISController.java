@@ -10,12 +10,10 @@ import es.um.asio.service.proxy.LanguageProxy;
 import es.um.asio.service.proxy.LanguageTypeProxy;
 import es.um.asio.service.proxy.LocalURIProxy;
 import es.um.asio.service.proxy.TypeProxy;
-import es.um.asio.service.service.CanonicalURILanguageService;
-import es.um.asio.service.service.CanonicalURIService;
-import es.um.asio.service.service.LocalURIService;
-import es.um.asio.service.service.SchemaService;
+import es.um.asio.service.service.*;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.validation.group.Create;
+import io.cucumber.messages.internal.com.google.gson.internal.LinkedTreeMap;
 import io.swagger.annotations.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -109,6 +107,12 @@ public class URISController {
 	@Autowired
 	private SchemaService schemaService;
 
+	/**
+	 * DiscoveryService Service
+	 */
+	@Autowired
+	private DiscoveryService discoveryService;
+
 	@ApiOperation(value = "Check if server is Alive", notes = "Check if server is Alive")
 	@RequestMapping(method={RequestMethod.GET},value={Mappings.HEALTH})
 	public String getHealth() {
@@ -161,6 +165,10 @@ public class URISController {
 			@RequestParam(required = false, defaultValue = "um") @Validated(Create.class) final String subDomain,
 			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = false)
 			@RequestParam(required = false, defaultValue = "es-ES") @Validated(Create.class) final String lang,
+			@ApiParam(name = "tripleStore", value = "Triple Store", defaultValue = Constants.TRELLIS, required = false)
+			@RequestParam(required = false, defaultValue = Constants.TRELLIS) @Validated(Create.class) final String tripleStore,
+			@ApiParam(name = "requestDiscovery", value = "Request in discovery library", defaultValue = "true", required = false)
+			@RequestParam(required = false, defaultValue = "true") @Validated(Create.class) final boolean requestDiscovery,
 			@RequestBody final Object input) {
 		this.logger.info("Creating Instance URI..." );
 		try {
@@ -178,6 +186,14 @@ public class URISController {
 			String localId = new String(entityId);
 			if (Utils.isValidString(entityId) && !Utils.isValidUUID(entityId)) {
 				entityId = Utils.getUUIDFromString(entityId);
+			}
+
+			if (requestDiscovery) {
+				LinkedTreeMap<String, Object> similarity = discoveryService.findSimilarEntity(subDomain, tripleStore, entity, entityId, map);
+				if (similarity != null) {
+					if (similarity.containsKey("entityId"))
+						entityId = similarity.get("entityId").toString();
+				}
 			}
 			CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(domain, subDomain,
 					lang, type, entity, (Utils.isValidString(entityId) ? entityId : ref),localId, null,
@@ -1085,6 +1101,50 @@ public class URISController {
 		return response;
 	}
 
+	@GetMapping(Mappings.CANONICAL_SCHEMA)
+	public String getCanonicalSchema() {
+		return schemaService.getCanonicalSchema();
+	}
+
+	@GetMapping(Mappings.CANONICAL_LOCAL_SCHEMA)
+	public String getLocalCanonicalSchema() {
+		return schemaService.getCanonicalLanguageSchema();
+	}
+
+	@GetMapping(Mappings.BUILD_CANONICAL_SCHEMA)
+	public String getBuilderCanonicalSchema(
+			@ApiParam(name = "domain", value = "Domain: hercules.org", defaultValue = Constants.DOMAIN_VALUE, required = true)
+			@RequestParam(required = true, defaultValue = "hercules.org") @Validated(Create.class) final String domain,
+			@ApiParam(name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = Constants.SUBDOMAIN_VALUE, required = true)
+			@RequestParam(required = true, defaultValue = Constants.SUBDOMAIN_VALUE) @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "type", value = "res", defaultValue = Constants.TYPE_REST, required = true)
+			@RequestParam(required = true, defaultValue =  Constants.TYPE_REST) @Validated(Create.class) final String type,
+			@ApiParam(name = "entity", value = "", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String entity,
+			@ApiParam(name = "reference", value = "", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String reference
+	) {
+		return schemaService.buildCanonical(domain,subDomain,type,entity,reference);
+	}
+
+	@GetMapping(Mappings.BUILD_CANONICAL_LOCAL_SCHEMA)
+	public String getBuilderCanonicalLanguageSchema(
+			@ApiParam(name = "domain", value = "Domain: hercules.org", defaultValue = Constants.DOMAIN_VALUE, required = true)
+			@RequestParam(required = true, defaultValue = "hercules.org") @Validated(Create.class) final String domain,
+			@ApiParam(name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = Constants.SUBDOMAIN_VALUE, required = true)
+			@RequestParam(required = true, defaultValue = Constants.LANGUAGE) @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "language", value = "es-ES", defaultValue = Constants.LANGUAGE, required = true)
+			@RequestParam(required = true, defaultValue = Constants.SUBDOMAIN_VALUE) @Validated(Create.class) final String language,
+			@ApiParam(name = "type", value = "res", defaultValue = Constants.TYPE_REST, required = true)
+			@RequestParam(required = true, defaultValue =  Constants.TYPE_REST) @Validated(Create.class) final String type,
+			@ApiParam(name = "entity", value = "", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String entity,
+			@ApiParam(name = "reference", value = "", required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String reference
+	) {
+		return schemaService.buildCanonicalLanguage(domain,subDomain,language,type,entity,reference);
+	}
+
 	/**
 	 * Mappings.
 	 */
@@ -1136,6 +1196,18 @@ public class URISController {
 		 * Controller request mapping.
 		 */
 		protected static final String BASE = "/uri-factory";
+
+		/** The Constant CANONICAL_SCHEMA. */
+		protected static final String CANONICAL_SCHEMA = "/schema";
+
+		/** The Constant CANONICAL_LOCAL_SCHEMA. */
+		protected static final String CANONICAL_LOCAL_SCHEMA = "/local-schema";
+
+		/** The Constant CANONICAL_SCHEMA. */
+		protected static final String BUILD_CANONICAL_SCHEMA = "/schema/build";
+
+		/** The Constant CANONICAL_LOCAL_SCHEMA. */
+		protected static final String BUILD_CANONICAL_LOCAL_SCHEMA = "/local-schema/build";
 
 	}
 }

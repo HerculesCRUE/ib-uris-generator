@@ -7,9 +7,9 @@ app:
     datasource:
       driver-class-name: org.mariadb.jdbc.Driver
       username: 'root'
-      password: 'root'
+      password: '1z3rt1s'
       rootUsername: 'root'
-      rootPassword: 'root'
+      rootPassword: '1z3rt1s'
       url: jdbc:mariadb://127.0.0.1:3307/uris?ssl=false&createDatabaseIfNotExist=true
   # Swagger
   swagger:
