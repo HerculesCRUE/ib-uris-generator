@@ -11,6 +11,7 @@ import es.um.asio.service.model.*;
 import es.um.asio.service.proxy.*;
 import es.um.asio.service.service.CanonicalURILanguageService;
 import es.um.asio.service.service.CanonicalURIService;
+import es.um.asio.service.service.DiscoveryService;
 import es.um.asio.service.service.SchemaService;
 import es.um.asio.service.util.Utils;
 import org.junit.Assert;
@@ -129,6 +130,12 @@ public class URISControllerTest {
      */
     @MockBean
     private SchemaService schemaService;
+
+    /**
+     * TypeProxy proxy
+     */
+    @MockBean
+    private DiscoveryService discoveryService;
 
     /**
      * JSON Object mapper
@@ -422,6 +429,11 @@ public class URISControllerTest {
                     canonicalURISSet.add(cu);
             }
             return Arrays.asList(canonicalURISSet.toArray());
+        });
+
+        // Mock Discovery Service
+        Mockito.when(this.discoveryService.findSimilarEntity(anyString(),anyString(),anyString(),anyString(),any())).thenAnswer(invocation -> {
+            return null;
         });
 
 
