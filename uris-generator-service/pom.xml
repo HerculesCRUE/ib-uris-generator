@@ -123,6 +123,18 @@
 			<version>1.5.20</version>
 			<scope>compile</scope>
 		</dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>messages</artifactId>
+            <version>12.3.2</version>
+            <scope>compile</scope>
+        </dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>messages</artifactId>
+			<version>12.3.2</version>
+			<scope>compile</scope>
+		</dependency>
 
 
 	</dependencies>
