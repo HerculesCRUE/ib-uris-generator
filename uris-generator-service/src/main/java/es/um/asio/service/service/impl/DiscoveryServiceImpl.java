@@ -35,7 +35,7 @@ public class DiscoveryServiceImpl implements DiscoveryService {
     public LinkedTreeMap<String, Object> findSimilarEntity(String node, String tripleStore, String className, String entityId, HashMap<String, Object> attrs) {
         try {
             JsonObject jResult = doRequest(node,tripleStore,className,entityId,attrs);
-            if (jResult.has("automatics")) {
+            if (jResult!=null && jResult.has("automatics")) {
                 JsonArray jAutomaticsArray = jResult.get("automatics").getAsJsonArray();
                 if (jAutomaticsArray != null && jAutomaticsArray.size() > 0) {
                     JsonObject jAuto = jAutomaticsArray.get(0).getAsJsonObject();
