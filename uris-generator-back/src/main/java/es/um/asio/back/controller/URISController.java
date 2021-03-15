@@ -190,12 +190,16 @@ public class URISController {
 			if (Utils.isValidString(entityId) && !Utils.isValidUUID(entityId)) {
 				entityId = Utils.getUUIDFromString(entityId);
 			}
+			
+			boolean found = false;
 
 			if (requestDiscovery) {
 				LinkedTreeMap<String, Object> similarity = discoveryService.findSimilarEntity(subDomain, tripleStore, entity, entityId, map);
 				if (similarity != null) {
-					if (similarity.containsKey("entityId"))
+					if (similarity.containsKey("entityId")) {
 						entityId = similarity.get("entityId").toString();
+						found = true;
+					}
 				}
 			}
 			CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(domain, subDomain,
@@ -207,6 +211,10 @@ public class URISController {
 			response.put(Constants.CANONICAL_URI, canonicalURILanguage.getFullParentURI());
 			response.put(Constants.LANGUAGE, lang);
 			response.put(Constants.CANONICAL_LANGUAGE_URI, canonicalURILanguage.getFullURI());
+			if (found) {
+				response.put("similarity", "");
+			}
+			
 			this.logger.info(CREATED_INSTANCE, new JSONObject(response));
 			return response;
 
