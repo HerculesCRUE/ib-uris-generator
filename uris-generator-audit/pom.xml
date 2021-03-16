@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>es.um.asio</groupId>
 		<artifactId>uris-generator</artifactId>
-		<version>1.1.0</version>
+		<version>2.0.0</version>
 	</parent>
 
 	<artifactId>uris-generator-audit</artifactId>
