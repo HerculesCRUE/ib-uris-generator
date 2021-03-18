@@ -173,7 +173,7 @@ public class URISController {
 
 		try {
 			if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(type)) {
-				throw new CustomNotFoundException("Type: " +type +" wrong, the type must be one of this [cat,def,kos,res]" );
+				throw new CustomNotFoundException("Type: " +type +" wrong, the type must be one of this [ cat,def,kos,res ]" );
 			}
 /*			final String type = Constants.TYPE_REST;*/
 
