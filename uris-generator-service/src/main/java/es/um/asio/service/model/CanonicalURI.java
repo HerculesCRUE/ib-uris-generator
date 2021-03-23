@@ -26,7 +26,7 @@ public class CanonicalURI  {
      */
     private static final long serialVersionUID = -8605786237765754616L;
 
-    private static String schema = "http://$domain$/$sub-domain$/$type$/$concept$/$reference$";
+    private static String schema = "$domain$/$sub-domain$/$type$/$concept$/$reference$";
 
     /**
      * The id.

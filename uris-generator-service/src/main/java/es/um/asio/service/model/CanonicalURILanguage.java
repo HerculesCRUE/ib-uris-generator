@@ -28,7 +28,7 @@ public class CanonicalURILanguage {
      */
     private static final long serialVersionUID = -8605786237765754621L;
 
-    private static String schema = "http://$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$";
+    private static String schema = "$domain$/$sub-domain$/$language$/$type$/$concept$/$reference$";
 
     /**
      * The id.
