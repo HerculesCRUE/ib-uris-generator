@@ -26,4 +26,4 @@ services:
           - mysql.svc
 
 volumes:
-  mysql-data:
+  mysql-data2:

@@ -351,7 +351,7 @@ public class URISController {
 						: (map.get(Constants.CANONICAL_CLASS))));
 
 		CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(domain, subDomain,
-				lang, type, entity, null, null, (pEntity != null) ? pEntity : entity,null, null, true);
+				lang, type, entity, null, null, null,((pEntity != null) ? pEntity : entity), null, true);
 
 		// response
 		final Map<String, String> response = new HashMap<>();
