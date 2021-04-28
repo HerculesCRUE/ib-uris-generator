@@ -2,7 +2,8 @@
 
 | Entregable     | Librería factoria de URIs                                    |
 | -------------- | ------------------------------------------------------------ |
-| Fecha          | 25/05/2020                                                   |
+| Fecha          | 28/04/2021                                                   |
+| Revisado por   | Paloma Terán Pérez                                           |
 | Proyecto       | [ASIO](https://www.um.es/web/hercules/proyectos/asio) (Arquitectura Semántica e Infraestructura Ontológica) en el marco de la iniciativa [Hércules](https://www.um.es/web/hercules/) para la Semántica de Datos de Investigación de Universidades que forma parte de [CRUE-TIC](http://www.crue.org/SitePages/ProyectoHercules.aspx) |
 | Módulo         | Arquitectura Semántica                                       |
 | Tipo           | Software                                                     |
@@ -107,7 +108,7 @@ Para activar swagger se utilizará la variable `app.swagger.enabled`
 
 Se incluyen los resultados del testing y cobertura en los siguientes enlaces:
 
-- [Testing TDD](http://herc-iz-front-desa.atica.um.es:8070/uris-generator/surefire/surefire-report.html)
+- [Testing TDD](https://reports.herculesasioizertis.desa.um.es/uris-generator/surefire/surefire-report.html)
 - [Cobertura TDD](https://sonarcloud.io/component_measures?id=HerculesCRUE_ib-uris-generator&metric=coverage&view=list)
 - [Testing BDD](docs/testing.md)
 
