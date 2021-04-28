@@ -10,9 +10,9 @@
 | Módulo         | Arquitectura Semántica                                       |
 | Tipo           | Documento                                                    |
 | Objetivo       | El presente documento pretende ser la documentación técnica relativa a el entregable Factoría de URIs. Para ello, se documentaran exhaustivamente tanto los aspectos relativos a su despliegue, como todos los End Point que esta ofrece a otros procesos o usuarios, para interactuar con la misma. |
-| Estado         | Implementada al **100%**, según la funcionalidad prevista para cubrir lo expresado en los documentos de [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)  , y  [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md).  Por otro lado la exposición de los EndPoint relativos al CRUD sobre modelo de datos completo, hace posible realizar cualquier operación, aunque esta en principio no estuviese prevista. |
+| Estado         | Implementada al **100%**, según la funcionalidad prevista para cubrir lo expresado en los documentos de [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)  , y  [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md).  Por otro lado la exposición de los EndPoint relativos al CRUD sobre modelo de datos completo, hace posible realizar cualquier operación, aunque esta en principio no estuviese prevista. |
 | Próximos pasos | La integración con componentes desarrollados en una fase de madurez no final, o otros por desarrollar (tales como el servicio de publicación web), quizás requieran la modificación o creación de algún EndPoint adicional, aunque según lo descrito en el apartado anterior, dado que existe un CRUD completo sobre todas las entidades, la implementación, debería de ser trivial. |
-| Documentación  | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Manual de usuario](./manual_de_usuario.md) (documentación de alto nivel)<br />[Documentación API REST de la Factoría de URIs](documentacion_api_rest_de_la_factoria_de_uris.md)<br/>[build](./build.md)<br/>[docker](./docker.md) |
+| Documentación  | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Manual de usuario](./manual_de_usuario.md) (documentación de alto nivel)<br />[Documentación API REST de la Factoría de URIs](documentacion_api_rest_de_la_factoria_de_uris.md)<br/>[build](./build.md)<br/>[docker](./docker.md) |
 
 
 
@@ -104,7 +104,7 @@ Es conveniente para mejorar la comprensión, ver la representación del modelo d
 
 Entre las entidades presentes en el esquema podemos destacar:
 
-- **Entidad TYPE:** Representa el componente tipo, descrito en el  [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md). El atributo code actua como calve primaria y representa el código (de 3 caracteres) que será usado en el esquema de URIs, para las URIs canónicas y el atributo name, su descripción larga.
+- **Entidad TYPE:** Representa el componente tipo, descrito en el  [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md). El atributo code actua como calve primaria y representa el código (de 3 caracteres) que será usado en el esquema de URIs, para las URIs canónicas y el atributo name, su descripción larga.
 
   ![Type](./images/type_entity.png)
 
@@ -145,7 +145,7 @@ Para separar convenientemente los controladores que manejan las peticiones todos
 
 Entre dichos controladores podemos encontrar los siguientes:
 
-- **TypeController: ** Controlador que gestiona todas las peticiones sobre la entidad TYPE, que representa el componente tipo, descrito en el  [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md).
+- **TypeController: ** Controlador que gestiona todas las peticiones sobre la entidad TYPE, que representa el componente tipo, descrito en el  [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md).
 - **LanguageController: ** Controlador que gestiona todas las peticiones sobre la entidad LANGUAGE, que implementa los atributos de un determinado.
 - **LanguageTypeController: ** Controlador que gestiona todas las peticiones CRUD sobre la entidad LANGUAGE_TYPE.
 - **StorageTypeController: ** Controlador que gestiona todas las peticiones CRUD sobre la entidad STORAGE_TYPE.
