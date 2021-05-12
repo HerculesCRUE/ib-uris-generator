@@ -2,14 +2,15 @@
 
 | Entregable     | Librería factoria de URIs                                    |
 | -------------- | ------------------------------------------------------------ |
-| Fecha          | 25/05/2020                                                   |
+| Fecha          | 28/04/2021                                                   |
+| Revisado por   | Paloma Terán Pérez                                           |
 | Proyecto       | [ASIO](https://www.um.es/web/hercules/proyectos/asio) (Arquitectura Semántica e Infraestructura Ontológica) en el marco de la iniciativa [Hércules](https://www.um.es/web/hercules/) para la Semántica de Datos de Investigación de Universidades que forma parte de [CRUE-TIC](https://www.crue.org/proyecto/hercules/) |
 | Módulo         | Arquitectura Semántica                                       |
 | Tipo           | Documentación                                                |
-| Objetivo       | El presente documento describe la librería Factoría de URIs a alto nivel, por lo tanto, se complementa con el documento de [Documentación tecnica](./documentacion-tecnica.md) que la describe a bajo nivel.<br/>Únicamente pretende mejorar la comprensión del usuario, de las funcionalidades implementadas y el cumplimiento de lo expresado en los documentos de  [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md) y [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md) |
-| Estado         | Implementada al **100%**, según la funcionalidad prevista para cubrir lo expresado en los documentos de [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)  , y  [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md).  Por otro lado la exposición de los EndPoint relativos al [CRUD](https://es.wikipedia.org/wiki/CRUD) sobre modelo de datos completo, hace posible realizar cualquier operación, aunque esta en principio no estuviese prevista. |
+| Objetivo       | El presente documento describe la librería Factoría de URIs a alto nivel, por lo tanto, se complementa con el documento de [Documentación tecnica](./documentacion-tecnica.md) que la describe a bajo nivel.<br/>Únicamente pretende mejorar la comprensión del usuario, de las funcionalidades implementadas y el cumplimiento de lo expresado en los documentos de  [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md) y [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md) |
+| Estado         | Implementada al **100%**, según la funcionalidad prevista para cubrir lo expresado en los documentos de [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)  , y  [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md).  Por otro lado la exposición de los EndPoint relativos al [CRUD](https://es.wikipedia.org/wiki/CRUD) sobre modelo de datos completo, hace posible realizar cualquier operación, aunque esta en principio no estuviese prevista. |
 | Próximos pasos | La integración con componentes desarrollados en una fase de madurez no final, o otros por desarrollar (tales como el servicio de publicación web), quizás requieran la modificación o creación de algún EndPoint adicional, aunque según lo descrito en el apartado anterior, dado que existe un CRUD completo sobre todas las entidades, la implementación, debería de ser trivial. |
-| Documentación  | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Documentación técnica](./documentacion-tecnica.md) (documentación de bajo nivel)<br/>[Documentación API REST de la Factoria de URIs](./documentacion_api_rest_de_la_factoria_de_uris.md) (documentación de bajo nivel)<br/>[build](./build.md)<br/>[docker](./docker.md) |
+| Documentación  | [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md)<br/>[Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md)<br/>[Documentación técnica](./documentacion-tecnica.md) (documentación de bajo nivel)<br/>[Documentación API REST de la Factoria de URIs](./documentacion_api_rest_de_la_factoria_de_uris.md) (documentación de bajo nivel)<br/>[build](./build.md)<br/>[docker](./docker.md) |
 
 
 
@@ -17,7 +18,7 @@
 
 El presente documento realiza una descripción de la Factoría de URIs a alto nivel, por lo tanto, se complementa con el documento de [Documentación técnica](./documentacion-tecnica.md) que la describe a bajo nivel.
 
-Únicamente pretende mejorar la comprensión del usuario, de las funcionalidades implementadas y el cumplimiento de lo expresado en los documentos de  [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md) y [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md).
+Únicamente pretende mejorar la comprensión del usuario, de las funcionalidades implementadas y el cumplimiento de lo expresado en los documentos de  [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md) y [Buenas practicas para URIs Hércules](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/09-Buenas_prácticas_para_URIs_Hércules/ASIO_Izertis_BuenasPracticasParaURIsHercules.md).
 
 ## DESPLIEGUE
 
@@ -27,7 +28,7 @@ Se puede encontrar documentación exhaustiva de desplieguen en el documento [bui
 
 ### Esquema de URIS
 
-El esquema de URIs implementado, esta descrito en el documento de [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md) 
+El esquema de URIs implementado, esta descrito en el documento de [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md) 
 
 Básicamente tiene como finalidad principal mapear URIS publicas  o canónicas con URIs privadas o internas.
 
@@ -37,7 +38,7 @@ Para ello es conveniente una definición algo mas formal
 
 #### URIS publicas o externas (URIS Canónicas)
 
-Podemos definir una **URI canónica**, como aquella que siguiendo los criterios expresados en el documento [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md), ofrece un identificador persistente para un recurso semántico, siguiendo para ello el siguiente patrón de construcción 
+Podemos definir una **URI canónica**, como aquella que siguiendo los criterios expresados en el documento [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md), ofrece un identificador persistente para un recurso semántico, siguiendo para ello el siguiente patrón de construcción 
 
 **http://{dominio}/[{subdominio}]/{tipo}/{concepto}[/{referencia}]**
 
@@ -86,7 +87,7 @@ En cumplimiento del requisito de cambio de esquema de URIs, expresado en el plie
 
 Tanto en el fichero de configuración application.yaml como mediante la variable de entorno APP_URI_CANONICALURISCHEMA o APP_URI_CANONICALURILANGUAGESCHEMA es posible cambiar el patrón tanto de URIs Canónicas como de dichas URIs Canónicas por idioma (incluso de forma distinta para cada caso).
 
-Los componentes de la URI, son los descritos en el documento de  [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md), siguiendo el patrón para URIs Canónicas:
+Los componentes de la URI, son los descritos en el documento de  [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md), siguiendo el patrón para URIs Canónicas:
 
 **http://{dominio}/[{subdominio}]/{tipo}/{concepto}[/{referencia}]**
 
@@ -103,11 +104,11 @@ APP_URI_CANONICALURISCHEMA  = http://$domain$/$sub-domain$/$type$/$concept$/$ref
 APP_URI_CANONICALURILANGUAGESCHEMA = http://$domain$/$sub-domain$/$type$/$concept$/$reference$
 ```
 
-Donde podremos eliminar (algunos opcionales, tales como el sub-domain) o modificar el orden de los componentes (dichos componentes se definen en el documento de [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md))
+Donde podremos eliminar (algunos opcionales, tales como el sub-domain) o modificar el orden de los componentes (dichos componentes se definen en el documento de [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md))
 
  ### Normalización
 
-La Factoría de URIs implementa la normalización descrita en el documento [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md), concretamente todos los puntos detallados a continuación:
+La Factoría de URIs implementa la normalización descrita en el documento [esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md), concretamente todos los puntos detallados a continuación:
 
 - Han de ser únicos (al menos en su dominio). 
 - Usar siempre minúsculas, salvo para los conceptos que podrán tener la primera letra en mayúscula.
@@ -124,7 +125,7 @@ Entre las entidades presentes en el esquema podemos destacar:
 
 ### Entidad TYPE
 
-Representa el componente tipo, descrito en el  [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/entregables_hito_1/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md). El atributo code actúa como calve primaria y representa el código (de 3 caracteres) que será usado en el esquema de URIs, para las URIs canónicas y el atributo name, su descripción larga.
+Representa el componente tipo, descrito en el  [Esquema de URIs](https://github.com/HerculesCRUE/ib-asio-docs-/blob/master/08-Esquema_de_URIs_Hércules/ASIO_Izertis_ArquitecturaDeURIs.md). El atributo code actúa como calve primaria y representa el código (de 3 caracteres) que será usado en el esquema de URIs, para las URIs canónicas y el atributo name, su descripción larga.
 
 ![Type](./images/type_entity.png)
 
