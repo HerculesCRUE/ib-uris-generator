@@ -1,8 +1,10 @@
 # Changelog
 Este fichero documenta todos los cambios sufridos por la factoría de URIs, disponible en el presente [repositorio](https://github.com/HerculesCRUE/ib-uris-generator)
 
-## [2.0-SNAPSHOT] - 2021-05-13
+## 2.0-SNAPSHOT (19/05/2021)
 
+- Git build actions
+- Cambios para aceptar el multiidioma
 ### Added
 
 - Integration with Discovery Library.
