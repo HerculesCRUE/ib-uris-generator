@@ -1,9 +1,13 @@
 # Changelog
 Este fichero documenta todos los cambios sufridos por la factoría de URIs, disponible en el presente [repositorio](https://github.com/HerculesCRUE/ib-uris-generator)
 
+## [2.0-SNAPSHOT] - 2021-05-13
 
+### Added
 
-## [1.1.0] - 2020-09-28
+- Integration with Discovery Library.
+
+## [1.2.0] - 2020-09-28
 ### Added
 - Test BDD implementados con [cucumber](https://cucumber.io/).
 
