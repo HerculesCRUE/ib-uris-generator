@@ -89,9 +89,11 @@ public class Application {
             StorageType st1 = new StorageType("trellis");
             StorageType st2 = new StorageType("wikibase");
             StorageType st3 = new StorageType("weso-wikibase");
+            StorageType st4 = new StorageType("external-ontology");
             storageTypeProxy.save(st1);
             storageTypeProxy.save(st2);
             storageTypeProxy.save(st3);
+            storageTypeProxy.save(st4);
         };
     }
 }
