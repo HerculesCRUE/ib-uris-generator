@@ -36,7 +36,7 @@ public class LocalURI {
     private long id;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY)
     private CanonicalURILanguage canonicalURILanguage;
 
     /**
