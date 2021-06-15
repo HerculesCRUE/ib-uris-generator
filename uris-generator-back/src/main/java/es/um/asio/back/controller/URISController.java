@@ -25,10 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -163,6 +160,8 @@ public class URISController {
 			@RequestParam(required = false, defaultValue = "hercules.org") @Validated(Create.class) final String domain,
 			@ApiParam(name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = Constants.SUBDOMAIN_VALUE, required = false) 
 			@RequestParam(required = false, defaultValue = "um") @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "type", value = "Type of URI", defaultValue = Constants.TYPE_REST, required = false)
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String type,
 			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = false)
 			@RequestParam(required = false, defaultValue = "es-ES") @Validated(Create.class) final String lang,
 			@ApiParam(name = "tripleStore", value = "Triple Store", defaultValue = Constants.TRELLIS, required = false)
@@ -171,8 +170,12 @@ public class URISController {
 			@RequestParam(required = false, defaultValue = "true") @Validated(Create.class) final boolean requestDiscovery,
 			@RequestBody final Object input) {
 		this.logger.info("Creating Instance URI..." );
+
 		try {
-			final String type = Constants.TYPE_REST;
+			if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(type)) {
+				throw new CustomNotFoundException("Type: " +type +" wrong, the type must be one of this [ cat,def,kos,res ]" );
+			}
+/*			final String type = Constants.TYPE_REST;*/
 
 			final HashMap map = (HashMap) input;
 			final String entity = Utils.getClassNameFromPath(String.valueOf(map.get(Constants.CLASS) != null ? map.get(Constants.CLASS): map.get(Constants.CLASS)));
@@ -187,12 +190,16 @@ public class URISController {
 			if (Utils.isValidString(entityId) && !Utils.isValidUUID(entityId)) {
 				entityId = Utils.getUUIDFromString(entityId);
 			}
+			
+			boolean found = false;
 
 			if (requestDiscovery) {
 				LinkedTreeMap<String, Object> similarity = discoveryService.findSimilarEntity(subDomain, tripleStore, entity, entityId, map);
 				if (similarity != null) {
-					if (similarity.containsKey("entityId"))
+					if (similarity.containsKey("entityId")) {
 						entityId = similarity.get("entityId").toString();
+						found = true;
+					}
 				}
 			}
 			CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(domain, subDomain,
@@ -204,6 +211,10 @@ public class URISController {
 			response.put(Constants.CANONICAL_URI, canonicalURILanguage.getFullParentURI());
 			response.put(Constants.LANGUAGE, lang);
 			response.put(Constants.CANONICAL_LANGUAGE_URI, canonicalURILanguage.getFullURI());
+			if (found) {
+				response.put("similarity", "");
+			}
+			
 			this.logger.info(CREATED_INSTANCE, new JSONObject(response));
 			return response;
 
@@ -259,12 +270,16 @@ public class URISController {
 			@RequestParam(required = false, defaultValue = "hercules.org") @Validated(Create.class) final String domain,
 			@ApiParam(name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = Constants.SUBDOMAIN_VALUE, required = false) 
 			@RequestParam(required = false, defaultValue = "um") @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "type", value = "Type of URI", defaultValue = Constants.TYPE_REST, required = false)
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String type,
 			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = false) 
 			@RequestParam(required = false, defaultValue = "es-ES") @Validated(Create.class) final String lang,
 			@RequestBody final Object input) {
 		this.logger.info("Creating property URI");
 
-		final String type = Constants.TYPE_REST;
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(type)) {
+			throw new CustomNotFoundException("Type: " +type +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 
 		final HashMap map = (HashMap) input;
 		final String property = Utils.getClassNameFromPath((String) map.get(Constants.PROPERTY));
@@ -318,12 +333,16 @@ public class URISController {
 			@RequestParam(required = true) @Validated(Create.class) final String domain,
 			@ApiParam(name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = Constants.SUBDOMAIN_VALUE, required = false) 
 			@RequestParam(required = true) @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "type", value = "Type of URI", defaultValue = Constants.TYPE_REST, required = false)
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String type,
 			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = false) 
 			@RequestParam(required = true) @Validated(Create.class) final String lang,
 			@RequestBody final Object input) {
 		this.logger.info("Creating resource");
 
-		final String type = Constants.TYPE_REST;
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(type)) {
+			throw new CustomNotFoundException("Type: " +type +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 
 		final HashMap map = (HashMap) input;
 		final String entity = Utils.getClassNameFromPath((String) map.get(Constants.CLASS));
@@ -332,7 +351,7 @@ public class URISController {
 						: (map.get(Constants.CANONICAL_CLASS))));
 
 		CanonicalURILanguage canonicalURILanguage = canonicalURILanguageControllerController.save(domain, subDomain,
-				lang, type, entity, null, null, (pEntity != null) ? pEntity : entity,null, null, true);
+				lang, type, entity, null, null, null,((pEntity != null) ? pEntity : entity), null, true);
 
 		// response
 		final Map<String, String> response = new HashMap<>();
@@ -425,12 +444,16 @@ public class URISController {
 			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false, defaultValue = Constants.SPANISH_LANGUAGE)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
 			@ApiParam(name = "typeCode", value = "Type Code", required = false, defaultValue = Constants.TYPE_REST)
-			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = false)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
 			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
 		logger.info("Creating Local Entity URI");
+
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(typeCode)) {
+			throw new CustomNotFoundException("Type: " +typeCode +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 
 		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
 		String defSubdomain = (subDomain!=null)?subDomain:Constants.SUBDOMAIN_VALUE;
@@ -488,7 +511,7 @@ public class URISController {
 			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false, defaultValue = Constants.SPANISH_LANGUAGE)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
 			@ApiParam(name = "typeCode", value = "Type Code", required = false, defaultValue = Constants.TYPE_REST)
-			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = false)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
 			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true)
@@ -496,7 +519,9 @@ public class URISController {
 			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
 		logger.info("Creating Local Entity URI");
-
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(typeCode)) {
+			throw new CustomNotFoundException("Type: " +typeCode +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 		evaluateAndLunchException(!Utils.isValidURL(localURI),"Format of Local URI is wrong: " + localURI);
 
 		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
@@ -549,7 +574,7 @@ public class URISController {
 			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false, defaultValue = Constants.SPANISH_LANGUAGE)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
 			@ApiParam(name = "typeCode", value = "Type Code", required = false, defaultValue = Constants.TYPE_REST)
-			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
 			@ApiParam(name = "reference", value = "instance id", required = true)
@@ -557,6 +582,9 @@ public class URISController {
 			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
 		logger.info("Get Local Resource URI");
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(typeCode)) {
+			throw new CustomNotFoundException("Type: " +typeCode +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
 		String defSubdomain = (subDomain!=null)?subDomain:Constants.SUBDOMAIN_VALUE;
 		String defLang = null;
@@ -617,7 +645,7 @@ public class URISController {
 			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false, defaultValue = Constants.SPANISH_LANGUAGE)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
 			@ApiParam(name = "typeCode", value = "Type Code", required = false, defaultValue = Constants.TYPE_REST)
-			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
 			@ApiParam(name = "reference", value = "instance id", required = true)
@@ -629,6 +657,9 @@ public class URISController {
 		logger.info("Creating Local Resource URI: ");
 		if (!Utils.isValidURL(localURI))
 			throw new CustomNotFoundException(NOT_VALID_URI_LOCAL_FORMAT + localURI);
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(typeCode)) {
+			throw new CustomNotFoundException("Type: " +typeCode +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
 		String defSubdomain = (subDomain!=null)?subDomain:Constants.SUBDOMAIN_VALUE;
 		String defLang = null;
@@ -683,13 +714,15 @@ public class URISController {
 			@ApiParam(name = "languageCode", value = "Language", required = false, defaultValue = Constants.SPANISH_LANGUAGE)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
 			@ApiParam(name = "typeCode", value = "Type Code", required = false, defaultValue = Constants.TYPE_REST)
-			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "property", value = "property id", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String property,
 			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
 		logger.info("Get Local Property URI: ");
-
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(typeCode)) {
+			throw new CustomNotFoundException("Type: " +typeCode +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByPropertyNameAndIsProperty(Utils.toASIONormalization(property));
 
 
@@ -734,7 +767,7 @@ public class URISController {
 			@ApiParam(name = "languageCode", value = "Language", required = false, defaultValue = Constants.SPANISH_LANGUAGE)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
 			@ApiParam(name = "typeCode", value = "Type Code", required = false, defaultValue = Constants.TYPE_REST)
-			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "property", value = "property name", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String property,
 			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true)
@@ -744,6 +777,9 @@ public class URISController {
 		logger.info("Creating Local Property URI: ");
 		if (!Utils.isValidURL(localURI))
 			throw new CustomNotFoundException(NOT_VALID_URI_LOCAL_FORMAT + localURI);
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(typeCode)) {
+			throw new CustomNotFoundException("Type: " +typeCode +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 		Utils.toASIONormalization(property);
 		List<CanonicalURILanguage> cus = canonicalURILanguageControllerService.getAllByPropertyNameAndIsProperty(Utils.toASIONormalization(property));
 
@@ -815,7 +851,7 @@ public class URISController {
 			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
 			@ApiParam(name = "typeCode", value = "Type Code", required = false)
-			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
 			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true)
@@ -825,6 +861,9 @@ public class URISController {
 
 		if (!Utils.isValidURL(localURI))
 			throw new CustomNotFoundException(NOT_VALID_URI_LOCAL_FORMAT + localURI);
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(typeCode)) {
+			throw new CustomNotFoundException("Type: " +typeCode +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
 		String defSubdomain = (subDomain!=null)?subDomain:Constants.SUBDOMAIN_VALUE;
 		String defLang = null;
@@ -875,7 +914,7 @@ public class URISController {
 			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
 			@ApiParam(name = "typeCode", value = "Type Code", required = false)
-			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "entity", value = "entity name in language", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String entity,
 			@ApiParam(name = "reference", value = "instance id", required = true)
@@ -885,6 +924,9 @@ public class URISController {
 			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
 		logger.info("Deleting instance To local URI");
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(typeCode)) {
+			throw new CustomNotFoundException("Type: " +typeCode +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 		if (!Utils.isValidURL(localURI))
 			throw new CustomNotFoundException(NOT_VALID_URI_LOCAL_FORMAT + localURI);
 		String defDomain = (domain!=null)?domain:Constants.DOMAIN_VALUE;
@@ -940,7 +982,7 @@ public class URISController {
 			@ApiParam(name = "languageCode", value = "Sub Domain Element", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String languageCode,
 			@ApiParam(name = "typeCode", value = "Type Code", required = false)
-			@RequestParam(required = false) @Validated(Create.class) final String typeCode,
+			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String typeCode,
 			@ApiParam(name = "property", value = "instance id", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String property,
 			@ApiParam(name = "localURI", value = "local URI where resource is Storage", required = true)
@@ -948,6 +990,9 @@ public class URISController {
 			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
 		logger.info("Deleting property in language");
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(typeCode)) {
+			throw new CustomNotFoundException("Type: " +typeCode +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 		if (!Utils.isValidURL(localURI))
 			throw new CustomNotFoundException(NOT_VALID_URI_LOCAL_FORMAT + localURI);
 
@@ -1124,6 +1169,9 @@ public class URISController {
 			@ApiParam(name = "reference", value = "", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String reference
 	) {
+		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(type)) {
+			throw new CustomNotFoundException("Type: " +type +" wrong, the type must be one of this [cat,def,kos,res]" );
+		}
 		return schemaService.buildCanonical(domain,subDomain,type,entity,reference);
 	}
 
