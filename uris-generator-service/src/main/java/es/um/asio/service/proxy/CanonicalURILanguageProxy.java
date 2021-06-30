@@ -5,6 +5,7 @@ import es.um.asio.audit.abstractions.service.QueryService;
 import es.um.asio.audit.abstractions.service.SaveService;
 import es.um.asio.service.filter.CanonicalURILanguageFilter;
 import es.um.asio.service.model.CanonicalURILanguage;
+import es.um.asio.service.model.Type;
 
 import java.util.List;
 

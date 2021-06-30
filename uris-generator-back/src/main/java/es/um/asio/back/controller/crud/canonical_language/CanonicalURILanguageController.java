@@ -138,7 +138,7 @@ public class CanonicalURILanguageController {
                         cu.setEntityName(cu.getConcept());
                         cu.updateState();
                         if (property!=null) {
-                            cu.setPropertyName(property);
+                            cu.setPropertyName(parentProperty!=null?parentProperty:property);
                             cu.updateState();
                         }
                         CanonicalURI canonicalURI = canonicalProxy.save(cu);
@@ -165,40 +165,47 @@ public class CanonicalURILanguageController {
     private List<CanonicalURI> getCanonicalURIS(CanonicalURILanguage entity, String parentEntity, String parentProperty, String reference){
         List<CanonicalURI> canonicalURIs = new ArrayList<>();
         if (entity.getIsEntity()) {
-            canonicalURIs.addAll(getCanonicalURIEntities(parentEntity));
+            canonicalURIs.addAll(getCanonicalURIEntities(parentEntity,entity.getType()));
         } else if (entity.getIsInstance()) {
-            canonicalURIs.addAll(getCanonicalURIInstances(parentEntity, reference));
+            canonicalURIs.addAll(getCanonicalURIInstances(parentEntity, reference,entity.getType()));
         } else  {
-            canonicalURIs.addAll(getCanonicalURIProperties(entity, parentEntity, parentProperty));
+            canonicalURIs.addAll(getCanonicalURIProperties(entity, parentEntity, parentProperty,entity.getType()));
         }
         return canonicalURIs;
     }
 
-    private List<CanonicalURI> getCanonicalURIEntities(String parentEntity) {
+    private List<CanonicalURI> getCanonicalURIEntities(String parentEntity, Type type) {
         List<CanonicalURI> canonicalURIs = new ArrayList<>();
         for (CanonicalURI cu : canonicalProxy.getAllByEntityNameAndPropertyName(parentEntity, null)) {
             if (cu.getIsEntity() && cu.getReference()==null) {
-                canonicalURIs.add(cu);
+                if (cu.getType().equals(type)) {
+                    canonicalURIs.add(cu);
+                }
             }
         }
         return canonicalURIs;
     }
 
-    private List<CanonicalURI> getCanonicalURIInstances(String parentEntity, String reference) {
+    private List<CanonicalURI> getCanonicalURIInstances(String parentEntity, String reference, Type type) {
         List<CanonicalURI> canonicalURIs = new ArrayList<>();
         for (CanonicalURI cu : canonicalProxy.getAllByEntityNameAndReference(parentEntity,reference)) {
             if (cu.getIsInstance() && cu.getReference().trim().equals(reference)) {
-                canonicalURIs.add(cu);
+                if (cu.getType().equals(type)) {
+                    canonicalURIs.add(cu);
+                }
             }
         }
         return canonicalURIs;
     }
 
-    private List<CanonicalURI> getCanonicalURIProperties(CanonicalURILanguage entity, String parentEntity, String parentProperty) {
+    private List<CanonicalURI> getCanonicalURIProperties(CanonicalURILanguage entity, String parentEntity, String parentProperty, Type type) {
         List<CanonicalURI> canonicalURIs = new ArrayList<>();
+        List<CanonicalURI> a = canonicalProxy.getAllByPropertyFromProperties(parentProperty);
         for (CanonicalURI cu : canonicalProxy.getAllByPropertyFromProperties(parentProperty)) {
             if (cu.getIsProperty() && cu.getReference().trim().equals(entity.getParentPropertyName().trim())) {
-                canonicalURIs.add(cu);
+                if (cu.getType().equals(type)) {
+                    canonicalURIs.add(cu);
+                }
             }
         }
         return canonicalURIs;

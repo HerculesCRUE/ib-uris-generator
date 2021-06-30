@@ -10,7 +10,7 @@ app:
       password: '1z3rt1s'
       rootUsername: 'root'
       rootPassword: '1z3rt1s'
-      url: jdbc:mariadb://localhost:3306/uris?ssl=false&createDatabaseIfNotExist=true
+      url: jdbc:mariadb://localhost:3307/uris?ssl=false&createDatabaseIfNotExist=true
       #jdbc:mariadb://127.0.0.1:3307/uris?ssl=false&createDatabaseIfNotExist=true
   # Swagger
   swagger:

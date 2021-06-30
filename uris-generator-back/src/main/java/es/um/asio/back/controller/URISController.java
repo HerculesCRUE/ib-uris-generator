@@ -6,10 +6,7 @@ import es.um.asio.back.controller.crud.local.LocalURIController;
 import es.um.asio.back.controller.crud.storage_type.StorageTypeController;
 import es.um.asio.back.controller.error.CustomNotFoundException;
 import es.um.asio.service.model.*;
-import es.um.asio.service.proxy.LanguageProxy;
-import es.um.asio.service.proxy.LanguageTypeProxy;
-import es.um.asio.service.proxy.LocalURIProxy;
-import es.um.asio.service.proxy.TypeProxy;
+import es.um.asio.service.proxy.*;
 import es.um.asio.service.service.*;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.validation.group.Create;
@@ -26,6 +23,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static es.um.asio.service.model.LocalURI_.canonicalURILanguage;
 
 
 /**
@@ -99,6 +99,12 @@ public class URISController {
 	private TypeProxy typeProxy;
 
 	/**
+	 * Proxy implementation for {@link LocalURI}.
+	 */
+	@Autowired
+	private StorageTypeProxy storageTypeProxy;
+
+	/**
 	 * Schema Service
 	 */
 	@Autowired
@@ -115,7 +121,6 @@ public class URISController {
 	public String getHealth() {
 		return "Alive";
 	}
-
 
 	/**
 	 * Creates the resourceID URI
@@ -225,6 +230,61 @@ public class URISController {
 		return null;
 	}
 
+
+	/**
+	 * Search the resourceID URI
+	 * @param domain
+	 * @param subDomain
+	 * @param type
+	 * @param lang
+	 * @param className
+	 * @param entityId
+	 * @return List of Canonical URIs by Language
+	 */
+	@ApiOperation(value = "Get Canonical URI for Resource or Instance", notes = "If exist then return URIs")
+	@GetMapping(URISController.Mappings.RESOURCE_ID)
+	public List<Map<String, String>> getResource(
+			@ApiParam(name = "domain", value = "Domain: hercules.org", defaultValue = Constants.DOMAIN_VALUE, required = false)
+			@RequestParam(required = false, defaultValue = "hercules.org") @Validated(Create.class) final String domain,
+			@ApiParam(name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = Constants.SUBDOMAIN_VALUE, required = false)
+			@RequestParam(required = false, defaultValue = "um") @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "type", value = "Type of URI", defaultValue = Constants.TYPE_REST, required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String type,
+			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String lang,
+			@ApiParam(name = "className", required = true)
+			@RequestParam(required = true) @Validated(Create.class) final String className,
+			@ApiParam(name = "entityId", required = true)
+			@RequestParam(required = true) @Validated(Create.class)  String entityId) {
+		this.logger.info("Retrieving Instance URI..." );
+
+		final String entity = className;
+		if (!Utils.isValidString(entity)) {
+			throw new CustomNotFoundException("Parameter className is required");
+		}
+
+		if (type!= null && !Arrays.asList(new String[] {"cat","def","kos","res"}).contains(type)) {
+			throw new CustomNotFoundException("Type: " +type +" wrong, the type must be one of this [ cat,def,kos,res ]" );
+		}
+
+		List<Map<String, String>> canonicalURIsLanguage = canonicalURILanguageControllerController
+				.getByReference(className,entityId).stream().filter(cul ->
+					cul.getIsInstance() &&
+					(!Utils.isValidString(domain) || cul.getDomain().equals(domain)) &&
+					(!Utils.isValidString(subDomain) || cul.getSubDomain().equals(subDomain)) &&
+					(!Utils.isValidString(type) || cul.getTypeCode().equals(type)) &&
+					(!Utils.isValidString(lang) || cul.getLanguageID().equals(lang))
+				).map(
+						culf -> new HashMap<String, String>() {{
+							put(Constants.CANONICAL_URI, culf.getFullParentURI());
+							put(Constants.LANGUAGE, culf.getLanguageID());
+							put(Constants.CANONICAL_LANGUAGE_URI, culf.getFullURI());
+						}}
+				).collect(Collectors.toList());
+
+		return canonicalURIsLanguage;
+	}
+
 	/**
 	 * 
 	 * Creates the property URI
@@ -300,6 +360,53 @@ public class URISController {
 	}
 
 	/**
+	 * Search the Property Canonical Language URI
+	 * @param domain
+	 * @param subDomain
+	 * @param type
+	 * @param lang
+	 * @param className
+	 * @param entityId
+	 * @return List of Canonical URIs by Language
+	 */
+	@ApiOperation(value = "Get Canonical URI for Resource or Instance", notes = "If exist then return URIs")
+	@GetMapping(URISController.Mappings.PROPERTY_URI)
+	public List<Map<String, String>> getPropertiesURIS(
+			@ApiParam(name = "domain", value = "Domain: hercules.org", defaultValue = Constants.DOMAIN_VALUE, required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String domain,
+			@ApiParam(name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = Constants.SUBDOMAIN_VALUE, required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "type", value = "Type of URI", defaultValue = Constants.TYPE_REST, required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String type,
+			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String lang,
+			@ApiParam(name = "propertyName", required = true)
+			@RequestParam(required = true, defaultValue = Constants.TRELLIS) @Validated(Create.class)  String propertyName) {
+		this.logger.info("Retrieving Instance URI..." );
+
+		if (type!= null && !Arrays.asList(new String[] {"cat","def","kos","res"}).contains(type)) {
+			throw new CustomNotFoundException("Type: " +type +" wrong, the type must be one of this [ cat,def,kos,res ]" );
+		}
+
+		List<CanonicalURILanguage> xxx = canonicalURILanguageControllerController.getByProperty(propertyName);
+		List<Map<String, String>> canonicalURIsLanguage = canonicalURILanguageControllerController.getByProperty(propertyName).stream().filter(cul ->
+						cul.getIsProperty() &&
+						(!Utils.isValidString(domain) || cul.getDomain().equals(domain)) &&
+						(!Utils.isValidString(subDomain) || cul.getSubDomain().equals(subDomain)) &&
+						(!Utils.isValidString(type) || cul.getTypeCode().equals(type)) &&
+						(!Utils.isValidString(lang) || cul.getLanguageID().equals(lang))
+				).map(
+						culf -> new HashMap<String, String>() {{
+							put(Constants.CANONICAL_URI, culf.getFullParentURI());
+							put(Constants.LANGUAGE, culf.getLanguageID());
+							put(Constants.CANONICAL_LANGUAGE_URI, culf.getFullURI());
+						}}
+				).collect(Collectors.toList());
+
+		return canonicalURIsLanguage;
+	}
+
+	/**
 	 * Creates the resource type URI
 	 * <p>
 	 * Example
@@ -333,9 +440,9 @@ public class URISController {
 			@RequestParam(required = true) @Validated(Create.class) final String domain,
 			@ApiParam(name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = Constants.SUBDOMAIN_VALUE, required = false) 
 			@RequestParam(required = true) @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "type", value = "Type of URI", defaultValue = Constants.TYPE_REST, required = false)
+			@ApiParam(name = "type", value = "Type of URI", defaultValue = Constants.TYPE_REST, required = true)
 			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String type,
-			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = false) 
+			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String lang,
 			@RequestBody final Object input) {
 		this.logger.info("Creating resource");
@@ -361,6 +468,52 @@ public class URISController {
 		this.logger.info(CREATED_INSTANCE, new JSONObject(response));
 		return response;
 
+	}
+
+	/**
+	 * Search the Property Canonical Language URI
+	 * @param domain
+	 * @param subDomain
+	 * @param type
+	 * @param lang
+	 * @param className
+	 * @param entityId
+	 * @return List of Canonical URIs by Language
+	 */
+	@ApiOperation(value = "Get Canonical URI for Resource or Instance", notes = "If exist then return URIs")
+	@GetMapping(URISController.Mappings.RESOURCE_TYPE_URI)
+	public List<Map<String, String>> getClassURIS(
+			@ApiParam(name = "domain", value = "Domain: hercules.org", defaultValue = Constants.DOMAIN_VALUE, required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String domain,
+			@ApiParam(name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = Constants.SUBDOMAIN_VALUE, required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
+			@ApiParam(name = "type", value = "Type of URI", defaultValue = Constants.TYPE_REST, required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String type,
+			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = false)
+			@RequestParam(required = false) @Validated(Create.class) final String lang,
+			@ApiParam(name = "className", required = true)
+			@RequestParam(required = true) @Validated(Create.class)  String className) {
+		this.logger.info("Retrieving Instance URI..." );
+
+		if (type!= null && !Arrays.asList(new String[] {"cat","def","kos","res"}).contains(type)) {
+			throw new CustomNotFoundException("Type: " +type +" wrong, the type must be one of this [ cat,def,kos,res ]" );
+		}
+
+		List<Map<String, String>> canonicalURIsLanguage = canonicalURILanguageControllerController.get(className).stream().filter(cul ->
+				cul.getIsEntity() &&
+				(!Utils.isValidString(domain) || cul.getDomain().equals(domain)) &&
+				(!Utils.isValidString(subDomain) || cul.getSubDomain().equals(subDomain)) &&
+				(!Utils.isValidString(type) || cul.getTypeCode().equals(type)) &&
+				(!Utils.isValidString(lang) || cul.getLanguageID().equals(lang))
+		).map(
+				culf -> new HashMap<String, String>() {{
+					put(Constants.CANONICAL_URI, culf.getFullParentURI());
+					put(Constants.LANGUAGE, culf.getLanguageID());
+					put(Constants.CANONICAL_LANGUAGE_URI, culf.getFullURI());
+				}}
+		).collect(Collectors.toList());
+
+		return canonicalURIsLanguage;
 	}
 
 	/**
@@ -1193,6 +1346,13 @@ public class URISController {
 		return schemaService.buildCanonicalLanguage(domain,subDomain,language,type,entity,reference);
 	}
 
+
+	@GetMapping(Mappings.GET_ALL_LOCAL_STORAGES)
+	public List<String> getAllLocalStorages(
+	) {
+		return storageTypeProxy.findAll().stream().map(st -> st.getName()).collect(Collectors.toList());
+	}
+
 	/**
 	 * Mappings.
 	 */
@@ -1256,6 +1416,9 @@ public class URISController {
 
 		/** The Constant CANONICAL_LOCAL_SCHEMA. */
 		protected static final String BUILD_CANONICAL_LOCAL_SCHEMA = "/local-schema/build";
+
+		/** The Constant CANONICAL_LOCAL_SCHEMA. */
+		protected static final String GET_ALL_LOCAL_STORAGES = "/local-storages";
 
 	}
 }
