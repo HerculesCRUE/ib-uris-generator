@@ -1,6 +1,10 @@
 # Changelog
 Este fichero documenta todos los cambios sufridos por la factoría de URIs, disponible en el presente [repositorio](https://github.com/HerculesCRUE/ib-uris-generator)
 
+## 2.1-SNAPSHOT (15/07/2021)
+
+- Añadido endpoint de consulta
+
 ## 2.0-SNAPSHOT (19/05/2021)
 
 - Git build actions
