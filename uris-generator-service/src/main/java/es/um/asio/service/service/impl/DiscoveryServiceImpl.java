@@ -54,7 +54,7 @@ public class DiscoveryServiceImpl implements DiscoveryService {
         JSONObject jObject = new JSONObject(attrs);
         StringBuffer queryParams = new StringBuffer();
         queryParams.append(String.format("userId=%s", URLEncoder.encode("uris_factory", StandardCharsets.UTF_8.toString())));
-        queryParams.append(String.format("&requestCode=%s", URLEncoder.encode(RandomStringUtils.randomAlphabetic(10), StandardCharsets.UTF_8.toString())));
+        // queryParams.append(String.format("&requestCode=%s", URLEncoder.encode(RandomStringUtils.randomAlphabetic(10), StandardCharsets.UTF_8.toString())));
         queryParams.append(String.format("&node=%s", URLEncoder.encode(node, StandardCharsets.UTF_8.toString())));
         queryParams.append(String.format("&tripleStore=%s", URLEncoder.encode(tripleStore, StandardCharsets.UTF_8.toString())));
         queryParams.append(String.format("&className=%s", URLEncoder.encode(className, StandardCharsets.UTF_8.toString())));
