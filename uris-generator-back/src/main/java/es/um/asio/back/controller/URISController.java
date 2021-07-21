@@ -202,8 +202,8 @@ public class URISController {
 			logger.info("requestDiscovery value:",requestDiscovery);
 			if (requestDiscovery) {
 				LinkedTreeMap<String, Object> similarity = discoveryService.findSimilarEntity(subDomain, tripleStore, entity, entityId, map);
-				logger.info("requestDiscovery similarity found:",new Gson().toJsonTree(similarity).getAsJsonObject().toString());
 				if (similarity != null) {
+					logger.info("requestDiscovery similarity found:",new Gson().toJsonTree(similarity).getAsJsonObject().toString());
 					if (similarity.containsKey("entityId")) {
 						entityId = similarity.get("entityId").toString();
 						found = true;
