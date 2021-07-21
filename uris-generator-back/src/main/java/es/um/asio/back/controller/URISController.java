@@ -386,7 +386,7 @@ public class URISController {
 			@RequestParam(required = false) @Validated(Create.class) final String lang,
 			@ApiParam(name = "propertyName", required = true)
 			@RequestParam(required = true, defaultValue = Constants.TRELLIS) @Validated(Create.class)  String propertyName) {
-		this.logger.info("Retrieving Instance URI..." );
+		this.logger.info("Retrieving Instance URI...." );
 
 		if (type!= null && !Arrays.asList(new String[] {"cat","def","kos","res"}).contains(type)) {
 			throw new CustomNotFoundException("Type: " +type +" wrong, the type must be one of this [ cat,def,kos,res ]" );
