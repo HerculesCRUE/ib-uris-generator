@@ -541,6 +541,7 @@ public class URIControllerTest extends AbstractStepDefinitionConsumerTest {
      * Scenario: The client invokes the end point to get the canonical URI*/
 
 
+    /*
     @When("When post property the client calls endpoint {string} with domain {string} ,subDomain {string}, language {string} with JSON body")
     public void the_client_post_property_entity(String endPoint,String domain,String subDomain, String lang,String body) throws Throwable {
         initRequestParams();
@@ -576,6 +577,8 @@ public class URIControllerTest extends AbstractStepDefinitionConsumerTest {
         assertEquals(cURI,res.get("canonicalURI"));
         assertEquals(queryParams.get("lang"),res.get("language"));
     }
+
+     */
 
 /*     * Feature: GetCanonicalLanguageFromCanonicalURI
 
