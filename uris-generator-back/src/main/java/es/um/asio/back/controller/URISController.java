@@ -10,6 +10,7 @@ import es.um.asio.service.proxy.*;
 import es.um.asio.service.service.*;
 import es.um.asio.service.util.Utils;
 import es.um.asio.service.validation.group.Create;
+import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.cucumber.messages.internal.com.google.gson.internal.LinkedTreeMap;
 import io.swagger.annotations.*;
 import lombok.AccessLevel;
@@ -198,12 +199,15 @@ public class URISController {
 			
 			boolean found = false;
 
+			logger.info("requestDiscovery value:",requestDiscovery);
 			if (requestDiscovery) {
 				LinkedTreeMap<String, Object> similarity = discoveryService.findSimilarEntity(subDomain, tripleStore, entity, entityId, map);
+				logger.info("requestDiscovery similarity found:",new Gson().toJsonTree(similarity).getAsJsonObject().toString());
 				if (similarity != null) {
 					if (similarity.containsKey("entityId")) {
 						entityId = similarity.get("entityId").toString();
 						found = true;
+						logger.info("requestDiscovery similarity entityId:",new Gson().toJsonTree(similarity).getAsJsonObject().toString());
 					}
 				}
 			}
@@ -330,8 +334,8 @@ public class URISController {
 			@RequestParam(required = false, defaultValue = "hercules.org") @Validated(Create.class) final String domain,
 			@ApiParam(name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = Constants.SUBDOMAIN_VALUE, required = false) 
 			@RequestParam(required = false, defaultValue = "um") @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "type", value = "Type of URI", defaultValue = Constants.TYPE_REST, required = false)
-			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String type,
+			@ApiParam(name = "type", value = "Type of URI", defaultValue = "def", required = false)
+			@RequestParam(required = false, defaultValue = "def") @Validated(Create.class) final String type,
 			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = false) 
 			@RequestParam(required = false, defaultValue = "es-ES") @Validated(Create.class) final String lang,
 			@RequestBody final Object input) {
@@ -376,7 +380,7 @@ public class URISController {
 			@RequestParam(required = false) @Validated(Create.class) final String domain,
 			@ApiParam(name = "subDomain", value = "Subdomain: um (universidad de murcia)", defaultValue = Constants.SUBDOMAIN_VALUE, required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String subDomain,
-			@ApiParam(name = "type", value = "Type of URI", defaultValue = Constants.TYPE_REST, required = false)
+			@ApiParam(name = "type", value = "Type of URI", defaultValue = "def", required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String type,
 			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = false)
 			@RequestParam(required = false) @Validated(Create.class) final String lang,
