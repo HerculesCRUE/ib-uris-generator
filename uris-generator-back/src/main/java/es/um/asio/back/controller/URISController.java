@@ -188,6 +188,7 @@ public class URISController {
 			if (!Utils.isValidString(entity)) {
 				throw new CustomNotFoundException("Attribute @Class (required) is not present");
 			}
+			String entityNormalized = Utils.toConceptFormat(entity);
 			final String pEntity = Utils.getClassNameFromPath((String) (map.get(Constants.CANONICAL_CLASS_NAME) != null ? (map.get(Constants.CANONICAL_CLASS_NAME))	: (map.get(Constants.CANONICAL_CLASS))));
 			final String ref = Utils.generateUUIDFromOject(input);
 			String entityId = map.containsKey(Constants.ENTITY_ID)?String.valueOf(map.get(Constants.ENTITY_ID)) :
@@ -201,7 +202,7 @@ public class URISController {
 
 			logger.info("requestDiscovery value:",requestDiscovery);
 			if (requestDiscovery) {
-				LinkedTreeMap<String, Object> similarity = discoveryService.findSimilarEntity(subDomain, tripleStore, entity, entityId, map);
+				LinkedTreeMap<String, Object> similarity = discoveryService.findSimilarEntity(subDomain, tripleStore, entityNormalized, entityId, map);
 				if (similarity != null) {
 					logger.info("requestDiscovery similarity found:",new Gson().toJsonTree(similarity).getAsJsonObject().toString());
 					if (similarity.containsKey("entityId")) {
