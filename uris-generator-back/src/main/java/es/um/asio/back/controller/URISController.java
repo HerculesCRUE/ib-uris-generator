@@ -170,7 +170,7 @@ public class URISController {
 			@RequestParam(required = false, defaultValue = Constants.TYPE_REST) @Validated(Create.class) final String type,
 			@ApiParam(name = "lang", value = "Language of data", defaultValue = Constants.SPANISH_LANGUAGE, required = false)
 			@RequestParam(required = false, defaultValue = "es-ES") @Validated(Create.class) final String lang,
-			@ApiParam(name = "tripleStore", value = "Triple Store", defaultValue = Constants.TRELLIS, required = false)
+			@ApiParam(name = "tripleStore", value = "Triple Store", defaultValue = "fuseki", required = false)
 			@RequestParam(required = false, defaultValue = Constants.TRELLIS) @Validated(Create.class) final String tripleStore,
 			@ApiParam(name = "requestDiscovery", value = "Request in discovery library", defaultValue = "true", required = false)
 			@RequestParam(required = false, defaultValue = "true") @Validated(Create.class) final boolean requestDiscovery,
@@ -203,7 +203,7 @@ public class URISController {
 			logger.info("requestDiscovery value:" + String.valueOf(requestDiscovery));
 			if (requestDiscovery!=false) {
 				logger.info("requesting similarities");
-				LinkedTreeMap<String, Object> similarity = discoveryService.findSimilarEntity(subDomain, tripleStore, entityNormalized, entityId, map);
+				LinkedTreeMap<String, Object> similarity = discoveryService.findSimilarEntity(subDomain, tripleStore.equals(Constants.TRELLIS)?"fuseki":tripleStore, entityNormalized, entityId, map);
 				logger.info("requesting similarities results:" + ((similarity==null)?"find":"no find"));
 				if (similarity != null) {
 					logger.info("Found similarities:" + new Gson().toJsonTree(similarity).getAsJsonObject().toString());
