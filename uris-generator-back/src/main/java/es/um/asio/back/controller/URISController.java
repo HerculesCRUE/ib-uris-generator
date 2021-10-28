@@ -183,7 +183,7 @@ public class URISController {
 			}
 /*			final String type = Constants.TYPE_REST;*/
 
-			final HashMap map = (HashMap) input;
+			HashMap map = (HashMap) input;
 			final String entity = Utils.getClassNameFromPath(String.valueOf(map.get(Constants.CLASS) != null ? map.get(Constants.CLASS): map.get(Constants.CLASS)));
 			if (!Utils.isValidString(entity)) {
 				throw new CustomNotFoundException("Attribute @Class (required) is not present");
@@ -199,11 +199,12 @@ public class URISController {
 			}
 			
 			boolean found = false;
-
 			logger.info("requestDiscovery value:" + String.valueOf(requestDiscovery));
-			if (requestDiscovery!=false) {
+			if (requestDiscovery!=false ) {
 				logger.info("requesting similarities");
-				LinkedTreeMap<String, Object> similarity = discoveryService.findSimilarEntity(subDomain, tripleStore.equals(Constants.TRELLIS)?"fuseki":tripleStore, entityNormalized, entityId, map);
+				if (map.containsKey("attributes"))
+					map = (HashMap) map.get("attributes");
+				LinkedTreeMap<String, Object> similarity = discoveryService.findSimilarEntity(subDomain, tripleStore.equals(Constants.TRELLIS)?"fuseki":tripleStore, entityNormalized, entityId, (HashMap<String, Object>) map);
 				logger.info("requesting similarities results:" + ((similarity==null)?"find":"no find"));
 				if (similarity != null) {
 					logger.info("Found similarities:" + new Gson().toJsonTree(similarity).getAsJsonObject().toString());
