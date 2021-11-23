@@ -172,8 +172,8 @@ public class URISController {
 			@RequestParam(required = false, defaultValue = "es-ES") @Validated(Create.class) final String lang,
 			@ApiParam(name = "tripleStore", value = "Triple Store", defaultValue = "fuseki", required = false)
 			@RequestParam(required = false, defaultValue = Constants.TRELLIS) @Validated(Create.class) final String tripleStore,
-			@ApiParam(name = "requestDiscovery", value = "Request in discovery library", defaultValue = "false", required = false)
-			@RequestParam(required = false, defaultValue = "false") @Validated(Create.class) final boolean requestDiscovery,
+			@ApiParam(name = "requestDiscovery", value = "Request in discovery library", defaultValue = "true", required = false)
+			@RequestParam(required = false, defaultValue = "true") @Validated(Create.class) final boolean requestDiscovery,
 			@RequestBody final Object input) {
 		this.logger.info("Creating Instance URI..." );
 
