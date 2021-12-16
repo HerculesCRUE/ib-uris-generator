@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -117,6 +118,9 @@ public class URISController {
 	@Autowired
 	private DiscoveryService discoveryService;
 
+	@Value("${discovery.enable:true}")
+	private boolean isDiscoveryEnable;
+
 	@ApiOperation(value = "Check if server is Alive", notes = "Check if server is Alive")
 	@RequestMapping(method={RequestMethod.GET},value={Mappings.HEALTH})
 	public String getHealth() {
@@ -200,7 +204,7 @@ public class URISController {
 			
 			boolean found = false;
 			logger.info("requestDiscovery value:" + String.valueOf(requestDiscovery));
-			if (requestDiscovery!=false ) {
+			if (requestDiscovery!=false && isDiscoveryEnable!=false) {
 				logger.info("requesting similarities");
 				if (map.containsKey("attributes"))
 					map = (HashMap) map.get("attributes");

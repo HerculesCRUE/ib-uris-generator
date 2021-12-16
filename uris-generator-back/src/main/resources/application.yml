@@ -68,6 +68,7 @@ discovery:
   host: http://localhost
   port: 9327
   endPoint: /discovery/entity-link/instance
+  enable: true
 
 logging:
   level:
