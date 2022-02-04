@@ -43,6 +43,17 @@ public interface CanonicalURILanguageRepository extends JpaRepository<CanonicalU
     Optional<List<CanonicalURILanguage>> findByEntityNameAndReference(String entityName, String reference);
 
     /**
+     * Finds a CanonicalURI using the entityName field and propertyName field.
+     *
+     * @param entityName
+     *            The entityName to search for
+     * @param propertyName
+     *            The propertyName to search for
+     * @return an {@link CanonicalURILanguage} entity stored in the database or {@literal Optional#empty()} if none found
+     */
+    Optional<List<CanonicalURILanguage>> findByEntityNameAndLocalId(String entityName, String reference);
+
+    /**
      * Finds a CanonicalURI using  propertyName field.
      *
      * @param entityName
