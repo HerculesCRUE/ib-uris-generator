@@ -139,7 +139,9 @@ public class CanonicalURILanguageServiceImpl implements CanonicalURILanguageServ
 
     @Override
     public List<CanonicalURILanguage> getAllByEntityNameAndReference(String entityName, String reference) {
-        return this.repository.findByEntityNameAndReference(entityName,reference).orElse(new ArrayList<>());
+        return this.repository.findByEntityNameAndReference(entityName,reference).orElse(
+                this.repository.findByEntityNameAndLocalId(entityName,reference).orElse(new ArrayList<>())
+        );
     }
 
     @Override
