@@ -23,6 +23,7 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -770,7 +771,12 @@ public class URISController {
 		}
 
 		if (!Utils.isValidUUID(reference)) {
-			reference = Utils.getUUIDFromString(reference);
+			try {
+				String decodedReference = java.net.URLDecoder.decode(reference, StandardCharsets.UTF_8.name());
+				reference = Utils.getUUIDFromString(decodedReference);
+			} catch (Exception e) {
+				reference = Utils.getUUIDFromString(reference);
+			}
 		}
 
 		String schema = schemaService.getCanonicalLanguageSchema();
