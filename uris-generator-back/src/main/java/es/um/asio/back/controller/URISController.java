@@ -746,7 +746,7 @@ public class URISController {
 			@RequestParam(required = true) @Validated(Create.class)  String reference,
 			@ApiParam(name = "storageName", value = "Storage type by name", required = true)
 			@RequestParam(required = true) @Validated(Create.class) final String storageName) {
-		logger.info("Get Local Resource URI");
+		logger.info("Get Local Resource URI (domain={}, subDomain={}, languageCode={}, typeCode={}, entity={}, reference={}, storageName={})",domain,subDomain,languageCode,typeCode,entity,reference,storageName);
 		if (!Arrays.asList(new String[] {"cat","def","kos","res"}).contains(typeCode)) {
 			throw new CustomNotFoundException("Type: " +typeCode +" wrong, the type must be one of this [cat,def,kos,res]" );
 		}
